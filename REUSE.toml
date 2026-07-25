@@ -1,0 +1,10 @@
+version = 1
+SPDX-PackageName = "crypto-communications-assurance"
+SPDX-PackageSupplier = "Organization: itdojp"
+SPDX-PackageDownloadLocation = "https://github.com/itdojp/crypto-communications-assurance"
+
+[[annotations]]
+path = ["**"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 itdojp contributors"
+SPDX-License-Identifier = "Apache-2.0"

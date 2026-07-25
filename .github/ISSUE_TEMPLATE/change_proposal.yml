@@ -1,0 +1,33 @@
+name: Change proposal
+description: Propose a bounded contract, documentation, or integration change.
+title: "[PROPOSAL] "
+labels: []
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: State the assurance outcome and the accountable human decision it supports.
+    validations:
+      required: true
+  - type: textarea
+    id: boundaries
+    attributes:
+      label: Scope and non-goals
+      description: Identify affected contracts and explicit exclusions.
+    validations:
+      required: true
+  - type: textarea
+    id: validation
+    attributes:
+      label: Deterministic validation plan
+      description: Tests must not depend on external LLMs, scanners, or live targets.
+    validations:
+      required: true
+  - type: checkboxes
+    id: authority
+    attributes:
+      label: Authority boundary
+      options:
+        - label: Tool output will not be represented as human approval or release authority.
+          required: true

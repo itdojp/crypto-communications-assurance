@@ -1,0 +1,31 @@
+{
+  "name": "@itdojp/crypto-communications-assurance",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Data-first assurance contracts for cryptographic communication products",
+  "license": "Apache-2.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22 <23"
+  },
+  "packageManager": "pnpm@10.34.5",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "check:schemas": "vitest run tests/schema.test.ts",
+    "check:docs": "node scripts/check-docs.mjs",
+    "lint:workflows": "node scripts/lint-workflows.mjs",
+    "verify": "pnpm run lint && pnpm run typecheck && pnpm run build && pnpm run check:schemas && pnpm run test && pnpm run check:docs && pnpm run lint:workflows"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@types/node": "22.20.1",
+    "eslint": "10.8.0",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.65.0",
+    "vitest": "4.1.10",
+    "yaml": "2.9.0"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "cryptocomm-pack/v1",
+  "packId": "synthetic-invalid-pack",
+  "version": "0.0.0-synthetic.1",
+  "sourceRevision": "2222222222222222222222222222222222222222",
+  "compatibility": {
+    "aeFramework": {
+      "contractVersion": "bootstrap-placeholder",
+      "status": "planned"
+    },
+    "genaiRepoAuditor": {
+      "contractVersion": "bootstrap-placeholder",
+      "status": "planned"
+    }
+  },
+  "artifacts": [
+    {
+      "path": "fixtures/artifacts/synthetic-placeholder.json"
+    }
+  ],
+  "executable": false,
+  "networkRequired": false,
+  "secretsAllowed": false
+}
