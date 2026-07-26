@@ -472,22 +472,30 @@ function validateManifestLockBindingParsed(
     lock.manifest.digest.algorithm !== "sha256" ||
     lock.manifest.digest.value !== actualManifestDigest
   ) {
-    diagnostics.push(diagnostic("MANIFEST_DIGEST_MISMATCH", "/manifest/digest"));
+    diagnostics.push(
+      diagnostic("MANIFEST_DIGEST_MISMATCH", "/lock/manifest/digest"),
+    );
   }
   if (lock.packId !== manifest.packId) {
-    diagnostics.push(diagnostic("PACK_ID_MISMATCH", "/packId"));
+    diagnostics.push(diagnostic("PACK_ID_MISMATCH", "/lock/packId"));
   }
   if (lock.packVersion !== manifest.packVersion) {
-    diagnostics.push(diagnostic("PACK_VERSION_MISMATCH", "/packVersion"));
+    diagnostics.push(diagnostic("PACK_VERSION_MISMATCH", "/lock/packVersion"));
   }
   if (!sourceIdentityEqual(lock.manifest.source, manifest.source)) {
-    diagnostics.push(diagnostic("SOURCE_IDENTITY_MISMATCH", "/manifest/source"));
+    diagnostics.push(
+      diagnostic("SOURCE_IDENTITY_MISMATCH", "/lock/manifest/source"),
+    );
   }
   if (!implementationIdentityValid(manifest.producer)) {
-    diagnostics.push(diagnostic("IMPLEMENTATION_IDENTITY_INVALID", "/producer"));
+    diagnostics.push(
+      diagnostic("IMPLEMENTATION_IDENTITY_INVALID", "/manifest/producer"),
+    );
   }
   if (!implementationIdentityValid(lock.resolver)) {
-    diagnostics.push(diagnostic("IMPLEMENTATION_IDENTITY_INVALID", "/resolver"));
+    diagnostics.push(
+      diagnostic("IMPLEMENTATION_IDENTITY_INVALID", "/lock/resolver"),
+    );
   }
 
   return result(diagnostics);

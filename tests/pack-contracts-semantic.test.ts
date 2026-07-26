@@ -117,9 +117,13 @@ describe("CCA-110 semantic bindings", () => {
     const candidate = mutableClone(lock);
     candidate.manifest.digest.value = "0".repeat(64);
 
-    expect(codes(validateManifestLockBinding(manifestBytes, jsonBytes(candidate)))).toContain(
-      "MANIFEST_DIGEST_MISMATCH",
-    );
+    expect(
+      validateManifestLockBinding(manifestBytes, jsonBytes(candidate)).diagnostics,
+    ).toContainEqual({
+      code: "MANIFEST_DIGEST_MISMATCH",
+      path: "/lock/manifest/digest",
+      message: "The lock does not bind the exact supplied manifest bytes.",
+    });
   });
 
   it("derives the manifest identity from the exact bytes being hashed", () => {
@@ -133,23 +137,39 @@ describe("CCA-110 semantic bindings", () => {
   });
 
   it.each([
-    ["PACK_ID_MISMATCH", (candidate: Mutable<PackLock>) => {
+    ["PACK_ID_MISMATCH", "/lock/packId", (candidate: Mutable<PackLock>) => {
       candidate.packId = "synthetic-other-pack";
     }],
-    ["PACK_VERSION_MISMATCH", (candidate: Mutable<PackLock>) => {
+    ["PACK_VERSION_MISMATCH", "/lock/packVersion", (candidate: Mutable<PackLock>) => {
       candidate.packVersion = "0.2.0-synthetic.1";
     }],
-    ["SOURCE_IDENTITY_MISMATCH", (candidate: Mutable<PackLock>) => {
+    ["SOURCE_IDENTITY_MISMATCH", "/lock/manifest/source", (candidate: Mutable<PackLock>) => {
       candidate.manifest.source.revision.value = "9".repeat(40);
     }],
-    ["IMPLEMENTATION_IDENTITY_INVALID", (candidate: Mutable<PackLock>) => {
+    ["IMPLEMENTATION_IDENTITY_INVALID", "/lock/resolver", (candidate: Mutable<PackLock>) => {
       candidate.resolver.sourceRevision.value = "main";
     }],
-  ] as const)("detects %s", (expectedCode, mutate) => {
+  ] as const)("detects %s at its artifact-rooted path", (expectedCode, path, mutate) => {
     const candidate = mutableClone(lock);
     mutate(candidate);
-    expect(codes(validateManifestLockBinding(manifestBytes, jsonBytes(candidate)))).toContain(
-      expectedCode,
+    expect(
+      validateManifestLockBinding(manifestBytes, jsonBytes(candidate)).diagnostics,
+    ).toEqual(expect.arrayContaining([expect.objectContaining({ code: expectedCode, path })]));
+  });
+
+  it("roots producer identity diagnostics at the manifest", () => {
+    const candidate = mutableClone(manifest);
+    candidate.producer.sourceRevision.value = "main";
+
+    expect(
+      validateManifestLockBinding(jsonBytes(candidate), lockBytes).diagnostics,
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          code: "IMPLEMENTATION_IDENTITY_INVALID",
+          path: "/manifest/producer",
+        }),
+      ]),
     );
   });
 
