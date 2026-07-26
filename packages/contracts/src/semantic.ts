@@ -226,9 +226,74 @@ export type SemanticValidationResult = SemanticValidationSuccess | SemanticValid
 const repositoryIdPattern =
   /^[a-z][a-z0-9.-]{0,31}:[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?:\/[A-Za-z0-9][A-Za-z0-9._-]{0,127})+$/;
 const implementationIdPattern = /^[a-z][a-z0-9.-]*(?:\/[a-z0-9][a-z0-9._-]*)+$/;
-const semanticVersionPattern =
-  /^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(?:-(?:0|[1-9][0-9]*|[0-9A-Za-z-]*[A-Za-z-][0-9A-Za-z-]*)(?:\.(?:0|[1-9][0-9]*|[0-9A-Za-z-]*[A-Za-z-][0-9A-Za-z-]*))*)?(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$/;
 const gitSha1Pattern = /^[0-9a-f]{40}$/;
+
+function isAsciiDigit(code: number): boolean {
+  return code >= 0x30 && code <= 0x39;
+}
+
+function isSemverIdentifierCharacter(code: number): boolean {
+  return (
+    isAsciiDigit(code) ||
+    (code >= 0x41 && code <= 0x5a) ||
+    (code >= 0x61 && code <= 0x7a) ||
+    code === 0x2d
+  );
+}
+
+function identifierCharactersValid(value: string): boolean {
+  if (value.length === 0) return false;
+  for (let index = 0; index < value.length; index += 1) {
+    if (!isSemverIdentifierCharacter(value.charCodeAt(index))) return false;
+  }
+  return true;
+}
+
+function numericIdentifierValid(value: string): boolean {
+  if (value.length === 0 || (value.length > 1 && value.startsWith("0"))) return false;
+  for (let index = 0; index < value.length; index += 1) {
+    if (!isAsciiDigit(value.charCodeAt(index))) return false;
+  }
+  return true;
+}
+
+function prereleaseIdentifierValid(value: string): boolean {
+  if (!identifierCharactersValid(value)) return false;
+  let numeric = true;
+  for (let index = 0; index < value.length; index += 1) {
+    if (!isAsciiDigit(value.charCodeAt(index))) {
+      numeric = false;
+      break;
+    }
+  }
+  return !numeric || numericIdentifierValid(value);
+}
+
+function semanticVersionValid(value: string): boolean {
+  if (value.length === 0 || value.length > 64) return false;
+
+  const buildSeparator = value.indexOf("+");
+  if (buildSeparator !== value.lastIndexOf("+")) return false;
+  const coreAndPrerelease =
+    buildSeparator === -1 ? value : value.slice(0, buildSeparator);
+  if (buildSeparator !== -1) {
+    const build = value.slice(buildSeparator + 1);
+    if (!build.split(".").every(identifierCharactersValid)) return false;
+  }
+
+  const prereleaseSeparator = coreAndPrerelease.indexOf("-");
+  const core =
+    prereleaseSeparator === -1
+      ? coreAndPrerelease
+      : coreAndPrerelease.slice(0, prereleaseSeparator);
+  if (prereleaseSeparator !== -1) {
+    const prerelease = coreAndPrerelease.slice(prereleaseSeparator + 1);
+    if (!prerelease.split(".").every(prereleaseIdentifierValid)) return false;
+  }
+
+  const coreIdentifiers = core.split(".");
+  return coreIdentifiers.length === 3 && coreIdentifiers.every(numericIdentifierValid);
+}
 
 function sha256(bytes: Uint8Array): string {
   return createHash("sha256").update(bytes).digest("hex");
@@ -271,7 +336,7 @@ function implementationIdentityEqual(
 function implementationIdentityValid(identity: ImplementationIdentity): boolean {
   return (
     implementationIdPattern.test(identity.implementationId) &&
-    semanticVersionPattern.test(identity.version) &&
+    semanticVersionValid(identity.version) &&
     repositoryIdPattern.test(identity.sourceRepositoryId) &&
     identity.sourceRevision.algorithm === "git-sha1" &&
     gitSha1Pattern.test(identity.sourceRevision.value)

@@ -142,6 +142,41 @@ describe("CCA-110 semantic bindings", () => {
     );
   });
 
+  it.each([
+    "0.0.0",
+    "1.2.3-0",
+    "1.2.3-alpha.01x",
+    "1.2.3+01",
+    "1.2.3-alpha-1+build.01",
+  ])("accepts a bounded valid resolver SemVer: %s", (version) => {
+    const candidate = mutableClone(lock);
+    candidate.resolver.version = version;
+
+    expect(validateManifestLockBinding(manifestBytes, candidate)).toEqual({
+      valid: true,
+      diagnostics: [],
+    });
+  });
+
+  it.each([
+    "01.2.3",
+    "1.02.3",
+    "1.2.03",
+    "1.2.3-01",
+    "1.2.3-alpha.01",
+    "1.2.3-",
+    "1.2.3+",
+    "1.2.3+build+again",
+    "0.0.0-0." + "--.".repeat(64),
+  ])("rejects an invalid or unbounded resolver SemVer: %s", (version) => {
+    const candidate = mutableClone(lock);
+    candidate.resolver.version = version;
+
+    expect(codes(validateManifestLockBinding(manifestBytes, candidate))).toContain(
+      "IMPLEMENTATION_IDENTITY_INVALID",
+    );
+  });
+
   it("detects COMPATIBILITY_SUBJECT_MISMATCH", () => {
     const candidate = mutableClone(compatible);
     candidate.subject.manifestSource.revision.value = "8".repeat(40);
