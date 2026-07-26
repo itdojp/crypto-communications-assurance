@@ -28,6 +28,36 @@ export interface ContractIdentity {
   readonly version: string;
 }
 
+export interface ManifestContractIdentity {
+  readonly contractId: string;
+}
+
+export interface SafetyBoundary {
+  readonly executable: false;
+  readonly networkRequired: false;
+  readonly secretsAllowed: false;
+}
+
+export type FixtureClassification = "synthetic-test-only";
+
+export type ManifestArtifactType =
+  | "contract-schema"
+  | "contract-instance"
+  | "catalog"
+  | "profile"
+  | "evidence-requirement"
+  | "bridge-context"
+  | "bridge-evidence"
+  | "documentation"
+  | "synthetic-fixture";
+
+export interface ManifestArtifactDeclaration {
+  readonly digest: Sha256Digest;
+  readonly mediaType: string;
+  readonly artifactType: ManifestArtifactType;
+  readonly contract?: ManifestContractIdentity;
+}
+
 export interface CompatibilitySubject {
   readonly packId: string;
   readonly packVersion: string;
@@ -46,6 +76,9 @@ export interface PackManifest {
   readonly packVersion: string;
   readonly source: SourceIdentity;
   readonly producer: ImplementationIdentity;
+  readonly artifacts: Readonly<Record<string, ManifestArtifactDeclaration>>;
+  readonly safety: SafetyBoundary;
+  readonly fixtureClassification?: FixtureClassification;
 }
 
 export interface CompatibilityRecordReference {
@@ -64,38 +97,76 @@ export interface PackLock {
   };
   readonly resolver: ImplementationIdentity;
   readonly compatibilityRecords?: Readonly<Record<string, CompatibilityRecordReference>>;
+  readonly safety: SafetyBoundary;
+  readonly fixtureClassification?: FixtureClassification;
 }
 
 export type CompatibilityState = "unknown" | "compatible" | "incompatible" | "unsupported";
 
-export interface CompatibilityRecord {
+export type CompatibilityEvidenceType =
+  | "synthetic-test-result"
+  | "public-test-result"
+  | "public-analysis-report";
+
+export interface CompatibilityEvidenceReference {
+  readonly digest: Sha256Digest;
+  readonly mediaType: string;
+  readonly evidenceType: CompatibilityEvidenceType;
+}
+
+export interface UnsupportedCompatibilityReason {
+  readonly reason: string;
+  readonly scope: string;
+}
+
+interface CompatibilityRecordBase {
   readonly schemaVersion: "cryptocomm-compatibility-record/v1";
   readonly recordId: string;
   readonly subject: CompatibilitySubject;
   readonly target: CompatibilityTarget;
-  readonly state: CompatibilityState;
-  readonly evidence?: Readonly<Record<string, unknown>>;
+  readonly safety: SafetyBoundary;
+  readonly fixtureClassification?: FixtureClassification;
 }
 
-export interface ResolvedCompatibilityRecord {
-  readonly record: CompatibilityRecord;
-  readonly bytes: Uint8Array;
+export interface UnknownCompatibilityRecord extends CompatibilityRecordBase {
+  readonly state: "unknown";
+  readonly evidence?: never;
+  readonly unsupported?: never;
 }
+
+export interface AssessedCompatibilityRecord extends CompatibilityRecordBase {
+  readonly state: "compatible" | "incompatible";
+  readonly evidence: Readonly<Record<string, CompatibilityEvidenceReference>>;
+  readonly unsupported?: never;
+}
+
+export interface UnsupportedCompatibilityRecord extends CompatibilityRecordBase {
+  readonly state: "unsupported";
+  readonly evidence?: Readonly<Record<string, CompatibilityEvidenceReference>>;
+  readonly unsupported: UnsupportedCompatibilityReason;
+}
+
+export type CompatibilityRecord =
+  | UnknownCompatibilityRecord
+  | AssessedCompatibilityRecord
+  | UnsupportedCompatibilityRecord;
 
 export interface PackResolutionInput {
-  readonly manifest: PackManifest;
   readonly manifestBytes: Uint8Array;
   readonly lock: PackLock;
-  readonly compatibilityRecords: Readonly<Record<string, ResolvedCompatibilityRecord>>;
+  readonly compatibilityRecordBytes: Readonly<Record<string, Uint8Array>>;
 }
 
 export const semanticDiagnosticCodes = [
+  "MANIFEST_BYTES_INVALID",
   "MANIFEST_DIGEST_MISMATCH",
   "PACK_ID_MISMATCH",
   "PACK_VERSION_MISMATCH",
   "SOURCE_IDENTITY_MISMATCH",
   "IMPLEMENTATION_IDENTITY_INVALID",
+  "COMPATIBILITY_RECORD_BYTES_INVALID",
   "COMPATIBILITY_RECORD_MISSING",
+  "COMPATIBILITY_RECORD_UNREFERENCED",
   "COMPATIBILITY_RECORD_ID_MISMATCH",
   "COMPATIBILITY_RECORD_DIGEST_MISMATCH",
   "COMPATIBILITY_SUBJECT_MISMATCH",
@@ -107,13 +178,19 @@ export const semanticDiagnosticCodes = [
 export type SemanticDiagnosticCode = (typeof semanticDiagnosticCodes)[number];
 
 export const semanticDiagnosticDescriptions: Readonly<Record<SemanticDiagnosticCode, string>> = {
+  MANIFEST_BYTES_INVALID:
+    "The supplied manifest bytes are not a JSON object; schema validation must run separately.",
   MANIFEST_DIGEST_MISMATCH: "The lock does not bind the exact supplied manifest bytes.",
   PACK_ID_MISMATCH: "The pack identifier differs across bound artifacts.",
   PACK_VERSION_MISMATCH: "The pack version differs across bound artifacts.",
   SOURCE_IDENTITY_MISMATCH: "The repository, revision, or source tree identity differs.",
   IMPLEMENTATION_IDENTITY_INVALID:
     "A producer, resolver, or target implementation identity is incomplete or not exact.",
+  COMPATIBILITY_RECORD_BYTES_INVALID:
+    "The supplied compatibility-record bytes are not a JSON object; schema validation must run separately.",
   COMPATIBILITY_RECORD_MISSING: "A lock reference has no supplied compatibility record.",
+  COMPATIBILITY_RECORD_UNREFERENCED:
+    "A supplied compatibility record is not declared by the lock.",
   COMPATIBILITY_RECORD_ID_MISMATCH:
     "A lock reference key differs from the supplied compatibility record identifier.",
   COMPATIBILITY_RECORD_DIGEST_MISMATCH:
@@ -150,11 +227,22 @@ const repositoryIdPattern =
   /^[a-z][a-z0-9.-]{0,31}:[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?:\/[A-Za-z0-9][A-Za-z0-9._-]{0,127})+$/;
 const implementationIdPattern = /^[a-z][a-z0-9.-]*(?:\/[a-z0-9][a-z0-9._-]*)+$/;
 const semanticVersionPattern =
-  /^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$/;
+  /^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(?:-(?:0|[1-9][0-9]*|[0-9A-Za-z-]*[A-Za-z-][0-9A-Za-z-]*)(?:\.(?:0|[1-9][0-9]*|[0-9A-Za-z-]*[A-Za-z-][0-9A-Za-z-]*))*)?(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$/;
 const gitSha1Pattern = /^[0-9a-f]{40}$/;
 
 function sha256(bytes: Uint8Array): string {
   return createHash("sha256").update(bytes).digest("hex");
+}
+
+function parseJsonObject<T>(bytes: Uint8Array): T | undefined {
+  try {
+    const parsed: unknown = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes));
+    return typeof parsed === "object" && parsed !== null && !Array.isArray(parsed)
+      ? (parsed as T)
+      : undefined;
+  } catch {
+    return undefined;
+  }
 }
 
 function sourceIdentityEqual(left: SourceIdentity, right: SourceIdentity): boolean {
@@ -246,6 +334,18 @@ function expectedSubject(
 }
 
 export function validateManifestLockBinding(
+  manifestBytes: Uint8Array,
+  lock: PackLock,
+): SemanticValidationResult {
+  const manifest = parseJsonObject<PackManifest>(manifestBytes);
+  if (manifest === undefined) {
+    return result([diagnostic("MANIFEST_BYTES_INVALID", "/manifest")]);
+  }
+
+  return validateManifestLockBindingParsed(manifest, manifestBytes, lock);
+}
+
+function validateManifestLockBindingParsed(
   manifest: PackManifest,
   manifestBytes: Uint8Array,
   lock: PackLock,
@@ -279,6 +379,27 @@ export function validateManifestLockBinding(
 }
 
 export function validateCompatibilityRecordBinding(
+  manifestBytes: Uint8Array,
+  recordBytes: Uint8Array,
+): SemanticValidationResult {
+  const diagnostics: SemanticDiagnostic[] = [];
+  const manifest = parseJsonObject<PackManifest>(manifestBytes);
+  const record = parseJsonObject<CompatibilityRecord>(recordBytes);
+
+  if (manifest === undefined) {
+    diagnostics.push(diagnostic("MANIFEST_BYTES_INVALID", "/manifest"));
+  }
+  if (record === undefined) {
+    diagnostics.push(diagnostic("COMPATIBILITY_RECORD_BYTES_INVALID", "/record"));
+  }
+  if (manifest === undefined || record === undefined) {
+    return result(diagnostics);
+  }
+
+  return validateCompatibilityRecordBindingParsed(manifest, manifestBytes, record);
+}
+
+function validateCompatibilityRecordBindingParsed(
   manifest: PackManifest,
   manifestBytes: Uint8Array,
   record: CompatibilityRecord,
@@ -304,33 +425,43 @@ export function validateCompatibilityRecordBinding(
 }
 
 export function validatePackResolution(input: PackResolutionInput): SemanticValidationResult {
-  const diagnostics: SemanticDiagnostic[] = [
-    ...validateManifestLockBinding(input.manifest, input.manifestBytes, input.lock).diagnostics,
-  ];
+  const diagnostics: SemanticDiagnostic[] = [];
+  const manifest = parseJsonObject<PackManifest>(input.manifestBytes);
+  if (manifest === undefined) {
+    diagnostics.push(diagnostic("MANIFEST_BYTES_INVALID", "/manifest"));
+  } else {
+    diagnostics.push(
+      ...validateManifestLockBindingParsed(manifest, input.manifestBytes, input.lock)
+        .diagnostics,
+    );
+  }
   const references = input.lock.compatibilityRecords ?? {};
+
+  for (const recordId of Object.keys(input.compatibilityRecordBytes).sort()) {
+    if (references[recordId] === undefined) {
+      diagnostics.push(
+        diagnostic(
+          "COMPATIBILITY_RECORD_UNREFERENCED",
+          "/compatibilityRecordBytes/" + recordId,
+        ),
+      );
+    }
+  }
 
   for (const recordId of Object.keys(references).sort()) {
     const reference = references[recordId];
     if (reference === undefined) continue;
-    const supplied = input.compatibilityRecords[recordId];
-    if (supplied === undefined) {
+    const suppliedBytes = input.compatibilityRecordBytes[recordId];
+    if (suppliedBytes === undefined) {
       diagnostics.push(
         diagnostic("COMPATIBILITY_RECORD_MISSING", "/compatibilityRecords/" + recordId),
       );
       continue;
     }
 
-    if (supplied.record.recordId !== recordId) {
-      diagnostics.push(
-        diagnostic(
-          "COMPATIBILITY_RECORD_ID_MISMATCH",
-          "/compatibilityRecords/" + recordId,
-        ),
-      );
-    }
     if (
       reference.digest.algorithm !== "sha256" ||
-      reference.digest.value !== sha256(supplied.bytes)
+      reference.digest.value !== sha256(suppliedBytes)
     ) {
       diagnostics.push(
         diagnostic(
@@ -339,7 +470,27 @@ export function validatePackResolution(input: PackResolutionInput): SemanticVali
         ),
       );
     }
-    if (!subjectEqual(reference.subject, supplied.record.subject)) {
+
+    const record = parseJsonObject<CompatibilityRecord>(suppliedBytes);
+    if (record === undefined) {
+      diagnostics.push(
+        diagnostic(
+          "COMPATIBILITY_RECORD_BYTES_INVALID",
+          "/compatibilityRecords/" + recordId,
+        ),
+      );
+      continue;
+    }
+
+    if (record.recordId !== recordId) {
+      diagnostics.push(
+        diagnostic(
+          "COMPATIBILITY_RECORD_ID_MISMATCH",
+          "/compatibilityRecords/" + recordId,
+        ),
+      );
+    }
+    if (!subjectEqual(reference.subject, record.subject)) {
       diagnostics.push(
         diagnostic(
           "COMPATIBILITY_SUBJECT_MISMATCH",
@@ -347,7 +498,7 @@ export function validatePackResolution(input: PackResolutionInput): SemanticVali
         ),
       );
     }
-    if (!targetEqual(reference.target, supplied.record.target)) {
+    if (!targetEqual(reference.target, record.target)) {
       diagnostics.push(
         diagnostic(
           "COMPATIBILITY_TARGET_MISMATCH",
@@ -355,16 +506,18 @@ export function validatePackResolution(input: PackResolutionInput): SemanticVali
         ),
       );
     }
-    diagnostics.push(
-      ...validateCompatibilityRecordBinding(
-        input.manifest,
-        input.manifestBytes,
-        supplied.record,
-      ).diagnostics.map((entry) => ({
-        ...entry,
-        path: "/compatibilityRecords/" + recordId + entry.path,
-      })),
-    );
+    if (manifest !== undefined) {
+      diagnostics.push(
+        ...validateCompatibilityRecordBindingParsed(
+          manifest,
+          input.manifestBytes,
+          record,
+        ).diagnostics.map((entry) => ({
+          ...entry,
+          path: "/compatibilityRecords/" + recordId + entry.path,
+        })),
+      );
+    }
   }
 
   return result(diagnostics);

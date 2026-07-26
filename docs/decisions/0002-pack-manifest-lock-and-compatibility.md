@@ -45,7 +45,7 @@ No state means human approval, merge approval, release approval, certification, 
 
 ### Validation layers
 
-Generic AJV schema compilation remains separate from pure semantic validation. Semantic validators receive parsed objects and exact bytes; they do not fetch, clone, resolve arbitrary paths, execute artifacts, contact upstream tools, or call an external model/scanner.
+Generic AJV schema compilation remains separate from pure semantic validation. After a caller schema-validates values decoded from the same exact bytes, semantic validators receive the parsed lock and exact manifest/compatibility-record bytes. They derive the manifest and record objects they inspect from those bytes so that a digest cannot be paired with a separately mutated object. They do not fetch, clone, resolve arbitrary paths, execute artifacts, contact upstream tools, or call an external model/scanner.
 
 Bounded diagnostics cover exact-byte manifest and record digests, pack ID/version, source identity, implementation identity, compatibility subject/target, evidence requirements, and forbidden legacy status promotion.
 

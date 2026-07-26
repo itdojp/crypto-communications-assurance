@@ -236,6 +236,38 @@ describe("CCA-110 JSON Schema contracts", () => {
     expect(validateCompatibility(candidate)).toEqual({ valid: true, errors: [] });
   });
 
+  it.each([
+    ["manifest producer", "manifest"],
+    ["lock resolver", "lock"],
+    ["compatibility target", "compatibility"],
+  ] as const)(
+    "rejects a leading-zero numeric SemVer prerelease in the %s identity",
+    async (_name, contract) => {
+      if (contract === "manifest") {
+        const candidate = (await loadJson(
+          "../fixtures/valid/pack-manifest-v1.json",
+        )) as { producer: { version: string } };
+        candidate.producer.version = "1.2.3-01";
+        expect(validateManifest(candidate).valid).toBe(false);
+        return;
+      }
+      if (contract === "lock") {
+        const candidate = (await loadJson(
+          "../fixtures/valid/pack-lock-v1.json",
+        )) as { resolver: { version: string } };
+        candidate.resolver.version = "1.2.3-01";
+        expect(validateLock(candidate).valid).toBe(false);
+        return;
+      }
+
+      const candidate = (await loadJson(
+        "../fixtures/valid/compatibility-unknown-v1.json",
+      )) as { target: { implementation: { version: string } } };
+      candidate.target.implementation.version = "1.2.3-01";
+      expect(validateCompatibility(candidate).valid).toBe(false);
+    },
+  );
+
   it("keeps the evidence payload explicitly synthetic and test-only", async () => {
     expect(
       await loadJson("../fixtures/artifacts/synthetic-compatibility-evidence.json"),

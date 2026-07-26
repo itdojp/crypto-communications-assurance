@@ -27,6 +27,7 @@ const requiredFiles = [
   "docs/decisions/0001-repository-and-product-boundary.md",
   "docs/decisions/0002-pack-manifest-lock-and-compatibility.md",
   "schema/cryptocomm-pack-v1.schema.json",
+  "schema/README.md",
   "schema/cryptocomm-pack-manifest-v1.schema.json",
   "schema/cryptocomm-pack-lock-v1.schema.json",
   "schema/cryptocomm-compatibility-record-v1.schema.json",

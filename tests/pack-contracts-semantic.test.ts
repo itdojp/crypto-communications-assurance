@@ -25,6 +25,9 @@ const loadBytes = (relativePath: string): Promise<Buffer> =>
 const loadJson = async <T>(relativePath: string): Promise<T> =>
   JSON.parse((await loadBytes(relativePath)).toString("utf8")) as T;
 
+const jsonBytes = (value: unknown): Buffer =>
+  Buffer.from(JSON.stringify(value), "utf8");
+
 describe("CCA-110 semantic bindings", () => {
   let manifest: PackManifest;
   let manifestBytes: Buffer;
@@ -65,15 +68,11 @@ describe("CCA-110 semantic bindings", () => {
   it("accepts exact manifest, lock, record bytes, subject, and target bindings", () => {
     expect(
       validatePackResolution({
-        manifest,
         manifestBytes,
         lock,
-        compatibilityRecords: {
-          "synthetic-unknown-record": { record: unknown, bytes: unknownBytes },
-          "synthetic-compatible-record": {
-            record: compatible,
-            bytes: compatibleBytes,
-          },
+        compatibilityRecordBytes: {
+          "synthetic-unknown-record": unknownBytes,
+          "synthetic-compatible-record": compatibleBytes,
         },
       }),
     ).toEqual({ valid: true, diagnostics: [] });
@@ -83,16 +82,26 @@ describe("CCA-110 semantic bindings", () => {
     const candidate = mutableClone(lock);
     candidate.manifest.digest.value = "0".repeat(64);
 
-    expect(codes(validateManifestLockBinding(manifest, manifestBytes, candidate))).toContain(
+    expect(codes(validateManifestLockBinding(manifestBytes, candidate))).toContain(
       "MANIFEST_DIGEST_MISMATCH",
     );
+  });
+
+  it("derives the manifest identity from the exact bytes being hashed", () => {
+    const candidate = mutableClone(manifest);
+    candidate.packId = "synthetic-other-pack";
+
+    expect(codes(validateManifestLockBinding(jsonBytes(candidate), lock))).toEqual([
+      "MANIFEST_DIGEST_MISMATCH",
+      "PACK_ID_MISMATCH",
+    ]);
   });
 
   it("detects PACK_ID_MISMATCH", () => {
     const candidate = mutableClone(lock);
     candidate.packId = "synthetic-other-pack";
 
-    expect(codes(validateManifestLockBinding(manifest, manifestBytes, candidate))).toContain(
+    expect(codes(validateManifestLockBinding(manifestBytes, candidate))).toContain(
       "PACK_ID_MISMATCH",
     );
   });
@@ -101,7 +110,7 @@ describe("CCA-110 semantic bindings", () => {
     const candidate = mutableClone(lock);
     candidate.packVersion = "0.2.0-synthetic.1";
 
-    expect(codes(validateManifestLockBinding(manifest, manifestBytes, candidate))).toContain(
+    expect(codes(validateManifestLockBinding(manifestBytes, candidate))).toContain(
       "PACK_VERSION_MISMATCH",
     );
   });
@@ -110,7 +119,7 @@ describe("CCA-110 semantic bindings", () => {
     const candidate = mutableClone(lock);
     candidate.manifest.source.revision.value = "9".repeat(40);
 
-    expect(codes(validateManifestLockBinding(manifest, manifestBytes, candidate))).toContain(
+    expect(codes(validateManifestLockBinding(manifestBytes, candidate))).toContain(
       "SOURCE_IDENTITY_MISMATCH",
     );
   });
@@ -119,7 +128,16 @@ describe("CCA-110 semantic bindings", () => {
     const candidate = mutableClone(lock);
     candidate.resolver.sourceRevision.value = "main";
 
-    expect(codes(validateManifestLockBinding(manifest, manifestBytes, candidate))).toContain(
+    expect(codes(validateManifestLockBinding(manifestBytes, candidate))).toContain(
+      "IMPLEMENTATION_IDENTITY_INVALID",
+    );
+  });
+
+  it("rejects a SemVer numeric prerelease identifier with a leading zero", () => {
+    const candidate = mutableClone(lock);
+    candidate.resolver.version = "1.2.3-01";
+
+    expect(codes(validateManifestLockBinding(manifestBytes, candidate))).toContain(
       "IMPLEMENTATION_IDENTITY_INVALID",
     );
   });
@@ -129,7 +147,7 @@ describe("CCA-110 semantic bindings", () => {
     candidate.subject.manifestSource.revision.value = "8".repeat(40);
 
     expect(
-      codes(validateCompatibilityRecordBinding(manifest, manifestBytes, candidate)),
+      codes(validateCompatibilityRecordBinding(manifestBytes, jsonBytes(candidate))),
     ).toContain("COMPATIBILITY_SUBJECT_MISMATCH");
   });
 
@@ -140,15 +158,11 @@ describe("CCA-110 semantic bindings", () => {
     expect(
       codes(
         validatePackResolution({
-          manifest,
           manifestBytes,
           lock,
-          compatibilityRecords: {
-            "synthetic-unknown-record": { record: unknown, bytes: unknownBytes },
-            "synthetic-compatible-record": {
-              record: candidate,
-              bytes: compatibleBytes,
-            },
+          compatibilityRecordBytes: {
+            "synthetic-unknown-record": unknownBytes,
+            "synthetic-compatible-record": jsonBytes(candidate),
           },
         }),
       ),
@@ -156,11 +170,11 @@ describe("CCA-110 semantic bindings", () => {
   });
 
   it("detects COMPATIBILITY_EVIDENCE_REQUIRED", () => {
-    const candidate = mutableClone(compatible);
+    const candidate = mutableClone(compatible) as { evidence?: unknown };
     delete candidate.evidence;
 
     expect(
-      codes(validateCompatibilityRecordBinding(manifest, manifestBytes, candidate)),
+      codes(validateCompatibilityRecordBinding(manifestBytes, jsonBytes(candidate))),
     ).toContain("COMPATIBILITY_EVIDENCE_REQUIRED");
   });
 
@@ -168,14 +182,10 @@ describe("CCA-110 semantic bindings", () => {
     expect(
       codes(
         validatePackResolution({
-          manifest,
           manifestBytes,
           lock,
-          compatibilityRecords: {
-            "synthetic-compatible-record": {
-              record: compatible,
-              bytes: compatibleBytes,
-            },
+          compatibilityRecordBytes: {
+            "synthetic-compatible-record": compatibleBytes,
           },
         }),
       ),
@@ -189,15 +199,11 @@ describe("CCA-110 semantic bindings", () => {
     expect(
       codes(
         validatePackResolution({
-          manifest,
           manifestBytes,
           lock,
-          compatibilityRecords: {
-            "synthetic-unknown-record": { record: candidate, bytes: unknownBytes },
-            "synthetic-compatible-record": {
-              record: compatible,
-              bytes: compatibleBytes,
-            },
+          compatibilityRecordBytes: {
+            "synthetic-unknown-record": jsonBytes(candidate),
+            "synthetic-compatible-record": compatibleBytes,
           },
         }),
       ),
@@ -210,19 +216,40 @@ describe("CCA-110 semantic bindings", () => {
     expect(
       codes(
         validatePackResolution({
-          manifest,
           manifestBytes,
           lock,
-          compatibilityRecords: {
-            "synthetic-unknown-record": { record: unknown, bytes: unknownBytes },
-            "synthetic-compatible-record": {
-              record: compatible,
-              bytes: alteredBytes,
-            },
+          compatibilityRecordBytes: {
+            "synthetic-unknown-record": unknownBytes,
+            "synthetic-compatible-record": alteredBytes,
           },
         }),
       ),
     ).toContain("COMPATIBILITY_RECORD_DIGEST_MISMATCH");
+  });
+
+  it("rejects a supplied compatibility record absent from the lock", () => {
+    expect(
+      codes(
+        validatePackResolution({
+          manifestBytes,
+          lock,
+          compatibilityRecordBytes: {
+            "synthetic-unknown-record": unknownBytes,
+            "synthetic-compatible-record": compatibleBytes,
+            "synthetic-extra-record": unknownBytes,
+          },
+        }),
+      ),
+    ).toContain("COMPATIBILITY_RECORD_UNREFERENCED");
+  });
+
+  it("returns bounded diagnostics for non-JSON exact bytes", () => {
+    expect(codes(validateManifestLockBinding(Buffer.from("{"), lock))).toEqual([
+      "MANIFEST_BYTES_INVALID",
+    ]);
+    expect(
+      codes(validateCompatibilityRecordBinding(manifestBytes, Buffer.from("["))),
+    ).toEqual(["COMPATIBILITY_RECORD_BYTES_INVALID"]);
   });
 
   it("returns diagnostics in deterministic code-unit order", () => {
@@ -231,7 +258,7 @@ describe("CCA-110 semantic bindings", () => {
     candidate.packVersion = "0.2.0-synthetic.1";
     candidate.manifest.digest.value = "0".repeat(64);
 
-    expect(codes(validateManifestLockBinding(manifest, manifestBytes, candidate))).toEqual([
+    expect(codes(validateManifestLockBinding(manifestBytes, candidate))).toEqual([
       "MANIFEST_DIGEST_MISMATCH",
       "PACK_ID_MISMATCH",
       "PACK_VERSION_MISMATCH",

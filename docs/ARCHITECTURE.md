@@ -42,7 +42,7 @@ catalog is implemented.
 
 1. A caller independently validates a candidate JSON artifact against its checked-in closed Draft 2020-12 schema.
 2. `packages/contracts` compiles strict AJV 2020 validators without format or remote-schema loading.
-3. After schema success, a separate pure semantic validator receives parsed objects and exact bytes.
+3. After schema success, a separate pure semantic validator receives the parsed lock plus exact manifest and compatibility-record bytes. It derives the manifest and record objects it inspects from those exact bytes, preventing a separately mutated object from being assessed under another byte digest.
 4. Manifest/lock validation recomputes SHA-256 over exact manifest bytes and compares pack ID, pack version, source identity, and implementation identity.
 5. Compatibility validation binds exact subject and target identities, record bytes, and required evidence references.
 6. Both layers return deterministic local results. Neither layer fetches a URL, resolves an arbitrary path, executes an artifact, contacts an integration, or promotes evidence into approval.
