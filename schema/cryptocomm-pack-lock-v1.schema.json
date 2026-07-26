@@ -26,7 +26,10 @@
     "manifest": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["digest", "source"],
+      "required": [
+        "digest",
+        "source"
+      ],
       "properties": {
         "digest": {
           "$ref": "#/$defs/sha256Digest"
@@ -79,7 +82,10 @@
     "gitSha1": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["algorithm", "value"],
+      "required": [
+        "algorithm",
+        "value"
+      ],
       "properties": {
         "algorithm": {
           "const": "git-sha1"
@@ -93,7 +99,11 @@
     "sourceIdentity": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["repositoryId", "revision", "tree"],
+      "required": [
+        "repositoryId",
+        "revision",
+        "tree"
+      ],
       "properties": {
         "repositoryId": {
           "$ref": "#/$defs/repositoryId"
@@ -138,7 +148,10 @@
       "description": "SHA-256 of exact referenced bytes; no JSON canonicalization is implied.",
       "type": "object",
       "additionalProperties": false,
-      "required": ["algorithm", "value"],
+      "required": [
+        "algorithm",
+        "value"
+      ],
       "properties": {
         "algorithm": {
           "const": "sha256"
@@ -152,13 +165,16 @@
     "contractIdentity": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["contractId", "version"],
+      "required": [
+        "contractId",
+        "version"
+      ],
       "properties": {
         "contractId": {
           "type": "string",
           "minLength": 3,
           "maxLength": 128,
-          "pattern": "^[a-z][a-z0-9-]*/v[1-9][0-9]*$"
+          "pattern": "^[a-z][a-z0-9-]*(?:/[a-z][a-z0-9-]*)*/v[1-9][0-9]*$"
         },
         "version": {
           "$ref": "#/$defs/semanticVersion"
@@ -192,7 +208,10 @@
     "compatibilityTarget": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["implementation", "contract"],
+      "required": [
+        "implementation",
+        "contract"
+      ],
       "properties": {
         "implementation": {
           "$ref": "#/$defs/implementationIdentity"
@@ -211,7 +230,11 @@
     "compatibilityRecordReference": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["digest", "subject", "target"],
+      "required": [
+        "digest",
+        "subject",
+        "target"
+      ],
       "properties": {
         "digest": {
           "$ref": "#/$defs/sha256Digest"
@@ -227,7 +250,11 @@
     "safetyBoundary": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["executable", "networkRequired", "secretsAllowed"],
+      "required": [
+        "executable",
+        "networkRequired",
+        "secretsAllowed"
+      ],
       "properties": {
         "executable": {
           "const": false

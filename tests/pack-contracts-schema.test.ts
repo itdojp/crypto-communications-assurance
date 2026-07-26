@@ -222,6 +222,20 @@ describe("CCA-110 JSON Schema contracts", () => {
     expect(validateCompatibility(unknown).valid).toBe(false);
   });
 
+  it.each([
+    "ae-framework/assurance-profile/v1",
+    "genai-repo-auditor/audit-context/v1",
+  ])("accepts a generic hierarchical target contract ID: %s", async (contractId) => {
+    const candidate = (await loadJson(
+      "../fixtures/valid/compatibility-unknown-v1.json",
+    )) as Record<string, unknown> & {
+      target: { contract: { contractId: string } };
+    };
+    candidate.target.contract.contractId = contractId;
+
+    expect(validateCompatibility(candidate)).toEqual({ valid: true, errors: [] });
+  });
+
   it("keeps the evidence payload explicitly synthetic and test-only", async () => {
     expect(
       await loadJson("../fixtures/artifacts/synthetic-compatibility-evidence.json"),

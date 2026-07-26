@@ -220,8 +220,10 @@ function result(diagnostics: readonly SemanticDiagnostic[]): SemanticValidationR
   for (const entry of diagnostics) {
     unique.set(entry.code + "\u0000" + entry.path, entry);
   }
+  const compare = (left: string, right: string): number =>
+    left < right ? -1 : left > right ? 1 : 0;
   const stable = [...unique.values()].sort(
-    (left, right) => left.code.localeCompare(right.code) || left.path.localeCompare(right.path),
+    (left, right) => compare(left.code, right.code) || compare(left.path, right.path),
   );
   return stable.length === 0
     ? { valid: true, diagnostics: [] }

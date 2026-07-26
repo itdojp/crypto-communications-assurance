@@ -225,6 +225,19 @@ describe("CCA-110 semantic bindings", () => {
     ).toContain("COMPATIBILITY_RECORD_DIGEST_MISMATCH");
   });
 
+  it("returns diagnostics in deterministic code-unit order", () => {
+    const candidate = mutableClone(lock);
+    candidate.packId = "synthetic-other-pack";
+    candidate.packVersion = "0.2.0-synthetic.1";
+    candidate.manifest.digest.value = "0".repeat(64);
+
+    expect(codes(validateManifestLockBinding(manifest, manifestBytes, candidate))).toEqual([
+      "MANIFEST_DIGEST_MISMATCH",
+      "PACK_ID_MISMATCH",
+      "PACK_VERSION_MISMATCH",
+    ]);
+  });
+
   it("forbids promoting legacy planned to compatible", () => {
     expect(codes(validateLegacyCompatibilityMigration("planned", "compatible"))).toEqual([
       "LEGACY_STATUS_PROMOTION_FORBIDDEN",
