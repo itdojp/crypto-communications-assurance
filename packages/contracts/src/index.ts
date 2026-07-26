@@ -35,3 +35,5 @@ export function compileContract(schema: object): (candidate: unknown) => Validat
     };
   };
 }
+
+export * from "./semantic.js";

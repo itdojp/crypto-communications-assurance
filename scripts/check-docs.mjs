@@ -23,8 +23,13 @@ const requiredFiles = [
   "docs/PUBLIC_PRIVATE_BOUNDARY.md",
   "docs/STATUS_SEMANTICS.md",
   "docs/ROADMAP.md",
+  "docs/CONTRACT_VERSIONING.md",
   "docs/decisions/0001-repository-and-product-boundary.md",
+  "docs/decisions/0002-pack-manifest-lock-and-compatibility.md",
   "schema/cryptocomm-pack-v1.schema.json",
+  "schema/cryptocomm-pack-manifest-v1.schema.json",
+  "schema/cryptocomm-pack-lock-v1.schema.json",
+  "schema/cryptocomm-compatibility-record-v1.schema.json",
 ];
 
 const requiredDirectories = [
@@ -84,10 +89,38 @@ for (const command of [
   "pnpm run lint",
   "pnpm run test",
   "pnpm run check:schemas",
+  "pnpm run check:docs",
+  "pnpm run lint:workflows",
   "pnpm run verify",
 ]) {
   if (!readme.includes(command)) {
     failures.push(`README.md does not document ${command}`);
+  }
+}
+
+const architecture = await readFile("docs/ARCHITECTURE.md", "utf8");
+for (const distinction of [
+  "`bootstrap envelope != manifest`",
+  "`manifest != lock`",
+  "`lock != compatibility record`",
+  "`compatibility != human approval`",
+  "`schema validation != semantic validation`",
+  "`content binding != security proof`",
+]) {
+  if (!architecture.includes(distinction)) {
+    failures.push(`ARCHITECTURE.md does not document ${distinction}`);
+  }
+}
+
+const schemaReadme = await readFile("schema/README.md", "utf8");
+for (const contractId of [
+  "`cryptocomm-pack/v1`",
+  "`cryptocomm-pack-manifest/v1`",
+  "`cryptocomm-pack-lock/v1`",
+  "`cryptocomm-compatibility-record/v1`",
+]) {
+  if (!schemaReadme.includes(contractId)) {
+    failures.push(`schema/README.md does not document ${contractId}`);
   }
 }
 

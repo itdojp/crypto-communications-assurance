@@ -1,0 +1,119 @@
+{
+  "schemaVersion": "cryptocomm-pack-lock/v1",
+  "packId": "synthetic-contract-pack",
+  "packVersion": "0.1.0-synthetic.1",
+  "manifest": {
+    "digest": {
+      "algorithm": "sha256",
+      "value": "3f1dc97270ce81f7f3c33aac33c21a731cd8c967c4fc03ebac6b63658fdc3a92"
+    },
+    "source": {
+      "repositoryId": "synthetic:example/pack-source",
+      "revision": {
+        "algorithm": "git-sha1",
+        "value": "1111111111111111111111111111111111111111"
+      },
+      "tree": {
+        "algorithm": "git-sha1",
+        "value": "2222222222222222222222222222222222222222"
+      }
+    }
+  },
+  "resolver": {
+    "implementationId": "synthetic/pack-resolver",
+    "version": "0.1.0-synthetic.1",
+    "sourceRepositoryId": "synthetic:example/pack-resolver",
+    "sourceRevision": {
+      "algorithm": "git-sha1",
+      "value": "5555555555555555555555555555555555555555"
+    }
+  },
+  "compatibilityRecords": {
+    "synthetic-unknown-record": {
+      "digest": {
+        "algorithm": "sha256",
+        "value": "de34c685628fdcca95c38112bcf6b076a5298e578007f171a67638c25b7da7ff"
+      },
+      "subject": {
+        "packId": "synthetic-contract-pack",
+        "packVersion": "0.1.0-synthetic.1",
+        "manifestDigest": {
+          "algorithm": "sha256",
+          "value": "3f1dc97270ce81f7f3c33aac33c21a731cd8c967c4fc03ebac6b63658fdc3a92"
+        },
+        "manifestSource": {
+          "repositoryId": "synthetic:example/pack-source",
+          "revision": {
+            "algorithm": "git-sha1",
+            "value": "1111111111111111111111111111111111111111"
+          },
+          "tree": {
+            "algorithm": "git-sha1",
+            "value": "2222222222222222222222222222222222222222"
+          }
+        }
+      },
+      "target": {
+        "implementation": {
+          "implementationId": "synthetic/target-adapter",
+          "version": "0.1.0-synthetic.1",
+          "sourceRepositoryId": "synthetic:example/target-adapter",
+          "sourceRevision": {
+            "algorithm": "git-sha1",
+            "value": "4444444444444444444444444444444444444444"
+          }
+        },
+        "contract": {
+          "contractId": "synthetic-assurance-target/v1",
+          "version": "1.0.0-synthetic.1"
+        }
+      }
+    },
+    "synthetic-compatible-record": {
+      "digest": {
+        "algorithm": "sha256",
+        "value": "21cf592ff82cdd324ee5a255b302674c88ed9d75659f312ae33072e8a0bfc8ff"
+      },
+      "subject": {
+        "packId": "synthetic-contract-pack",
+        "packVersion": "0.1.0-synthetic.1",
+        "manifestDigest": {
+          "algorithm": "sha256",
+          "value": "3f1dc97270ce81f7f3c33aac33c21a731cd8c967c4fc03ebac6b63658fdc3a92"
+        },
+        "manifestSource": {
+          "repositoryId": "synthetic:example/pack-source",
+          "revision": {
+            "algorithm": "git-sha1",
+            "value": "1111111111111111111111111111111111111111"
+          },
+          "tree": {
+            "algorithm": "git-sha1",
+            "value": "2222222222222222222222222222222222222222"
+          }
+        }
+      },
+      "target": {
+        "implementation": {
+          "implementationId": "synthetic/target-adapter",
+          "version": "0.1.0-synthetic.1",
+          "sourceRepositoryId": "synthetic:example/target-adapter",
+          "sourceRevision": {
+            "algorithm": "git-sha1",
+            "value": "4444444444444444444444444444444444444444"
+          }
+        },
+        "contract": {
+          "contractId": "synthetic-assurance-target/v1",
+          "version": "1.0.0-synthetic.1"
+        }
+      }
+    }
+  },
+  "safety": {
+    "executable": false,
+    "networkRequired": false,
+    "secretsAllowed": false
+  },
+  "fixtureClassification": "synthetic-test-only"
+}

@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "cryptocomm-pack-manifest/v1",
+  "packId": "synthetic-contract-pack",
+  "packVersion": "0.1.0-synthetic.1",
+  "source": {
+    "repositoryId": "synthetic:example/pack-source",
+    "revision": {
+      "algorithm": "git-sha1",
+      "value": "1111111111111111111111111111111111111111"
+    },
+    "tree": {
+      "algorithm": "git-sha1",
+      "value": "2222222222222222222222222222222222222222"
+    }
+  },
+  "producer": {
+    "implementationId": "synthetic/manifest-producer",
+    "version": "0.1.0-synthetic.1",
+    "sourceRepositoryId": "synthetic:example/manifest-producer",
+    "sourceRevision": {
+      "algorithm": "git-sha1",
+      "value": "3333333333333333333333333333333333333333"
+    }
+  },
+  "artifacts": {
+    "fixtures/artifacts/synthetic-placeholder.json": {
+      "digest": {
+        "algorithm": "sha256",
+        "value": "2098c99aa0eaa5f61bca935a56d5c0498c8afc96b920e0316d77b1c334a601d8"
+      },
+      "artifactType": "contract-instance",
+      "contract": {
+        "contractId": "cryptocomm-pack/v1"
+      }
+    }
+  },
+  "safety": {
+    "executable": false,
+    "networkRequired": false,
+    "secretsAllowed": false
+  },
+  "fixtureClassification": "synthetic-test-only"
+}

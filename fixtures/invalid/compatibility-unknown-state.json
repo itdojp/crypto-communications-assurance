@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "cryptocomm-compatibility-record/v1",
+  "recordId": "synthetic-invalid-state",
+  "subject": {
+    "packId": "synthetic-contract-pack",
+    "packVersion": "0.1.0-synthetic.1",
+    "manifestDigest": {
+      "algorithm": "sha256",
+      "value": "3f1dc97270ce81f7f3c33aac33c21a731cd8c967c4fc03ebac6b63658fdc3a92"
+    },
+    "manifestSource": {
+      "repositoryId": "synthetic:example/pack-source",
+      "revision": {
+        "algorithm": "git-sha1",
+        "value": "1111111111111111111111111111111111111111"
+      },
+      "tree": {
+        "algorithm": "git-sha1",
+        "value": "2222222222222222222222222222222222222222"
+      }
+    }
+  },
+  "target": {
+    "implementation": {
+      "implementationId": "synthetic/target-adapter",
+      "version": "0.1.0-synthetic.1",
+      "sourceRepositoryId": "synthetic:example/target-adapter",
+      "sourceRevision": {
+        "algorithm": "git-sha1",
+        "value": "4444444444444444444444444444444444444444"
+      }
+    },
+    "contract": {
+      "contractId": "synthetic-assurance-target/v1",
+      "version": "1.0.0-synthetic.1"
+    }
+  },
+  "state": "planned",
+  "safety": {
+    "executable": false,
+    "networkRequired": false,
+    "secretsAllowed": false
+  },
+  "fixtureClassification": "synthetic-test-only"
+}

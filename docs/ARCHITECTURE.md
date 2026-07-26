@@ -4,8 +4,9 @@
 
 1. **Data first.** JSON artifacts are authoritative. Markdown explains contracts
    and provides a human review surface; it is not a second machine authority.
-2. **Closed bootstrap contract.** Draft 2020-12 schemas reject undeclared fields
-   and unsafe values instead of silently accepting them.
+2. **Closed versioned contracts.** Draft 2020-12 schemas reject undeclared fields
+   and unsafe values instead of silently accepting them. The bootstrap meaning stays
+   frozen while manifest, lock, and compatibility use distinct contract IDs.
 3. **Content binding.** Pack declarations identify their source revision and bind
    artifact bytes with SHA-256 digests.
 4. **No execution authority.** The bootstrap envelope is non-executable, requires
@@ -37,19 +38,25 @@ Directories without bootstrap implementation contain an explanatory README. Thei
 presence does not claim that a bridge, adapter, compatibility layer, or property
 catalog is implemented.
 
-## Bootstrap validation flow
+## Contract validation flow
 
-1. A caller reads a candidate JSON pack and the checked-in Draft 2020-12 schema.
-2. `packages/contracts` creates a strict AJV 2020 validator without format or
-   remote-schema loading.
-3. The validator returns a discriminated local result: valid with no errors, or
-   invalid with AJV error objects.
-4. Tests demonstrate that the valid synthetic fixture passes and the invalid
-   fixture fails, including safety constants and repository-path constraints.
+1. A caller independently validates a candidate JSON artifact against its checked-in closed Draft 2020-12 schema.
+2. `packages/contracts` compiles strict AJV 2020 validators without format or remote-schema loading.
+3. After schema success, a separate pure semantic validator receives parsed objects and exact bytes.
+4. Manifest/lock validation recomputes SHA-256 over exact manifest bytes and compares pack ID, pack version, source identity, and implementation identity.
+5. Compatibility validation binds exact subject and target identities, record bytes, and required evidence references.
+6. Both layers return deterministic local results. Neither layer fetches a URL, resolves an arbitrary path, executes an artifact, contacts an integration, or promotes evidence into approval.
 
-The validator does not fetch referenced artifacts, recompute their digests, execute
-them, contact integrations, or promote results to approval. Those capabilities are
-outside this bootstrap and require later contracts.
+The authority boundaries are intentionally non-equivalent:
+
+- `bootstrap envelope != manifest`
+- `manifest != lock`
+- `lock != compatibility record`
+- `compatibility != human approval`
+- `schema validation != semantic validation`
+- `content binding != security proof`
+
+SHA-256 covers exact bytes. JSON whitespace, member order, encoding, and line endings therefore affect content identity; version 1 performs no implicit JSON canonicalization. A manifest has no self-digest.
 
 ## Trust boundaries
 
@@ -67,8 +74,8 @@ See [`PUBLIC_PRIVATE_BOUNDARY.md`](PUBLIC_PRIVATE_BOUNDARY.md) and
 
 ## Compatibility and evolution
 
-Compatibility declarations in the initial schema are explicit data fields. A
-`planned` value states intent only. A later `compatible` claim requires a versioned
-contract, fixtures derived from public or synthetic data, exact-head test evidence,
-and human review. Breaking schema changes require a new schema version rather than
-in-place reinterpretation.
+`cryptocomm-pack/v1` is a frozen bootstrap envelope. Its `planned` value states intent only and may never be promoted to `compatible`. CCA-110 uses a separate compatibility record with `unknown`, `compatible`, `incompatible`, and `unsupported` states.
+
+`compatible` and `incompatible` require exact subject/target identity and content-addressed evidence. `unsupported` requires a bounded reason and scope. `unknown` makes no compatibility claim. No state communicates human approval, release approval, certification, production readiness, protocol security, or vulnerability absence.
+
+Each `schemaVersion` has one immutable meaning. Breaking changes require a new contract ID/version; migration is explicit, deterministic, tested, and fail-closed. See [`CONTRACT_VERSIONING.md`](CONTRACT_VERSIONING.md).
