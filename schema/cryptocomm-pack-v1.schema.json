@@ -50,12 +50,15 @@
       }
     },
     "artifacts": {
-      "type": "array",
-      "minItems": 1,
-      "maxItems": 1024,
-      "uniqueItems": true,
-      "items": {
-        "$ref": "#/$defs/artifactReference"
+      "description": "Content bindings keyed by bounded repository-relative artifact path. A JSON object can bind each path to only one digest.",
+      "type": "object",
+      "minProperties": 1,
+      "maxProperties": 1024,
+      "propertyNames": {
+        "$ref": "#/$defs/artifactPath"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/sha256Digest"
       }
     },
     "executable": {
@@ -84,24 +87,17 @@
         }
       }
     },
-    "artifactReference": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["path", "sha256"],
-      "properties": {
-        "path": {
-          "description": "Bounded repository-relative POSIX path; absolute paths, backslashes, and dot traversal segments are forbidden.",
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 512,
-          "pattern": "^(?!/)(?!.*\\\\)(?!\\.{1,2}(?:/|$))[A-Za-z0-9._-]+(?:/(?!\\.{1,2}(?:/|$))[A-Za-z0-9._-]+)*$"
-        },
-        "sha256": {
-          "description": "Lowercase hexadecimal SHA-256 digest of the referenced artifact bytes.",
-          "type": "string",
-          "pattern": "^[0-9a-f]{64}$"
-        }
-      }
+    "artifactPath": {
+      "description": "Bounded repository-relative POSIX path; absolute paths, backslashes, and dot traversal segments are forbidden.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^(?!/)(?!.*\\\\)(?!\\.{1,2}(?:/|$))[A-Za-z0-9._-]+(?:/(?!\\.{1,2}(?:/|$))[A-Za-z0-9._-]+)*$"
+    },
+    "sha256Digest": {
+      "description": "Lowercase hexadecimal SHA-256 digest of the referenced artifact bytes.",
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
     }
   }
 }

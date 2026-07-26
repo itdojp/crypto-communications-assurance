@@ -18,6 +18,18 @@ for (const file of workflowFiles) {
   const filePath = path.join(workflowDirectory, file);
   const source = await readFile(filePath, "utf8");
   const document = parseDocument(source, { prettyErrors: true, strict: true });
+  const rawUsesLines = source
+    .split("\n")
+    .map((line, lineIndex) => {
+      const match = line.match(
+        /^\s*-?\s*uses:\s*(?:"[^"]*"|'[^']*'|[^\s#]+)\s*(?:#\s*(.+))?$/,
+      );
+      return match
+        ? { lineNumber: lineIndex + 1, versionComment: match[1] }
+        : undefined;
+    })
+    .filter((entry) => entry !== undefined);
+  let parsedUsesCount = 0;
 
   for (const error of document.errors) {
     failures.push(`${filePath}: ${error.message}`);
@@ -80,34 +92,43 @@ for (const file of workflowFiles) {
           `${filePath}: job ${jobId} step ${stepIndex + 1} needs exactly one of run or uses`,
         );
       }
-      if (hasUses && stepValue.uses.startsWith("actions/checkout@")) {
+      if (!hasUses) continue;
+
+      const reference = stepValue.uses;
+      const rawUsesLine = rawUsesLines[parsedUsesCount];
+      parsedUsesCount += 1;
+      const lineNumber = rawUsesLine?.lineNumber ?? "unknown";
+
+      if (reference.startsWith("actions/checkout@")) {
         if (stepValue.with?.["persist-credentials"] !== false) {
           failures.push(
             `${filePath}: job ${jobId} checkout must set persist-credentials to false`,
           );
         }
       }
+
+      if (reference.startsWith("./")) continue;
+      if (reference.startsWith("docker://")) {
+        if (!/@sha256:[0-9a-f]{64}$/.test(reference)) {
+          failures.push(`${filePath}:${lineNumber}: Docker actions require a SHA-256 digest`);
+        }
+        continue;
+      }
+      if (!/@[0-9a-f]{40}$/.test(reference)) {
+        failures.push(
+          `${filePath}:${lineNumber}: action must use a full 40-character commit SHA`,
+        );
+      }
+      if (!rawUsesLine?.versionComment || !/v[0-9]/.test(rawUsesLine.versionComment)) {
+        failures.push(`${filePath}:${lineNumber}: pinned action needs a release-version comment`);
+      }
     }
   }
 
-  for (const [lineIndex, line] of source.split("\n").entries()) {
-    const match = line.match(/^\s*-?\s*uses:\s*([^\s#]+)(?:\s+#\s*(.+))?$/);
-    if (!match) continue;
-    const reference = match[1];
-    const comment = match[2];
-    if (reference.startsWith("./")) continue;
-    if (reference.startsWith("docker://")) {
-      if (!/@sha256:[0-9a-f]{64}$/.test(reference)) {
-        failures.push(`${filePath}:${lineIndex + 1}: Docker actions require a SHA-256 digest`);
-      }
-      continue;
-    }
-    if (!/@[0-9a-f]{40}$/.test(reference)) {
-      failures.push(`${filePath}:${lineIndex + 1}: action must use a full 40-character commit SHA`);
-    }
-    if (!comment || !/v[0-9]/.test(comment)) {
-      failures.push(`${filePath}:${lineIndex + 1}: pinned action needs a release-version comment`);
-    }
+  if (parsedUsesCount !== rawUsesLines.length) {
+    failures.push(
+      `${filePath}: parsed ${parsedUsesCount} action references but found ${rawUsesLines.length} source anchors`,
+    );
   }
 }
 

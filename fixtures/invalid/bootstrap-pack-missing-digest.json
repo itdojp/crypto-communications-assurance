@@ -13,11 +13,9 @@
       "status": "planned"
     }
   },
-  "artifacts": [
-    {
-      "path": "fixtures/artifacts/synthetic-placeholder.json"
-    }
-  ],
+  "artifacts": {
+    "fixtures/artifacts/synthetic-placeholder.json": null
+  },
   "executable": false,
   "networkRequired": false,
   "secretsAllowed": false

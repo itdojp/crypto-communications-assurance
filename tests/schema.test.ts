@@ -26,11 +26,12 @@ describe("cryptocomm pack v1 schema", () => {
   });
 
   it("content-binds the synthetic referenced artifact with SHA-256", async () => {
-    const [artifact] = validFixture.artifacts as Array<{ path: string; sha256: string }>;
-    if (artifact === undefined) throw new Error("valid fixture has no artifact");
+    const [artifact] = Object.entries(validFixture.artifacts as Record<string, string>);
+    if (artifact === undefined) throw new Error("valid fixture has no artifact binding");
+    const [artifactPath, expectedDigest] = artifact;
 
-    const bytes = await readFile(new URL(`../${artifact.path}`, import.meta.url));
-    expect(createHash("sha256").update(bytes).digest("hex")).toBe(artifact.sha256);
+    const bytes = await readFile(new URL(`../${artifactPath}`, import.meta.url));
+    expect(createHash("sha256").update(bytes).digest("hex")).toBe(expectedDigest);
   });
 
   it("rejects the invalid fixture that omits an artifact digest", async () => {
@@ -41,7 +42,23 @@ describe("cryptocomm pack v1 schema", () => {
 
     expect(result.valid).toBe(false);
     if (!result.valid) {
-      expect(result.errors.some((error) => error.keyword === "required")).toBe(true);
+      expect(result.errors.some((error) => error.keyword === "type")).toBe(true);
+    }
+  });
+
+  it("rejects conflicting digest bindings for the same artifact path", async () => {
+    const conflictingFixture = await loadJson(
+      "../fixtures/invalid/bootstrap-pack-conflicting-artifact-bindings.json",
+    );
+    const result = validate(conflictingFixture);
+
+    expect(result.valid).toBe(false);
+    if (!result.valid) {
+      expect(
+        result.errors.some(
+          (error) => error.instancePath === "/artifacts" && error.keyword === "type",
+        ),
+      ).toBe(true);
     }
   });
 
@@ -49,12 +66,7 @@ describe("cryptocomm pack v1 schema", () => {
     "rejects an unbounded artifact path: %s",
     (path) => {
       const candidate = structuredClone(validFixture);
-      candidate.artifacts = [
-        {
-          path,
-          sha256: "0".repeat(64),
-        },
-      ];
+      candidate.artifacts = { [path]: "0".repeat(64) };
 
       expect(validate(candidate).valid).toBe(false);
     },

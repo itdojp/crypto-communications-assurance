@@ -17,7 +17,7 @@
     "check:schemas": "vitest run tests/schema.test.ts",
     "check:docs": "node scripts/check-docs.mjs",
     "lint:workflows": "node scripts/lint-workflows.mjs",
-    "verify": "pnpm run lint && pnpm run typecheck && pnpm run build && pnpm run check:schemas && pnpm run test && pnpm run check:docs && pnpm run lint:workflows"
+    "verify": "pnpm run lint && pnpm run typecheck && pnpm run build && pnpm run test && pnpm run check:docs && pnpm run lint:workflows"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

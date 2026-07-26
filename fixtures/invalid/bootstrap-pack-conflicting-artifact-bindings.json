@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "cryptocomm-pack/v1",
+  "packId": "synthetic-conflicting-artifact-pack",
+  "version": "0.0.0-synthetic.1",
+  "sourceRevision": "3333333333333333333333333333333333333333",
+  "compatibility": {
+    "aeFramework": {
+      "contractVersion": "bootstrap-placeholder",
+      "status": "planned"
+    },
+    "genaiRepoAuditor": {
+      "contractVersion": "bootstrap-placeholder",
+      "status": "planned"
+    }
+  },
+  "artifacts": [
+    {
+      "path": "fixtures/artifacts/synthetic-placeholder.json",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "path": "fixtures/artifacts/synthetic-placeholder.json",
+      "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    }
+  ],
+  "executable": false,
+  "networkRequired": false,
+  "secretsAllowed": false
+}
