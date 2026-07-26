@@ -278,6 +278,27 @@ describe("CCA-110 semantic bindings", () => {
     ).toContain("COMPATIBILITY_RECORD_UNREFERENCED");
   });
 
+  it("returns one bounded diagnostic above the 256-record input limit", () => {
+    const compatibilityRecordBytes: Record<string, Uint8Array> = {
+      "synthetic-unknown-record": unknownBytes,
+      "synthetic-compatible-record": compatibleBytes,
+    };
+    for (let index = 0; index < 255; index += 1) {
+      compatibilityRecordBytes[`synthetic-extra-${index.toString().padStart(3, "0")}`] =
+        unknownBytes;
+    }
+
+    expect(
+      codes(
+        validatePackResolution({
+          manifestBytes,
+          lock,
+          compatibilityRecordBytes,
+        }),
+      ),
+    ).toEqual(["COMPATIBILITY_RECORD_LIMIT_EXCEEDED"]);
+  });
+
   it("returns bounded diagnostics for non-JSON exact bytes", () => {
     expect(codes(validateManifestLockBinding(Buffer.from("{"), lock))).toEqual([
       "MANIFEST_BYTES_INVALID",

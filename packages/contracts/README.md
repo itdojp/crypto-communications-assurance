@@ -18,6 +18,7 @@ The package is not published. Validation conveys no human approval, compatibilit
 | `SOURCE_IDENTITY_MISMATCH` | Repository, exact revision, or source tree differs. |
 | `IMPLEMENTATION_IDENTITY_INVALID` | Producer, resolver, or target implementation identity is incomplete or non-exact. |
 | `COMPATIBILITY_RECORD_BYTES_INVALID` | Supplied compatibility-record bytes are not a JSON object; separate schema validation is still required. |
+| `COMPATIBILITY_RECORD_LIMIT_EXCEEDED` | More than 256 record-byte entries were supplied; one bounded aggregate diagnostic is returned. |
 | `COMPATIBILITY_RECORD_MISSING` | A lock reference has no supplied record. |
 | `COMPATIBILITY_RECORD_UNREFERENCED` | A supplied record is not declared by the lock. |
 | `COMPATIBILITY_RECORD_ID_MISMATCH` | Lock key and record ID differ. |

@@ -182,6 +182,7 @@ export const semanticDiagnosticCodes = [
   "SOURCE_IDENTITY_MISMATCH",
   "IMPLEMENTATION_IDENTITY_INVALID",
   "COMPATIBILITY_RECORD_BYTES_INVALID",
+  "COMPATIBILITY_RECORD_LIMIT_EXCEEDED",
   "COMPATIBILITY_RECORD_MISSING",
   "COMPATIBILITY_RECORD_UNREFERENCED",
   "COMPATIBILITY_RECORD_ID_MISMATCH",
@@ -205,6 +206,8 @@ export const semanticDiagnosticDescriptions: Readonly<Record<SemanticDiagnosticC
     "A producer, resolver, or target implementation identity is incomplete or not exact.",
   COMPATIBILITY_RECORD_BYTES_INVALID:
     "The supplied compatibility-record bytes are not a JSON object; schema validation must run separately.",
+  COMPATIBILITY_RECORD_LIMIT_EXCEEDED:
+    "More than 256 compatibility-record byte entries were supplied; validation fails with one bounded aggregate diagnostic.",
   COMPATIBILITY_RECORD_MISSING: "A lock reference has no supplied compatibility record.",
   COMPATIBILITY_RECORD_UNREFERENCED:
     "A supplied compatibility record is not declared by the lock.",
@@ -314,6 +317,21 @@ function semanticVersionValid(value: string): boolean {
 
 function sha256(bytes: Uint8Array): string {
   return createHash("sha256").update(bytes).digest("hex");
+}
+
+const maximumCompatibilityRecordCount = 256;
+
+function boundedOwnKeys(
+  value: Readonly<Record<string, unknown>>,
+  maximum: number,
+): { readonly keys: readonly string[]; readonly exceeded: boolean } {
+  const keys: string[] = [];
+  for (const key in value) {
+    if (!Object.hasOwn(value, key)) continue;
+    if (keys.length === maximum) return { keys, exceeded: true };
+    keys.push(key);
+  }
+  return { keys, exceeded: false };
 }
 
 function parseJsonObject<T>(bytes: Uint8Array): T | undefined {
@@ -519,14 +537,24 @@ export function validatePackResolution(input: PackResolutionInput): SemanticVali
   }
   const references = input.lock.compatibilityRecords ?? {};
 
-  for (const recordId of Object.keys(input.compatibilityRecordBytes).sort()) {
-    if (references[recordId] === undefined) {
-      diagnostics.push(
-        diagnostic(
-          "COMPATIBILITY_RECORD_UNREFERENCED",
-          "/compatibilityRecordBytes/" + recordId,
-        ),
-      );
+  const suppliedKeyScan = boundedOwnKeys(
+    input.compatibilityRecordBytes,
+    maximumCompatibilityRecordCount,
+  );
+  if (suppliedKeyScan.exceeded) {
+    diagnostics.push(
+      diagnostic("COMPATIBILITY_RECORD_LIMIT_EXCEEDED", "/compatibilityRecordBytes"),
+    );
+  } else {
+    for (const recordId of [...suppliedKeyScan.keys].sort()) {
+      if (references[recordId] === undefined) {
+        diagnostics.push(
+          diagnostic(
+            "COMPATIBILITY_RECORD_UNREFERENCED",
+            "/compatibilityRecordBytes/" + recordId,
+          ),
+        );
+      }
     }
   }
 
