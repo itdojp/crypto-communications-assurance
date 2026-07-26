@@ -9,10 +9,13 @@ import {
 
 /** Raw UTF-8 byte limit for each manifest, lock, or compatibility record. */
 export const maximumContractJsonBytes = 1_048_576;
+/** Maximum number of nested JSON object/array containers, including the root. */
+export const maximumContractJsonDepth = 128;
 
 export const strictJsonDiagnosticCodes = [
   "JSON_INPUT_TOO_LARGE",
   "JSON_INVALID_UTF8",
+  "JSON_NESTING_TOO_DEEP",
   "JSON_SYNTAX_INVALID",
   "JSON_DUPLICATE_MEMBER",
   "JSON_ROOT_NOT_OBJECT",
@@ -26,6 +29,8 @@ export const strictJsonDiagnosticDescriptions: Readonly<
   JSON_INPUT_TOO_LARGE:
     "The exact JSON input exceeds the 1,048,576-byte per-artifact limit.",
   JSON_INVALID_UTF8: "The exact JSON input is not valid UTF-8.",
+  JSON_NESTING_TOO_DEEP:
+    "The exact JSON input exceeds the 128-container nesting limit.",
   JSON_SYNTAX_INVALID:
     "The exact input is not strict JSON; comments, trailing commas, and trailing data are rejected.",
   JSON_DUPLICATE_MEMBER:
@@ -69,42 +74,90 @@ function jsonPointer(path: readonly Segment[]): string {
 }
 
 function duplicateMemberDiagnostic(
-  node: Node,
-  path: readonly Segment[],
+  root: Node,
 ): StrictJsonDiagnostic | undefined {
-  if (node.type === "object") {
-    const seen = new Set<string>();
-    for (const property of node.children ?? []) {
-      const keyNode = property.children?.[0];
-      const valueNode = property.children?.[1];
-      if (keyNode === undefined || typeof keyNode.value !== "string") continue;
+  const pending: Array<{ readonly node: Node; readonly path: readonly Segment[] }> = [
+    { node: root, path: [] },
+  ];
 
-      const key = keyNode.value;
-      const memberPath = [...path, key];
-      if (seen.has(key)) {
-        return {
-          code: "JSON_DUPLICATE_MEMBER",
-          path: jsonPointer(memberPath),
-          message: strictJsonDiagnosticDescriptions.JSON_DUPLICATE_MEMBER,
-          characterOffset: keyNode.offset,
-        };
+  while (pending.length > 0) {
+    const current = pending.pop();
+    if (current === undefined) break;
+
+    if (current.node.type === "object") {
+      const seen = new Set<string>();
+      const nested: Array<{
+        readonly node: Node;
+        readonly path: readonly Segment[];
+      }> = [];
+      for (const property of current.node.children ?? []) {
+        const keyNode = property.children?.[0];
+        const valueNode = property.children?.[1];
+        if (keyNode === undefined || typeof keyNode.value !== "string") continue;
+
+        const key = keyNode.value;
+        const memberPath = [...current.path, key];
+        if (seen.has(key)) {
+          return {
+            code: "JSON_DUPLICATE_MEMBER",
+            path: jsonPointer(memberPath),
+            message: strictJsonDiagnosticDescriptions.JSON_DUPLICATE_MEMBER,
+            characterOffset: keyNode.offset,
+          };
+        }
+        seen.add(key);
+        if (valueNode !== undefined) nested.push({ node: valueNode, path: memberPath });
       }
-      seen.add(key);
 
-      if (valueNode !== undefined) {
-        const nested = duplicateMemberDiagnostic(valueNode, memberPath);
-        if (nested !== undefined) return nested;
+      for (let index = nested.length - 1; index >= 0; index -= 1) {
+        const entry = nested[index];
+        if (entry !== undefined) pending.push(entry);
+      }
+      continue;
+    }
+
+    if (current.node.type === "array") {
+      const children = current.node.children ?? [];
+      for (let index = children.length - 1; index >= 0; index -= 1) {
+        const child = children[index];
+        if (child !== undefined) {
+          pending.push({ node: child, path: [...current.path, index] });
+        }
       }
     }
-    return undefined;
   }
 
-  if (node.type === "array") {
-    for (const [index, child] of (node.children ?? []).entries()) {
-      const nested = duplicateMemberDiagnostic(child, [...path, index]);
-      if (nested !== undefined) return nested;
+  return undefined;
+}
+
+function excessiveNestingOffset(text: string): number | undefined {
+  let depth = 0;
+  let inString = false;
+  let escaped = false;
+
+  for (let index = 0; index < text.length; index += 1) {
+    const character = text[index];
+    if (inString) {
+      if (escaped) {
+        escaped = false;
+      } else if (character === "\\") {
+        escaped = true;
+      } else if (character === '"') {
+        inString = false;
+      }
+      continue;
+    }
+
+    if (character === '"') {
+      inString = true;
+    } else if (character === "{" || character === "[") {
+      depth += 1;
+      if (depth > maximumContractJsonDepth) return index;
+    } else if (character === "}" || character === "]") {
+      depth = Math.max(0, depth - 1);
     }
   }
+
   return undefined;
 }
 
@@ -147,12 +200,41 @@ export function decodeStrictJsonObject<
     };
   }
 
+  const nestingOffset = excessiveNestingOffset(text);
+  if (nestingOffset !== undefined) {
+    return {
+      valid: false,
+      diagnostics: [
+        {
+          code: "JSON_NESTING_TOO_DEEP",
+          path: "",
+          message: strictJsonDiagnosticDescriptions.JSON_NESTING_TOO_DEEP,
+          characterOffset: nestingOffset,
+        },
+      ],
+    };
+  }
+
   const parseErrors: ParseError[] = [];
-  const root = parseTree(text, parseErrors, {
-    allowEmptyContent: false,
-    allowTrailingComma: false,
-    disallowComments: true,
-  });
+  let root: Node | undefined;
+  try {
+    root = parseTree(text, parseErrors, {
+      allowEmptyContent: false,
+      allowTrailingComma: false,
+      disallowComments: true,
+    });
+  } catch {
+    return {
+      valid: false,
+      diagnostics: [
+        {
+          code: "JSON_SYNTAX_INVALID",
+          path: "",
+          message: `${strictJsonDiagnosticDescriptions.JSON_SYNTAX_INVALID} Parser detail: ParserFailure.`,
+        },
+      ],
+    };
+  }
   const firstParseError = parseErrors[0];
   if (firstParseError !== undefined || root === undefined) {
     const detail =
@@ -174,7 +256,7 @@ export function decodeStrictJsonObject<
     };
   }
 
-  const duplicate = duplicateMemberDiagnostic(root, []);
+  const duplicate = duplicateMemberDiagnostic(root);
   if (duplicate !== undefined) {
     return { valid: false, diagnostics: [duplicate] };
   }

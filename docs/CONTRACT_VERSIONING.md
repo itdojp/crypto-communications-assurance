@@ -47,7 +47,7 @@ The only accepted pair is legacy `planned` to new `unknown`. Every other combina
 
 ## Content binding across versions
 
-SHA-256 values cover exact referenced bytes. JSON member order, whitespace, encoding, and line endings therefore affect a digest. Version 1 defines no implicit JSON canonicalization. Strict decoding validates, but does not rewrite, at most 1,048,576 bytes per artifact. A manifest never contains its own digest; a lock binds the separately supplied manifest bytes.
+SHA-256 values cover exact referenced bytes. JSON member order, whitespace, encoding, and line endings therefore affect a digest. Version 1 defines no implicit JSON canonicalization. Strict decoding validates, but does not rewrite, at most 1,048,576 bytes and 128 nested object/array containers per artifact. A manifest never contains its own digest; a lock binds the separately supplied manifest bytes.
 
 ## Human authority
 

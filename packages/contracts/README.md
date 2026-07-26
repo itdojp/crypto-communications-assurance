@@ -2,11 +2,11 @@
 
 This private package provides three separate repository-local validation layers:
 
-1. `decodeStrictJsonObject` decodes at most 1,048,576 exact input bytes as fatal UTF-8 and strict JSON. It rejects comments, trailing commas, trailing data, a non-object root, and duplicate decoded member names at every nesting level (including duplicates expressed with JSON escapes).
+1. `decodeStrictJsonObject` decodes at most 1,048,576 exact input bytes as fatal UTF-8 and strict JSON with at most 128 nested object/array containers. It rejects comments, trailing commas, trailing data, a non-object root, and duplicate decoded member names at every nesting level (including duplicates expressed with JSON escapes).
 2. `compileContractBytes` passes only that strict-decoded object to a caller-supplied closed Draft 2020-12 schema compiled with strict AJV behavior. `compileContract` remains the generic schema-compilation primitive for already decoded trusted values.
 3. Pure semantic validators strict-decode the exact supplied manifest, lock, and compatibility-record bytes and check cross-artifact bindings without network, filesystem resolution, execution, or mutation. Callers must separately schema-validate each object decoded from those same exact bytes before treating semantic results as contract validation.
 
-The decoder does not canonicalize or rewrite JSON. SHA-256 binding continues to cover the original byte sequence supplied by the caller, not a re-serialized object. The 1,048,576-byte limit applies independently to each manifest, lock, and compatibility record and is checked before UTF-8 decoding.
+The decoder does not canonicalize or rewrite JSON. SHA-256 binding continues to cover the original byte sequence supplied by the caller, not a re-serialized object. The 1,048,576-byte limit applies independently to each manifest, lock, and compatibility record and is checked before UTF-8 decoding. The 128-container limit is checked with a non-recursive structural preflight before parsing, and duplicate traversal is also non-recursive.
 
 A v1 lock may reference at most one compatibility record for each exact subject/target pair. Multiple supporting results belong in that single record's evidence map. Evidence map keys are bounded bundle-relative identifiers, not repository authorities, URLs, private or absolute paths, or provenance records.
 
@@ -18,6 +18,7 @@ The package is not published. Validation conveys no human approval, compatibilit
 | --- | --- |
 | `JSON_INPUT_TOO_LARGE` | One exact JSON input exceeds 1,048,576 bytes. |
 | `JSON_INVALID_UTF8` | Exact bytes are not valid UTF-8. |
+| `JSON_NESTING_TOO_DEEP` | Input exceeds 128 nested object/array containers. |
 | `JSON_SYNTAX_INVALID` | Input is not strict JSON; comments, trailing commas, and trailing data are rejected. |
 | `JSON_DUPLICATE_MEMBER` | An object repeats a decoded member name at any nesting level. |
 | `JSON_ROOT_NOT_OBJECT` | The strict JSON root is not an object. |

@@ -6,6 +6,7 @@ import {
   type CompatibilityRecord,
   type CompatibilityState,
   decodeStrictJsonObject,
+  maximumContractJsonBytes,
   type PackLock,
   type PackManifest,
   validateCompatibilityRecordBinding,
@@ -308,17 +309,75 @@ describe("CCA-110 semantic bindings", () => {
   });
 
   it("detects COMPATIBILITY_RECORD_MISSING", () => {
+    const validation = validatePackResolution({
+      manifestBytes,
+      lockBytes,
+      compatibilityRecordBytes: {
+        "synthetic-compatible-record": compatibleBytes,
+      },
+    });
+
+    expect(validation.diagnostics).toContainEqual({
+      code: "COMPATIBILITY_RECORD_MISSING",
+      path: "/lock/compatibilityRecords/synthetic-unknown-record",
+      message:
+        "A lock reference has no supplied compatibility record.",
+    });
+  });
+
+  it("treats an inherited record-map property as missing", () => {
+    const candidateLock = mutableClone(lock);
+    if (candidateLock.compatibilityRecords === undefined) {
+      throw new Error("Expected lock references");
+    }
+    const reference = candidateLock.compatibilityRecords["synthetic-unknown-record"];
+    if (reference === undefined) throw new Error("Expected unknown record reference");
+    Object.defineProperty(candidateLock.compatibilityRecords, "constructor", {
+      value: structuredClone(reference),
+      enumerable: true,
+      configurable: true,
+      writable: true,
+    });
+
+    expect(
+      codes(
+        validatePackResolution({
+          manifestBytes,
+          lockBytes: jsonBytes(candidateLock),
+          compatibilityRecordBytes: {
+            "synthetic-unknown-record": unknownBytes,
+            "synthetic-compatible-record": compatibleBytes,
+          },
+        }),
+      ),
+    ).toContain("COMPATIBILITY_RECORD_MISSING");
+  });
+
+  it("strict-rejects an oversized record before exact-byte hashing", () => {
+    const oversizedBytes = Buffer.alloc(maximumContractJsonBytes + 1, 0x20);
+
+    expect(() =>
+      validatePackResolution({
+        manifestBytes,
+        lockBytes,
+        compatibilityRecordBytes: {
+          "synthetic-unknown-record": oversizedBytes,
+          "synthetic-compatible-record": compatibleBytes,
+        },
+      }),
+    ).not.toThrow();
     expect(
       codes(
         validatePackResolution({
           manifestBytes,
           lockBytes,
           compatibilityRecordBytes: {
+            "synthetic-unknown-record": oversizedBytes,
             "synthetic-compatible-record": compatibleBytes,
           },
         }),
       ),
-    ).toContain("COMPATIBILITY_RECORD_MISSING");
+    ).toContain("JSON_INPUT_TOO_LARGE");
   });
 
   it("detects COMPATIBILITY_RECORD_ID_MISMATCH", () => {

@@ -45,7 +45,7 @@ No state means human approval, merge approval, release approval, certification, 
 
 ### Validation layers
 
-Generic AJV schema compilation remains separate from pure semantic validation. Before either layer, a strict decoder applies a 1,048,576-byte per-artifact limit, fatal UTF-8 decoding, strict JSON syntax, recursive decoded-member uniqueness, and an object-root requirement. It rejects comments, trailing commas, and trailing data. Duplicate members fail before schema or semantic validation, including duplicates expressed using JSON escapes.
+Generic AJV schema compilation remains separate from pure semantic validation. Before either layer, a strict decoder applies a 1,048,576-byte and 128-container nesting limit per artifact, fatal UTF-8 decoding, strict JSON syntax, decoded-member uniqueness at every nesting level, and an object-root requirement. It rejects comments, trailing commas, and trailing data. A non-recursive structural preflight bounds nesting before parsing, and duplicate-member traversal is non-recursive. Duplicate members fail before schema or semantic validation, including duplicates expressed using JSON escapes.
 
 After a caller schema-validates the strict-decoded value, semantic validators receive the same exact manifest, lock, and compatibility-record bytes. Every object they inspect is derived from those bytes so that a digest cannot be paired with a separately mutated object. The original bytes remain the SHA-256 input; the decoder performs no canonicalization. The validators do not fetch, clone, resolve arbitrary paths, execute artifacts, contact upstream tools, or call an external model/scanner.
 

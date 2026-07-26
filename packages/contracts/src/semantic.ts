@@ -636,10 +636,26 @@ export function validatePackResolution(input: PackResolutionInput): SemanticVali
   for (const recordId of referenceIds) {
     const reference = references[recordId];
     if (reference === undefined) continue;
-    const suppliedBytes = input.compatibilityRecordBytes[recordId];
+    const suppliedBytes = Object.hasOwn(input.compatibilityRecordBytes, recordId)
+      ? input.compatibilityRecordBytes[recordId]
+      : undefined;
     if (suppliedBytes === undefined) {
       diagnostics.push(
-        diagnostic("COMPATIBILITY_RECORD_MISSING", "/compatibilityRecords/" + recordId),
+        diagnostic(
+          "COMPATIBILITY_RECORD_MISSING",
+          "/lock/compatibilityRecords/" + recordId,
+        ),
+      );
+      continue;
+    }
+
+    const record = decodeStrictJsonObject<CompatibilityRecord>(suppliedBytes);
+    if (!record.valid) {
+      diagnostics.push(
+        ...prefixedStrictDiagnostics(
+          record.diagnostics,
+          "/lock/compatibilityRecords/" + recordId,
+        ),
       );
       continue;
     }
@@ -651,27 +667,16 @@ export function validatePackResolution(input: PackResolutionInput): SemanticVali
       diagnostics.push(
         diagnostic(
           "COMPATIBILITY_RECORD_DIGEST_MISMATCH",
-          "/compatibilityRecords/" + recordId + "/digest",
+          "/lock/compatibilityRecords/" + recordId + "/digest",
         ),
       );
-    }
-
-    const record = decodeStrictJsonObject<CompatibilityRecord>(suppliedBytes);
-    if (!record.valid) {
-      diagnostics.push(
-        ...prefixedStrictDiagnostics(
-          record.diagnostics,
-          "/compatibilityRecords/" + recordId,
-        ),
-      );
-      continue;
     }
 
     if (record.value.recordId !== recordId) {
       diagnostics.push(
         diagnostic(
           "COMPATIBILITY_RECORD_ID_MISMATCH",
-          "/compatibilityRecords/" + recordId,
+          "/lock/compatibilityRecords/" + recordId,
         ),
       );
     }
@@ -679,7 +684,7 @@ export function validatePackResolution(input: PackResolutionInput): SemanticVali
       diagnostics.push(
         diagnostic(
           "COMPATIBILITY_SUBJECT_MISMATCH",
-          "/compatibilityRecords/" + recordId + "/subject",
+          "/lock/compatibilityRecords/" + recordId + "/subject",
         ),
       );
     }
@@ -687,7 +692,7 @@ export function validatePackResolution(input: PackResolutionInput): SemanticVali
       diagnostics.push(
         diagnostic(
           "COMPATIBILITY_TARGET_MISMATCH",
-          "/compatibilityRecords/" + recordId + "/target",
+          "/lock/compatibilityRecords/" + recordId + "/target",
         ),
       );
     }
@@ -699,7 +704,7 @@ export function validatePackResolution(input: PackResolutionInput): SemanticVali
           record.value,
         ).diagnostics.map((entry) => ({
           ...entry,
-          path: "/compatibilityRecords/" + recordId + entry.path,
+          path: "/lock/compatibilityRecords/" + recordId + entry.path,
         })),
       );
     }

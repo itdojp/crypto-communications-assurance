@@ -4,6 +4,7 @@ import {
   compileContractBytes,
   decodeStrictJsonObject,
   maximumContractJsonBytes,
+  maximumContractJsonDepth,
 } from "../packages/contracts/src/index.js";
 
 const bytes = (text: string): Buffer => Buffer.from(text, "utf8");
@@ -45,6 +46,45 @@ describe("CCA-110 strict exact-byte JSON decoding", () => {
     ]);
 
     expect(codes(decodeStrictJsonObject(candidate))).toEqual(["JSON_INVALID_UTF8"]);
+  });
+
+  it("accepts JSON at the exact documented container-depth limit", () => {
+    const arrayDepth = maximumContractJsonDepth - 1;
+    const candidate = bytes(
+      `{"value":${"[".repeat(arrayDepth)}null${"]".repeat(arrayDepth)}}`,
+    );
+
+    expect(decodeStrictJsonObject(candidate).valid).toBe(true);
+  });
+
+  it("rejects JSON one container above the documented depth limit", () => {
+    const arrayDepth = maximumContractJsonDepth;
+    const candidate = bytes(
+      `{"value":${"[".repeat(arrayDepth)}null${"]".repeat(arrayDepth)}}`,
+    );
+
+    expect(codes(decodeStrictJsonObject(candidate))).toEqual([
+      "JSON_NESTING_TOO_DEEP",
+    ]);
+  });
+
+  it("returns a bounded diagnostic instead of overflowing on extreme nesting", () => {
+    const candidate = bytes(
+      `{"value":${"[".repeat(5_000)}null${"]".repeat(5_000)}}`,
+    );
+
+    expect(() => decodeStrictJsonObject(candidate)).not.toThrow();
+    expect(codes(decodeStrictJsonObject(candidate))).toEqual([
+      "JSON_NESTING_TOO_DEEP",
+    ]);
+  });
+
+  it("does not count escaped structural characters inside strings as nesting", () => {
+    const candidate = bytes(
+      JSON.stringify({ value: `${"[".repeat(256)}"${"]".repeat(256)}` }),
+    );
+
+    expect(decodeStrictJsonObject(candidate).valid).toBe(true);
   });
 
   it.each([

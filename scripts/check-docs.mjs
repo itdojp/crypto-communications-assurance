@@ -114,6 +114,7 @@ for (const distinction of [
 }
 for (const strictBoundary of [
   "1,048,576",
+  "128 nested object/array containers",
   "duplicate decoded member names",
   "at most one record for each exact subject/target pair",
   "bounded bundle-relative identifiers",

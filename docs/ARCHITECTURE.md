@@ -40,7 +40,7 @@ catalog is implemented.
 
 ## Contract validation flow
 
-1. A bounded strict decoder accepts no more than 1,048,576 exact bytes per manifest, lock, or compatibility record. It requires fatal UTF-8 and strict JSON, rejects comments, trailing commas, trailing data, and duplicate decoded member names at every nesting level, and requires an object root.
+1. A bounded strict decoder accepts no more than 1,048,576 exact bytes and 128 nested object/array containers per manifest, lock, or compatibility record. It requires fatal UTF-8 and strict JSON, rejects comments, trailing commas, trailing data, and duplicate decoded member names at every nesting level, and requires an object root. Non-recursive structural and duplicate-member walks prevent nesting from becoming an unbounded call-stack input.
 2. A caller validates only the object produced by that decoder against its checked-in closed Draft 2020-12 schema. `packages/contracts` compiles strict AJV 2020 validators without format or remote-schema loading.
 3. After schema success, a separate pure semantic validator receives the same exact manifest, lock, and compatibility-record bytes and strict-decodes every object it inspects from those bytes. A separately mutated object therefore cannot be assessed under another byte digest.
 4. Manifest/lock validation recomputes SHA-256 over the original exact manifest bytes and compares pack ID, pack version, source identity, and implementation identity.
