@@ -617,12 +617,12 @@ export function validatePackResolution(input: PackResolutionInput): SemanticVali
     maximumCompatibilityRecordCount,
   );
   if (suppliedKeyScan.exceeded) {
-    diagnostics.push(
+    return result([
       diagnostic("COMPATIBILITY_RECORD_LIMIT_EXCEEDED", "/compatibilityRecordBytes"),
-    );
+    ]);
   } else {
     for (const recordId of [...suppliedKeyScan.keys].sort()) {
-      if (references[recordId] === undefined) {
+      if (!Object.hasOwn(references, recordId)) {
         diagnostics.push(
           diagnostic(
             "COMPATIBILITY_RECORD_UNREFERENCED",

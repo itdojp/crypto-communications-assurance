@@ -431,12 +431,33 @@ describe("CCA-110 semantic bindings", () => {
     ).toContain("COMPATIBILITY_RECORD_UNREFERENCED");
   });
 
-  it("returns one bounded diagnostic above the 256-record input limit", () => {
-    const compatibilityRecordBytes: Record<string, Uint8Array> = {
-      "synthetic-unknown-record": unknownBytes,
-      "synthetic-compatible-record": compatibleBytes,
+  it("does not treat an inherited lock-reference property as declared", () => {
+    const candidateLock = mutableClone(lock) as Mutable<PackLock> & {
+      compatibilityRecords?: unknown;
     };
-    for (let index = 0; index < 255; index += 1) {
+    delete candidateLock.compatibilityRecords;
+    const compatibilityRecordBytes: Record<string, Uint8Array> = {};
+    Object.defineProperty(compatibilityRecordBytes, "constructor", {
+      value: unknownBytes,
+      enumerable: true,
+      configurable: true,
+      writable: true,
+    });
+
+    expect(
+      codes(
+        validatePackResolution({
+          manifestBytes,
+          lockBytes: jsonBytes(candidateLock),
+          compatibilityRecordBytes,
+        }),
+      ),
+    ).toEqual(["COMPATIBILITY_RECORD_UNREFERENCED"]);
+  });
+
+  it("returns one bounded diagnostic above the 256-record input limit", () => {
+    const compatibilityRecordBytes: Record<string, Uint8Array> = {};
+    for (let index = 0; index < 257; index += 1) {
       compatibilityRecordBytes[`synthetic-extra-${index.toString().padStart(3, "0")}`] =
         unknownBytes;
     }
