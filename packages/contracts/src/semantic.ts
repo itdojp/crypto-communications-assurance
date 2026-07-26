@@ -51,12 +51,29 @@ export type ManifestArtifactType =
   | "documentation"
   | "synthetic-fixture";
 
-export interface ManifestArtifactDeclaration {
+interface ManifestArtifactDeclarationBase {
   readonly digest: Sha256Digest;
   readonly mediaType: string;
-  readonly artifactType: ManifestArtifactType;
+}
+
+export interface ManifestContractArtifactDeclaration
+  extends ManifestArtifactDeclarationBase {
+  readonly artifactType: "contract-schema" | "contract-instance";
+  readonly contract: ManifestContractIdentity;
+}
+
+export interface ManifestNonContractArtifactDeclaration
+  extends ManifestArtifactDeclarationBase {
+  readonly artifactType: Exclude<
+    ManifestArtifactType,
+    "contract-schema" | "contract-instance"
+  >;
   readonly contract?: ManifestContractIdentity;
 }
+
+export type ManifestArtifactDeclaration =
+  | ManifestContractArtifactDeclaration
+  | ManifestNonContractArtifactDeclaration;
 
 export interface CompatibilitySubject {
   readonly packId: string;
