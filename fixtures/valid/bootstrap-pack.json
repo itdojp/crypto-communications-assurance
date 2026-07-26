@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "cryptocomm-pack/v1",
+  "packId": "synthetic-bootstrap-pack",
+  "version": "0.0.0-synthetic.1",
+  "sourceRevision": "1111111111111111111111111111111111111111",
+  "compatibility": {
+    "aeFramework": {
+      "contractVersion": "bootstrap-placeholder",
+      "status": "planned"
+    },
+    "genaiRepoAuditor": {
+      "contractVersion": "bootstrap-placeholder",
+      "status": "planned"
+    }
+  },
+  "artifacts": {
+    "fixtures/artifacts/synthetic-placeholder.json": "2098c99aa0eaa5f61bca935a56d5c0498c8afc96b920e0316d77b1c334a601d8"
+  },
+  "executable": false,
+  "networkRequired": false,
+  "secretsAllowed": false
+}
