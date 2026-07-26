@@ -40,12 +40,12 @@ catalog is implemented.
 
 ## Contract validation flow
 
-1. A caller independently validates a candidate JSON artifact against its checked-in closed Draft 2020-12 schema.
-2. `packages/contracts` compiles strict AJV 2020 validators without format or remote-schema loading.
-3. After schema success, a separate pure semantic validator receives the parsed lock plus exact manifest and compatibility-record bytes. It derives the manifest and record objects it inspects from those exact bytes, preventing a separately mutated object from being assessed under another byte digest.
-4. Manifest/lock validation recomputes SHA-256 over exact manifest bytes and compares pack ID, pack version, source identity, and implementation identity.
-5. Compatibility validation binds exact subject and target identities, record bytes, and required evidence references.
-6. Both layers return deterministic local results. Neither layer fetches a URL, resolves an arbitrary path, executes an artifact, contacts an integration, or promotes evidence into approval.
+1. A bounded strict decoder accepts no more than 1,048,576 exact bytes per manifest, lock, or compatibility record. It requires fatal UTF-8 and strict JSON, rejects comments, trailing commas, trailing data, and duplicate decoded member names at every nesting level, and requires an object root.
+2. A caller validates only the object produced by that decoder against its checked-in closed Draft 2020-12 schema. `packages/contracts` compiles strict AJV 2020 validators without format or remote-schema loading.
+3. After schema success, a separate pure semantic validator receives the same exact manifest, lock, and compatibility-record bytes and strict-decodes every object it inspects from those bytes. A separately mutated object therefore cannot be assessed under another byte digest.
+4. Manifest/lock validation recomputes SHA-256 over the original exact manifest bytes and compares pack ID, pack version, source identity, and implementation identity.
+5. Compatibility validation binds exact subject and target identities, record bytes, and required evidence references. A lock may contain at most one record for each exact subject/target pair; multiple supporting results belong in one record's evidence map.
+6. Both validation layers return deterministic local results. Neither fetches a URL, resolves an arbitrary path, executes an artifact, contacts an integration, or promotes evidence into approval.
 
 The authority boundaries are intentionally non-equivalent:
 
@@ -56,7 +56,7 @@ The authority boundaries are intentionally non-equivalent:
 - `schema validation != semantic validation`
 - `content binding != security proof`
 
-SHA-256 covers exact bytes. JSON whitespace, member order, encoding, and line endings therefore affect content identity; version 1 performs no implicit JSON canonicalization. A manifest has no self-digest.
+SHA-256 covers the original exact bytes. JSON whitespace, member order, encoding, and line endings therefore affect content identity; strict decoding does not rewrite input and version 1 performs no implicit JSON canonicalization. A manifest has no self-digest.
 
 ## Trust boundaries
 
@@ -74,8 +74,8 @@ See [`PUBLIC_PRIVATE_BOUNDARY.md`](PUBLIC_PRIVATE_BOUNDARY.md) and
 
 ## Compatibility and evolution
 
-`cryptocomm-pack/v1` is a frozen bootstrap envelope. Its `planned` value states intent only and may never be promoted to `compatible`. CCA-110 uses a separate compatibility record with `unknown`, `compatible`, `incompatible`, and `unsupported` states.
+`cryptocomm-pack/v1` is a frozen bootstrap envelope. Its `planned` value states intent only. The CCA-110 validation layer accepts exactly one legacy migration pair, `planned` to `unknown`; all other combinations involving legacy `planned`, `compatible`, or `unsupported` and any new state fail closed. It performs no evidence-enriching migration. CCA-110 uses a separate compatibility record with `unknown`, `compatible`, `incompatible`, and `unsupported` states.
 
-`compatible` and `incompatible` require exact subject/target identity and content-addressed evidence. `unsupported` requires a bounded reason and scope. `unknown` makes no compatibility claim. No state communicates human approval, release approval, certification, production readiness, protocol security, or vulnerability absence.
+`compatible` and `incompatible` require exact subject/target identity and content-addressed evidence. `unsupported` requires a bounded reason and scope. `unknown` makes no compatibility claim. Evidence map keys are bounded bundle-relative identifiers only: they are not repository authorities, network locators, private paths, local absolute paths, or provenance records. Provenance, access control, retention, correlation risk, and freshness remain deferred to CCA-240. No state communicates human approval, release approval, certification, production readiness, protocol security, or vulnerability absence.
 
 Each `schemaVersion` has one immutable meaning. Breaking changes require a new contract ID/version; migration is explicit, deterministic, tested, and fail-closed. See [`CONTRACT_VERSIONING.md`](CONTRACT_VERSIONING.md).

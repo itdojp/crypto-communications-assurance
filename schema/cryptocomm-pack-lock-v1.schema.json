@@ -43,7 +43,7 @@
       "$ref": "#/$defs/implementationIdentity"
     },
     "compatibilityRecords": {
-      "description": "Exact content-bound compatibility-record references. A reference repeats subject and target bindings but never duplicates compatibility state as independent authority.",
+      "description": "Exact content-bound compatibility-record references. A reference repeats subject and target bindings but never duplicates compatibility state as independent authority. Repository-local semantic validation rejects more than one record for the same exact subject and target pair.",
       "type": "object",
       "maxProperties": 256,
       "propertyNames": {

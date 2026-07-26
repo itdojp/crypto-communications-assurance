@@ -3,7 +3,11 @@ import { readFile } from "node:fs/promises";
 
 import { beforeAll, describe, expect, it } from "vitest";
 
-import { compileContract, type ValidationResult } from "../packages/contracts/src/index.js";
+import {
+  compileContractBytes,
+  type ContractBytesValidationResult,
+  decodeStrictJsonObject,
+} from "../packages/contracts/src/index.js";
 
 const loadBytes = (relativePath: string): Promise<Buffer> =>
   readFile(new URL(relativePath, import.meta.url));
@@ -11,13 +15,24 @@ const loadBytes = (relativePath: string): Promise<Buffer> =>
 const loadJson = async (relativePath: string): Promise<unknown> =>
   JSON.parse((await loadBytes(relativePath)).toString("utf8")) as unknown;
 
+const loadContractObject = async (
+  relativePath: string,
+): Promise<Readonly<Record<string, unknown>>> => {
+  const decoded = decodeStrictJsonObject(await loadBytes(relativePath));
+  if (!decoded.valid) throw new Error(`${relativePath} failed strict decoding`);
+  return decoded.value;
+};
+
+const jsonBytes = (value: unknown): Buffer =>
+  Buffer.from(JSON.stringify(value), "utf8");
+
 const digest = (bytes: Uint8Array): string =>
   createHash("sha256").update(bytes).digest("hex");
 
 describe("CCA-110 JSON Schema contracts", () => {
-  let validateManifest: (candidate: unknown) => ValidationResult;
-  let validateLock: (candidate: unknown) => ValidationResult;
-  let validateCompatibility: (candidate: unknown) => ValidationResult;
+  let validateManifest: (candidate: Uint8Array) => ContractBytesValidationResult;
+  let validateLock: (candidate: Uint8Array) => ContractBytesValidationResult;
+  let validateCompatibility: (candidate: Uint8Array) => ContractBytesValidationResult;
 
   beforeAll(async () => {
     const [manifestSchema, lockSchema, compatibilitySchema] = await Promise.all([
@@ -25,9 +40,9 @@ describe("CCA-110 JSON Schema contracts", () => {
       loadJson("../schema/cryptocomm-pack-lock-v1.schema.json"),
       loadJson("../schema/cryptocomm-compatibility-record-v1.schema.json"),
     ]);
-    validateManifest = compileContract(manifestSchema as object);
-    validateLock = compileContract(lockSchema as object);
-    validateCompatibility = compileContract(compatibilitySchema as object);
+    validateManifest = compileContractBytes(manifestSchema as object);
+    validateLock = compileContractBytes(lockSchema as object);
+    validateCompatibility = compileContractBytes(compatibilitySchema as object);
   });
 
   it.each([
@@ -52,21 +67,67 @@ describe("CCA-110 JSON Schema contracts", () => {
       () => validateCompatibility,
     ],
   ])("accepts the explicitly synthetic %s fixture", async (_name, path, validator) => {
-    const fixture = await loadJson(path);
-    expect(validator()(fixture)).toEqual({ valid: true, errors: [] });
-    expect(fixture).toMatchObject({ fixtureClassification: "synthetic-test-only" });
+    const validation = validator()(await loadBytes(path));
+    expect(validation.valid).toBe(true);
+    if (validation.valid) {
+      expect(validation.stage).toBe("validated");
+      expect(validation.value).toMatchObject({
+        fixtureClassification: "synthetic-test-only",
+      });
+    }
   });
+
+  it.each([
+    [
+      "manifest",
+      "../fixtures/valid/pack-manifest-v1.json",
+      '"packId":"synthetic-shadow-pack",',
+      () => validateManifest,
+    ],
+    [
+      "lock",
+      "../fixtures/valid/pack-lock-v1.json",
+      '"packVersion":"9.9.9-synthetic.9",',
+      () => validateLock,
+    ],
+    [
+      "compatibility record",
+      "../fixtures/valid/compatibility-unknown-v1.json",
+      String.raw`"record\u0049d":"synthetic-shadow-record",`,
+      () => validateCompatibility,
+    ],
+  ])(
+    "rejects a duplicate decoded member before %s schema validation",
+    async (_name, path, injectedMember, validator) => {
+      const original = await loadBytes(path);
+      const candidate = Buffer.concat([
+        Buffer.from(`{${injectedMember}`, "utf8"),
+        original.subarray(1),
+      ]);
+      const validation = validator()(candidate);
+
+      expect(validation.valid).toBe(false);
+      if (!validation.valid) {
+        expect(validation.stage).toBe("decode");
+        if (validation.stage === "decode") {
+          expect(validation.errors).toMatchObject([
+            { code: "JSON_DUPLICATE_MEMBER" },
+          ]);
+        }
+      }
+    },
+  );
 
   it("binds the lock and compatibility subjects to exact manifest bytes", async () => {
     const manifestBytes = await loadBytes("../fixtures/valid/pack-manifest-v1.json");
     const expected = digest(manifestBytes);
-    const lock = (await loadJson("../fixtures/valid/pack-lock-v1.json")) as {
+    const lock = (await loadContractObject("../fixtures/valid/pack-lock-v1.json")) as {
       manifest: { digest: { value: string } };
     };
-    const unknown = (await loadJson("../fixtures/valid/compatibility-unknown-v1.json")) as {
+    const unknown = (await loadContractObject("../fixtures/valid/compatibility-unknown-v1.json")) as {
       subject: { manifestDigest: { value: string } };
     };
-    const compatible = (await loadJson(
+    const compatible = (await loadContractObject(
       "../fixtures/valid/compatibility-compatible-v1.json",
     )) as {
       subject: { manifestDigest: { value: string } };
@@ -78,7 +139,7 @@ describe("CCA-110 JSON Schema contracts", () => {
   });
 
   it("binds every resolved compatibility record to exact record bytes", async () => {
-    const lock = (await loadJson("../fixtures/valid/pack-lock-v1.json")) as {
+    const lock = (await loadContractObject("../fixtures/valid/pack-lock-v1.json")) as {
       compatibilityRecords: Record<string, { digest: { value: string } }>;
     };
     const cases = [
@@ -97,10 +158,10 @@ describe("CCA-110 JSON Schema contracts", () => {
   });
 
   it("content-binds exact synthetic artifact and evidence bytes", async () => {
-    const manifest = (await loadJson("../fixtures/valid/pack-manifest-v1.json")) as {
+    const manifest = (await loadContractObject("../fixtures/valid/pack-manifest-v1.json")) as {
       artifacts: Record<string, { digest: { value: string } }>;
     };
-    const compatible = (await loadJson(
+    const compatible = (await loadContractObject(
       "../fixtures/valid/compatibility-compatible-v1.json",
     )) as {
       evidence: Record<string, { digest: { value: string } }>;
@@ -109,8 +170,16 @@ describe("CCA-110 JSON Schema contracts", () => {
     for (const [path, declaration] of Object.entries(manifest.artifacts)) {
       expect(digest(await loadBytes("../" + path))).toBe(declaration.digest.value);
     }
-    for (const [path, reference] of Object.entries(compatible.evidence)) {
-      expect(digest(await loadBytes("../" + path))).toBe(reference.digest.value);
+    const evidenceFixtureById: Readonly<Record<string, string>> = {
+      "evidence/synthetic-compatibility-result":
+        "../fixtures/artifacts/synthetic-compatibility-evidence.json",
+    };
+    for (const [identifier, reference] of Object.entries(compatible.evidence)) {
+      const fixturePath = evidenceFixtureById[identifier];
+      expect(fixturePath).toBeDefined();
+      if (fixturePath !== undefined) {
+        expect(digest(await loadBytes(fixturePath))).toBe(reference.digest.value);
+      }
     }
   });
 
@@ -175,28 +244,37 @@ describe("CCA-110 JSON Schema contracts", () => {
       () => validateCompatibility,
       "enum",
     ],
+    [
+      "network evidence identifier",
+      "../fixtures/invalid/compatibility-invalid-evidence-identifier-v1.json",
+      () => validateCompatibility,
+      "pattern",
+    ],
   ])("rejects synthetic negative fixture: %s", async (_name, path, validator, keyword) => {
-    const candidate = await loadJson(path);
-    const validation = validator()(candidate);
+    const candidate = await loadContractObject(path);
+    const validation = validator()(await loadBytes(path));
 
     expect(candidate).toMatchObject({ fixtureClassification: "synthetic-test-only" });
     expect(validation.valid).toBe(false);
     if (!validation.valid) {
-      expect(validation.errors.some((error) => error.keyword === keyword)).toBe(true);
+      expect(validation.stage).toBe("schema");
+      if (validation.stage === "schema") {
+        expect(validation.errors.some((error) => error.keyword === keyword)).toBe(true);
+      }
     }
   });
 
   it("accepts evidence-backed incompatible and bounded unsupported states", async () => {
-    const compatible = (await loadJson(
+    const compatible = (await loadContractObject(
       "../fixtures/valid/compatibility-compatible-v1.json",
     )) as Record<string, unknown>;
-    const unknown = (await loadJson(
+    const unknown = (await loadContractObject(
       "../fixtures/valid/compatibility-unknown-v1.json",
     )) as Record<string, unknown>;
 
     const incompatible = structuredClone(compatible);
     incompatible.state = "incompatible";
-    expect(validateCompatibility(incompatible)).toEqual({ valid: true, errors: [] });
+    expect(validateCompatibility(jsonBytes(incompatible)).valid).toBe(true);
 
     const unsupported = structuredClone(unknown);
     unsupported.state = "unsupported";
@@ -204,36 +282,36 @@ describe("CCA-110 JSON Schema contracts", () => {
       reason: "Synthetic target contract is outside this test profile.",
       scope: "synthetic-target-adapter",
     };
-    expect(validateCompatibility(unsupported)).toEqual({ valid: true, errors: [] });
+    expect(validateCompatibility(jsonBytes(unsupported)).valid).toBe(true);
   });
 
   it("rejects evidence on unknown because unknown makes no compatibility claim", async () => {
-    const unknown = (await loadJson(
+    const unknown = (await loadContractObject(
       "../fixtures/valid/compatibility-unknown-v1.json",
     )) as Record<string, unknown>;
     unknown.evidence = {
-      "fixtures/artifacts/synthetic-compatibility-evidence.json": {
+      "evidence/synthetic-unknown-result": {
         digest: { algorithm: "sha256", value: "0".repeat(64) },
         mediaType: "application/json",
         evidenceType: "synthetic-test-result",
       },
     };
 
-    expect(validateCompatibility(unknown).valid).toBe(false);
+    expect(validateCompatibility(jsonBytes(unknown)).valid).toBe(false);
   });
 
   it.each([
     "ae-framework/assurance-profile/v1",
     "genai-repo-auditor/audit-context/v1",
   ])("accepts a generic hierarchical target contract ID: %s", async (contractId) => {
-    const candidate = (await loadJson(
+    const candidate = (await loadContractObject(
       "../fixtures/valid/compatibility-unknown-v1.json",
     )) as Record<string, unknown> & {
       target: { contract: { contractId: string } };
     };
     candidate.target.contract.contractId = contractId;
 
-    expect(validateCompatibility(candidate)).toEqual({ valid: true, errors: [] });
+    expect(validateCompatibility(jsonBytes(candidate)).valid).toBe(true);
   });
 
   it.each([
@@ -244,29 +322,51 @@ describe("CCA-110 JSON Schema contracts", () => {
     "rejects a leading-zero numeric SemVer prerelease in the %s identity",
     async (_name, contract) => {
       if (contract === "manifest") {
-        const candidate = (await loadJson(
+        const candidate = (await loadContractObject(
           "../fixtures/valid/pack-manifest-v1.json",
         )) as { producer: { version: string } };
         candidate.producer.version = "1.2.3-01";
-        expect(validateManifest(candidate).valid).toBe(false);
+        expect(validateManifest(jsonBytes(candidate)).valid).toBe(false);
         return;
       }
       if (contract === "lock") {
-        const candidate = (await loadJson(
+        const candidate = (await loadContractObject(
           "../fixtures/valid/pack-lock-v1.json",
         )) as { resolver: { version: string } };
         candidate.resolver.version = "1.2.3-01";
-        expect(validateLock(candidate).valid).toBe(false);
+        expect(validateLock(jsonBytes(candidate)).valid).toBe(false);
         return;
       }
 
-      const candidate = (await loadJson(
+      const candidate = (await loadContractObject(
         "../fixtures/valid/compatibility-unknown-v1.json",
       )) as { target: { implementation: { version: string } } };
       candidate.target.implementation.version = "1.2.3-01";
-      expect(validateCompatibility(candidate).valid).toBe(false);
+      expect(validateCompatibility(jsonBytes(candidate)).valid).toBe(false);
     },
   );
+
+  it.each([
+    "github:itdojp/repository",
+    "https://example.invalid/evidence",
+    "/var/private/evidence",
+    "../private/evidence",
+    String.raw`C:\private\evidence`,
+    "evidence//result",
+    "evidence/" + "a".repeat(257),
+    "a/b/c/d/e/f/g/h/i",
+  ])("rejects a non-bundle-relative evidence identifier: %s", async (identifier) => {
+    const candidate = (await loadContractObject(
+      "../fixtures/valid/compatibility-compatible-v1.json",
+    )) as Record<string, unknown> & { evidence: Record<string, unknown> };
+    const reference = Object.values(candidate.evidence)[0];
+    if (reference === undefined) throw new Error("Expected evidence fixture");
+    candidate.evidence = { [identifier]: reference };
+
+    const validation = validateCompatibility(jsonBytes(candidate));
+    expect(validation.valid).toBe(false);
+    if (!validation.valid) expect(validation.stage).toBe("schema");
+  });
 
   it("keeps the evidence payload explicitly synthetic and test-only", async () => {
     expect(

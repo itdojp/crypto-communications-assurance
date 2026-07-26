@@ -1,6 +1,6 @@
 {
   "schemaVersion": "cryptocomm-compatibility-record/v1",
-  "recordId": "synthetic-compatible-record",
+  "recordId": "synthetic-invalid-evidence-id",
   "subject": {
     "packId": "synthetic-contract-pack",
     "packVersion": "0.1.0-synthetic.1",
@@ -37,7 +37,7 @@
   },
   "state": "compatible",
   "evidence": {
-    "evidence/synthetic-compatibility-result": {
+    "https://example.invalid/private-evidence": {
       "digest": {
         "algorithm": "sha256",
         "value": "3529d805508207c3ca273d72a53c6a176728a8d7fcecdb0b7fd51d93ff735931"

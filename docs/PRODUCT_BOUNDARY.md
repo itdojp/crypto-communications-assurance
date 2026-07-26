@@ -41,7 +41,7 @@ CCA-110 does not alter the bootstrap envelope. It adds:
 - a lock that binds exact manifest bytes, the same manifest source identity, resolver implementation identity, and optional compatibility-record references;
 - a compatibility record that binds an exact manifest subject to an exact generic target implementation/contract identity.
 
-The lock does not duplicate compatibility state as an independent authority. The compatibility record does not grant approval. All three contracts preserve `executable=false`, `networkRequired=false`, and `secretsAllowed=false`.
+The lock does not duplicate compatibility state as an independent authority and may bind at most one record per exact subject/target pair. Evidence keys are bundle-relative identifiers, not locations or provenance. The compatibility record does not grant approval. All three contracts preserve `executable=false`, `networkRequired=false`, and `secretsAllowed=false`.
 
 ## Non-goals
 

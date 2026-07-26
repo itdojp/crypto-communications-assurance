@@ -1,5 +1,12 @@
 import { createHash } from "node:crypto";
 
+import {
+  decodeStrictJsonObject,
+  strictJsonDiagnosticCodes,
+  strictJsonDiagnosticDescriptions,
+  type StrictJsonDiagnostic,
+} from "./strict-json.js";
+
 export interface Sha256Digest {
   readonly algorithm: "sha256";
   readonly value: string;
@@ -170,18 +177,17 @@ export type CompatibilityRecord =
 
 export interface PackResolutionInput {
   readonly manifestBytes: Uint8Array;
-  readonly lock: PackLock;
+  readonly lockBytes: Uint8Array;
   readonly compatibilityRecordBytes: Readonly<Record<string, Uint8Array>>;
 }
 
 export const semanticDiagnosticCodes = [
-  "MANIFEST_BYTES_INVALID",
+  ...strictJsonDiagnosticCodes,
   "MANIFEST_DIGEST_MISMATCH",
   "PACK_ID_MISMATCH",
   "PACK_VERSION_MISMATCH",
   "SOURCE_IDENTITY_MISMATCH",
   "IMPLEMENTATION_IDENTITY_INVALID",
-  "COMPATIBILITY_RECORD_BYTES_INVALID",
   "COMPATIBILITY_RECORD_LIMIT_EXCEEDED",
   "COMPATIBILITY_RECORD_MISSING",
   "COMPATIBILITY_RECORD_UNREFERENCED",
@@ -189,23 +195,21 @@ export const semanticDiagnosticCodes = [
   "COMPATIBILITY_RECORD_DIGEST_MISMATCH",
   "COMPATIBILITY_SUBJECT_MISMATCH",
   "COMPATIBILITY_TARGET_MISMATCH",
+  "COMPATIBILITY_PAIR_DUPLICATE",
   "COMPATIBILITY_EVIDENCE_REQUIRED",
-  "LEGACY_STATUS_PROMOTION_FORBIDDEN",
+  "LEGACY_STATUS_MIGRATION_FORBIDDEN",
 ] as const;
 
 export type SemanticDiagnosticCode = (typeof semanticDiagnosticCodes)[number];
 
 export const semanticDiagnosticDescriptions: Readonly<Record<SemanticDiagnosticCode, string>> = {
-  MANIFEST_BYTES_INVALID:
-    "The supplied manifest bytes are not a JSON object; schema validation must run separately.",
+  ...strictJsonDiagnosticDescriptions,
   MANIFEST_DIGEST_MISMATCH: "The lock does not bind the exact supplied manifest bytes.",
   PACK_ID_MISMATCH: "The pack identifier differs across bound artifacts.",
   PACK_VERSION_MISMATCH: "The pack version differs across bound artifacts.",
   SOURCE_IDENTITY_MISMATCH: "The repository, revision, or source tree identity differs.",
   IMPLEMENTATION_IDENTITY_INVALID:
     "A producer, resolver, or target implementation identity is incomplete or not exact.",
-  COMPATIBILITY_RECORD_BYTES_INVALID:
-    "The supplied compatibility-record bytes are not a JSON object; schema validation must run separately.",
   COMPATIBILITY_RECORD_LIMIT_EXCEEDED:
     "More than 256 compatibility-record byte entries were supplied; validation fails with one bounded aggregate diagnostic.",
   COMPATIBILITY_RECORD_MISSING: "A lock reference has no supplied compatibility record.",
@@ -219,10 +223,12 @@ export const semanticDiagnosticDescriptions: Readonly<Record<SemanticDiagnosticC
     "A compatibility subject differs from the exact manifest identity.",
   COMPATIBILITY_TARGET_MISMATCH:
     "A compatibility target differs between the lock reference and record.",
+  COMPATIBILITY_PAIR_DUPLICATE:
+    "A lock references more than one compatibility record for the same exact subject and target pair.",
   COMPATIBILITY_EVIDENCE_REQUIRED:
     "Compatible and incompatible states require at least one content-addressed evidence reference.",
-  LEGACY_STATUS_PROMOTION_FORBIDDEN:
-    "Legacy bootstrap planned status may migrate only to unknown or be rejected.",
+  LEGACY_STATUS_MIGRATION_FORBIDDEN:
+    "The only accepted legacy mapping is planned to unknown; every other legacy/new-state combination fails closed.",
 };
 
 export interface SemanticDiagnostic {
@@ -334,15 +340,15 @@ function boundedOwnKeys(
   return { keys, exceeded: false };
 }
 
-function parseJsonObject<T>(bytes: Uint8Array): T | undefined {
-  try {
-    const parsed: unknown = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes));
-    return typeof parsed === "object" && parsed !== null && !Array.isArray(parsed)
-      ? (parsed as T)
-      : undefined;
-  } catch {
-    return undefined;
-  }
+function prefixedStrictDiagnostics(
+  diagnostics: readonly StrictJsonDiagnostic[],
+  prefix: string,
+): readonly SemanticDiagnostic[] {
+  return diagnostics.map((entry) => ({
+    code: entry.code,
+    path: prefix + entry.path,
+    message: entry.message,
+  }));
 }
 
 function sourceIdentityEqual(left: SourceIdentity, right: SourceIdentity): boolean {
@@ -435,14 +441,23 @@ function expectedSubject(
 
 export function validateManifestLockBinding(
   manifestBytes: Uint8Array,
-  lock: PackLock,
+  lockBytes: Uint8Array,
 ): SemanticValidationResult {
-  const manifest = parseJsonObject<PackManifest>(manifestBytes);
-  if (manifest === undefined) {
-    return result([diagnostic("MANIFEST_BYTES_INVALID", "/manifest")]);
+  const diagnostics: SemanticDiagnostic[] = [];
+  const manifest = decodeStrictJsonObject<PackManifest>(manifestBytes);
+  const lock = decodeStrictJsonObject<PackLock>(lockBytes);
+
+  if (!manifest.valid) {
+    diagnostics.push(...prefixedStrictDiagnostics(manifest.diagnostics, "/manifest"));
+  }
+  if (!lock.valid) {
+    diagnostics.push(...prefixedStrictDiagnostics(lock.diagnostics, "/lock"));
+  }
+  if (!manifest.valid || !lock.valid) {
+    return result(diagnostics);
   }
 
-  return validateManifestLockBindingParsed(manifest, manifestBytes, lock);
+  return validateManifestLockBindingParsed(manifest.value, manifestBytes, lock.value);
 }
 
 function validateManifestLockBindingParsed(
@@ -483,20 +498,24 @@ export function validateCompatibilityRecordBinding(
   recordBytes: Uint8Array,
 ): SemanticValidationResult {
   const diagnostics: SemanticDiagnostic[] = [];
-  const manifest = parseJsonObject<PackManifest>(manifestBytes);
-  const record = parseJsonObject<CompatibilityRecord>(recordBytes);
+  const manifest = decodeStrictJsonObject<PackManifest>(manifestBytes);
+  const record = decodeStrictJsonObject<CompatibilityRecord>(recordBytes);
 
-  if (manifest === undefined) {
-    diagnostics.push(diagnostic("MANIFEST_BYTES_INVALID", "/manifest"));
+  if (!manifest.valid) {
+    diagnostics.push(...prefixedStrictDiagnostics(manifest.diagnostics, "/manifest"));
   }
-  if (record === undefined) {
-    diagnostics.push(diagnostic("COMPATIBILITY_RECORD_BYTES_INVALID", "/record"));
+  if (!record.valid) {
+    diagnostics.push(...prefixedStrictDiagnostics(record.diagnostics, "/record"));
   }
-  if (manifest === undefined || record === undefined) {
+  if (!manifest.valid || !record.valid) {
     return result(diagnostics);
   }
 
-  return validateCompatibilityRecordBindingParsed(manifest, manifestBytes, record);
+  return validateCompatibilityRecordBindingParsed(
+    manifest.value,
+    manifestBytes,
+    record.value,
+  );
 }
 
 function validateCompatibilityRecordBindingParsed(
@@ -524,18 +543,74 @@ function validateCompatibilityRecordBindingParsed(
   return result(diagnostics);
 }
 
+function validateUniqueCompatibilityPairs(
+  references: Readonly<Record<string, CompatibilityRecordReference>>,
+  recordIds: readonly string[],
+): readonly SemanticDiagnostic[] {
+  const diagnostics: SemanticDiagnostic[] = [];
+  const seen: Array<{
+    readonly recordId: string;
+    readonly reference: CompatibilityRecordReference;
+  }> = [];
+
+  for (const recordId of recordIds) {
+    const reference = references[recordId];
+    if (reference === undefined) continue;
+    const duplicate = seen.find(
+      (entry) =>
+        subjectEqual(entry.reference.subject, reference.subject) &&
+        targetEqual(entry.reference.target, reference.target),
+    );
+    if (duplicate !== undefined) {
+      diagnostics.push(
+        diagnostic(
+          "COMPATIBILITY_PAIR_DUPLICATE",
+          "/lock/compatibilityRecords/" + recordId,
+        ),
+      );
+      continue;
+    }
+    seen.push({ recordId, reference });
+  }
+
+  return diagnostics;
+}
+
 export function validatePackResolution(input: PackResolutionInput): SemanticValidationResult {
   const diagnostics: SemanticDiagnostic[] = [];
-  const manifest = parseJsonObject<PackManifest>(input.manifestBytes);
-  if (manifest === undefined) {
-    diagnostics.push(diagnostic("MANIFEST_BYTES_INVALID", "/manifest"));
-  } else {
+  const manifest = decodeStrictJsonObject<PackManifest>(input.manifestBytes);
+  const lock = decodeStrictJsonObject<PackLock>(input.lockBytes);
+
+  if (!manifest.valid) {
+    diagnostics.push(...prefixedStrictDiagnostics(manifest.diagnostics, "/manifest"));
+  }
+  if (!lock.valid) {
+    diagnostics.push(...prefixedStrictDiagnostics(lock.diagnostics, "/lock"));
+    return result(diagnostics);
+  }
+  if (manifest.valid) {
     diagnostics.push(
-      ...validateManifestLockBindingParsed(manifest, input.manifestBytes, input.lock)
-        .diagnostics,
+      ...validateManifestLockBindingParsed(
+        manifest.value,
+        input.manifestBytes,
+        lock.value,
+      ).diagnostics,
     );
   }
-  const references = input.lock.compatibilityRecords ?? {};
+
+  const references = lock.value.compatibilityRecords ?? {};
+  const referenceKeyScan = boundedOwnKeys(references, maximumCompatibilityRecordCount);
+  if (referenceKeyScan.exceeded) {
+    diagnostics.push(
+      diagnostic(
+        "COMPATIBILITY_RECORD_LIMIT_EXCEEDED",
+        "/lock/compatibilityRecords",
+      ),
+    );
+    return result(diagnostics);
+  }
+  const referenceIds = [...referenceKeyScan.keys].sort();
+  diagnostics.push(...validateUniqueCompatibilityPairs(references, referenceIds));
 
   const suppliedKeyScan = boundedOwnKeys(
     input.compatibilityRecordBytes,
@@ -558,7 +633,7 @@ export function validatePackResolution(input: PackResolutionInput): SemanticVali
     }
   }
 
-  for (const recordId of Object.keys(references).sort()) {
+  for (const recordId of referenceIds) {
     const reference = references[recordId];
     if (reference === undefined) continue;
     const suppliedBytes = input.compatibilityRecordBytes[recordId];
@@ -581,18 +656,18 @@ export function validatePackResolution(input: PackResolutionInput): SemanticVali
       );
     }
 
-    const record = parseJsonObject<CompatibilityRecord>(suppliedBytes);
-    if (record === undefined) {
+    const record = decodeStrictJsonObject<CompatibilityRecord>(suppliedBytes);
+    if (!record.valid) {
       diagnostics.push(
-        diagnostic(
-          "COMPATIBILITY_RECORD_BYTES_INVALID",
+        ...prefixedStrictDiagnostics(
+          record.diagnostics,
           "/compatibilityRecords/" + recordId,
         ),
       );
       continue;
     }
 
-    if (record.recordId !== recordId) {
+    if (record.value.recordId !== recordId) {
       diagnostics.push(
         diagnostic(
           "COMPATIBILITY_RECORD_ID_MISMATCH",
@@ -600,7 +675,7 @@ export function validatePackResolution(input: PackResolutionInput): SemanticVali
         ),
       );
     }
-    if (!subjectEqual(reference.subject, record.subject)) {
+    if (!subjectEqual(reference.subject, record.value.subject)) {
       diagnostics.push(
         diagnostic(
           "COMPATIBILITY_SUBJECT_MISMATCH",
@@ -608,7 +683,7 @@ export function validatePackResolution(input: PackResolutionInput): SemanticVali
         ),
       );
     }
-    if (!targetEqual(reference.target, record.target)) {
+    if (!targetEqual(reference.target, record.value.target)) {
       diagnostics.push(
         diagnostic(
           "COMPATIBILITY_TARGET_MISMATCH",
@@ -616,12 +691,12 @@ export function validatePackResolution(input: PackResolutionInput): SemanticVali
         ),
       );
     }
-    if (manifest !== undefined) {
+    if (manifest.valid) {
       diagnostics.push(
         ...validateCompatibilityRecordBindingParsed(
-          manifest,
+          manifest.value,
           input.manifestBytes,
-          record,
+          record.value,
         ).diagnostics.map((entry) => ({
           ...entry,
           path: "/compatibilityRecords/" + recordId + entry.path,
@@ -637,10 +712,9 @@ export function validateLegacyCompatibilityMigration(
   legacyStatus: "planned" | "compatible" | "unsupported",
   migratedState: CompatibilityState,
 ): SemanticValidationResult {
-  if (legacyStatus === "planned" && migratedState !== "unknown") {
-    return result([
-      diagnostic("LEGACY_STATUS_PROMOTION_FORBIDDEN", "/compatibility/state"),
-    ]);
-  }
-  return result([]);
+  return legacyStatus === "planned" && migratedState === "unknown"
+    ? result([])
+    : result([
+        diagnostic("LEGACY_STATUS_MIGRATION_FORBIDDEN", "/compatibility/state"),
+      ]);
 }

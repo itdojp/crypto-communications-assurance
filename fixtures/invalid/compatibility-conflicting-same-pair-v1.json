@@ -1,6 +1,6 @@
 {
   "schemaVersion": "cryptocomm-compatibility-record/v1",
-  "recordId": "synthetic-compatible-record",
+  "recordId": "synthetic-conflicting-record",
   "subject": {
     "packId": "synthetic-contract-pack",
     "packVersion": "0.1.0-synthetic.1",
@@ -22,22 +22,28 @@
   },
   "target": {
     "implementation": {
-      "implementationId": "synthetic/target-adapter",
+      "implementationId": "synthetic/unknown-target-adapter",
       "version": "0.1.0-synthetic.1",
-      "sourceRepositoryId": "synthetic:example/target-adapter",
+      "sourceRepositoryId": "synthetic:example/unknown-target-adapter",
       "sourceRevision": {
         "algorithm": "git-sha1",
-        "value": "4444444444444444444444444444444444444444"
+        "value": "6666666666666666666666666666666666666666"
       }
     },
     "contract": {
-      "contractId": "synthetic-assurance-target/v1",
+      "contractId": "synthetic-unknown-target/v1",
       "version": "1.0.0-synthetic.1"
     }
   },
   "state": "compatible",
+  "safety": {
+    "executable": false,
+    "networkRequired": false,
+    "secretsAllowed": false
+  },
+  "fixtureClassification": "synthetic-test-only",
   "evidence": {
-    "evidence/synthetic-compatibility-result": {
+    "evidence/synthetic-conflicting-result": {
       "digest": {
         "algorithm": "sha256",
         "value": "3529d805508207c3ca273d72a53c6a176728a8d7fcecdb0b7fd51d93ff735931"
@@ -45,11 +51,5 @@
       "mediaType": "application/json",
       "evidenceType": "synthetic-test-result"
     }
-  },
-  "safety": {
-    "executable": false,
-    "networkRequired": false,
-    "secretsAllowed": false
-  },
-  "fixtureClassification": "synthetic-test-only"
+  }
 }

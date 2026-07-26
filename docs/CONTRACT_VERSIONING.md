@@ -33,13 +33,21 @@ A migration is a separately reviewed deterministic transformation. Its specifica
 - validation for positive, negative, and ambiguous inputs;
 - the human decision boundary retained after migration.
 
-Ambiguous, lossy, unrecognized, or under-specified migrations fail closed. No validator in CCA-110 performs an implicit migration.
+Ambiguous, lossy, unrecognized, or under-specified migrations fail closed. No validator in CCA-110 performs an implicit or evidence-enriching migration.
 
-Legacy bootstrap `planned` has no compatibility meaning. An explicit migration may map `planned` only to `unknown`, or reject the input pending assessment. Mapping `planned` to `compatible`, `incompatible`, or `unsupported` is rejected as `LEGACY_STATUS_PROMOTION_FORBIDDEN`.
+The current validator exposes only this fail-closed legacy-status relation:
+
+| Legacy status | `unknown` | `compatible` | `incompatible` | `unsupported` |
+| --- | --- | --- | --- | --- |
+| `planned` | accepted | rejected | rejected | rejected |
+| `compatible` | rejected | rejected | rejected | rejected |
+| `unsupported` | rejected | rejected | rejected | rejected |
+
+The only accepted pair is legacy `planned` to new `unknown`. Every other combination is rejected as `LEGACY_STATUS_MIGRATION_FORBIDDEN`. In particular, equal spelling does not supply the missing exact target, evidence, reason, scope, or provenance needed to migrate legacy `compatible` or `unsupported` into a new assessed state. A future migration requires its own versioned contract and review.
 
 ## Content binding across versions
 
-SHA-256 values cover exact referenced bytes. JSON member order, whitespace, encoding, and line endings therefore affect a digest. Version 1 defines no implicit JSON canonicalization. A manifest never contains its own digest; a lock binds the separately supplied manifest bytes.
+SHA-256 values cover exact referenced bytes. JSON member order, whitespace, encoding, and line endings therefore affect a digest. Version 1 defines no implicit JSON canonicalization. Strict decoding validates, but does not rewrite, at most 1,048,576 bytes per artifact. A manifest never contains its own digest; a lock binds the separately supplied manifest bytes.
 
 ## Human authority
 

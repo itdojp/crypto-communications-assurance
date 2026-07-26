@@ -112,6 +112,28 @@ for (const distinction of [
     failures.push(`ARCHITECTURE.md does not document ${distinction}`);
   }
 }
+for (const strictBoundary of [
+  "1,048,576",
+  "duplicate decoded member names",
+  "at most one record for each exact subject/target pair",
+  "bounded bundle-relative identifiers",
+  "no implicit JSON canonicalization",
+]) {
+  if (!architecture.includes(strictBoundary)) {
+    failures.push(`ARCHITECTURE.md does not document ${strictBoundary}`);
+  }
+}
+
+const versioning = await readFile("docs/CONTRACT_VERSIONING.md", "utf8");
+for (const migrationBoundary of [
+  "The only accepted pair is legacy `planned` to new `unknown`",
+  "`LEGACY_STATUS_MIGRATION_FORBIDDEN`",
+  "evidence-enriching migration",
+]) {
+  if (!versioning.includes(migrationBoundary)) {
+    failures.push(`CONTRACT_VERSIONING.md does not document ${migrationBoundary}`);
+  }
+}
 
 const schemaReadme = await readFile("schema/README.md", "utf8");
 for (const contractId of [

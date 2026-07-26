@@ -38,6 +38,8 @@ CCA-110 adds three separate closed Draft 2020-12 contracts:
 
 These contracts do not contain a complete security property, threat, module, or integration catalog, and they make no actual compatibility claim about ae-framework or GenAI Repo Auditor. See [contract versioning](docs/CONTRACT_VERSIONING.md) and [ADR 0002](docs/decisions/0002-pack-manifest-lock-and-compatibility.md).
 
+Contract inputs use bounded strict UTF-8 JSON decoding before schema and semantic validation. SHA-256 continues to cover the exact original bytes; no JSON canonicalization is implied.
+
 ## Non-goals
 
 This project does not:

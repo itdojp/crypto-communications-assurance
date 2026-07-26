@@ -18,7 +18,7 @@ Add three closed JSON Schema Draft 2020-12 contracts:
 2. `cryptocomm-pack-lock/v1` is a consumer resolution of one exact manifest. It binds manifest bytes, manifest source identity, resolver implementation identity, and optional exact compatibility-record references.
 3. `cryptocomm-compatibility-record/v1` assesses one exact manifest subject against one exact target implementation and contract.
 
-The lock repeats compatibility subject and target identities only to bind a referenced record. It does not carry an independent compatibility state.
+The lock repeats compatibility subject and target identities only to bind a referenced record. It does not carry an independent compatibility state. One lock may reference at most one record for each exact subject/target pair. Multiple supporting results belong inside that record's evidence map; v1 defines no precedence, latest selection, history, producer-specific aggregation, or conflict resolution.
 
 ### Identity model
 
@@ -32,7 +32,7 @@ The lock repeats compatibility subject and target identities only to bind a refe
 
 Manifest artifact declarations are keyed by bounded repository-relative POSIX paths and contain SHA-256, media type, bounded artifact role, and contract identity where applicable. SHA-256 is computed over exact bytes. Version 1 introduces no implicit JSON canonicalization.
 
-A manifest has no self-digest. A lock externally binds the exact manifest bytes. Compatibility records and lock references content-bind exact evidence or record bytes.
+A manifest has no self-digest. A lock externally binds the exact manifest bytes. Compatibility records and lock references content-bind exact evidence or record bytes. Evidence map keys are bounded bundle-relative identifiers only. They confer no repository authority and are not network locators, private evidence paths, local absolute paths, or provenance records. Evidence provenance, access control, retention, correlation risk, and freshness are deferred to CCA-240.
 
 ### Compatibility states
 
@@ -41,13 +41,15 @@ A manifest has no self-digest. A lock externally binds the exact manifest bytes.
 - `incompatible`: exact subject and target plus one or more content-addressed evidence references.
 - `unsupported`: exact subject and target plus an explicit bounded reason and scope.
 
-No state means human approval, merge approval, release approval, certification, production readiness, protocol security, or vulnerability absence. Legacy bootstrap `planned` may migrate only to `unknown`, or be rejected.
+No state means human approval, merge approval, release approval, certification, production readiness, protocol security, or vulnerability absence. The CCA-110 validator accepts only legacy `planned` to new `unknown`; it rejects every other combination involving legacy `planned`, `compatible`, or `unsupported`. It is not an evidence-enriching migration transformer.
 
 ### Validation layers
 
-Generic AJV schema compilation remains separate from pure semantic validation. After a caller schema-validates values decoded from the same exact bytes, semantic validators receive the parsed lock and exact manifest/compatibility-record bytes. They derive the manifest and record objects they inspect from those bytes so that a digest cannot be paired with a separately mutated object. They do not fetch, clone, resolve arbitrary paths, execute artifacts, contact upstream tools, or call an external model/scanner.
+Generic AJV schema compilation remains separate from pure semantic validation. Before either layer, a strict decoder applies a 1,048,576-byte per-artifact limit, fatal UTF-8 decoding, strict JSON syntax, recursive decoded-member uniqueness, and an object-root requirement. It rejects comments, trailing commas, and trailing data. Duplicate members fail before schema or semantic validation, including duplicates expressed using JSON escapes.
 
-Bounded diagnostics cover exact-byte manifest and record digests, pack ID/version, source identity, implementation identity, compatibility subject/target, evidence requirements, and forbidden legacy status promotion.
+After a caller schema-validates the strict-decoded value, semantic validators receive the same exact manifest, lock, and compatibility-record bytes. Every object they inspect is derived from those bytes so that a digest cannot be paired with a separately mutated object. The original bytes remain the SHA-256 input; the decoder performs no canonicalization. The validators do not fetch, clone, resolve arbitrary paths, execute artifacts, contact upstream tools, or call an external model/scanner.
+
+Bounded diagnostics cover strict decoding, exact-byte manifest and record digests, pack ID/version, source identity, implementation identity, compatibility subject/target and pair uniqueness, evidence requirements, and forbidden legacy status migration.
 
 ### Versioning
 
@@ -59,7 +61,7 @@ Every `schemaVersion` has one immutable meaning. Breaking changes require a new 
 - Exact-byte digests make whitespace and encoding part of identity; producers must preserve the bytes that consumers lock.
 - Committed examples use synthetic repository, revision, target, and evidence identities and make no upstream compatibility claim.
 - Schema validation and semantic validation produce machine evidence only; human review remains required.
-- Private evidence references, operational timestamps, live probing, a CLI, release behavior, and upstream modifications remain outside CCA-110.
+- Private evidence handling and provenance, operational timestamps, compatibility history or aggregation, live probing, a CLI, release behavior, and upstream modifications remain outside CCA-110.
 
 ## Alternatives rejected
 

@@ -35,12 +35,12 @@
       ]
     },
     "evidence": {
-      "description": "Content-addressed evidence references keyed by bounded repository-relative paths. Referenced bytes are not embedded and no private location is allowed.",
+      "description": "Content-addressed evidence references keyed only by bounded bundle-relative identifiers. Keys are not repository authorities, network locators, private or local paths, provenance records, freshness assertions, or access-control declarations.",
       "type": "object",
       "minProperties": 1,
       "maxProperties": 256,
       "propertyNames": {
-        "$ref": "#/$defs/artifactPath"
+        "$ref": "#/$defs/evidenceIdentifier"
       },
       "additionalProperties": {
         "$ref": "#/$defs/evidenceReference"
@@ -311,11 +311,12 @@
       "maxLength": 128,
       "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"
     },
-    "artifactPath": {
+    "evidenceIdentifier": {
+      "description": "Opaque bundle-relative identifier of at most eight slash-delimited segments. It is not a filesystem path, URL, repository identity, or provenance record.",
       "type": "string",
       "minLength": 1,
-      "maxLength": 512,
-      "pattern": "^(?!/)(?!.*\\\\)(?!\\.{1,2}(?:/|$))[A-Za-z0-9._-]+(?:/(?!\\.{1,2}(?:/|$))[A-Za-z0-9._-]+)*$"
+      "maxLength": 256,
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,63}(?:/[a-z0-9][a-z0-9._-]{0,63}){0,7}$"
     },
     "mediaType": {
       "type": "string",
