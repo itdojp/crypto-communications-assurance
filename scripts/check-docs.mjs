@@ -23,8 +23,14 @@ const requiredFiles = [
   "docs/PUBLIC_PRIVATE_BOUNDARY.md",
   "docs/STATUS_SEMANTICS.md",
   "docs/ROADMAP.md",
+  "docs/CONTRACT_VERSIONING.md",
   "docs/decisions/0001-repository-and-product-boundary.md",
+  "docs/decisions/0002-pack-manifest-lock-and-compatibility.md",
   "schema/cryptocomm-pack-v1.schema.json",
+  "schema/README.md",
+  "schema/cryptocomm-pack-manifest-v1.schema.json",
+  "schema/cryptocomm-pack-lock-v1.schema.json",
+  "schema/cryptocomm-compatibility-record-v1.schema.json",
 ];
 
 const requiredDirectories = [
@@ -84,10 +90,61 @@ for (const command of [
   "pnpm run lint",
   "pnpm run test",
   "pnpm run check:schemas",
+  "pnpm run check:docs",
+  "pnpm run lint:workflows",
   "pnpm run verify",
 ]) {
   if (!readme.includes(command)) {
     failures.push(`README.md does not document ${command}`);
+  }
+}
+
+const architecture = await readFile("docs/ARCHITECTURE.md", "utf8");
+for (const distinction of [
+  "`bootstrap envelope != manifest`",
+  "`manifest != lock`",
+  "`lock != compatibility record`",
+  "`compatibility != human approval`",
+  "`schema validation != semantic validation`",
+  "`content binding != security proof`",
+]) {
+  if (!architecture.includes(distinction)) {
+    failures.push(`ARCHITECTURE.md does not document ${distinction}`);
+  }
+}
+for (const strictBoundary of [
+  "1,048,576",
+  "128 nested object/array containers",
+  "duplicate decoded member names",
+  "at most one record for each exact subject/target pair",
+  "bounded bundle-relative identifiers",
+  "no implicit JSON canonicalization",
+]) {
+  if (!architecture.includes(strictBoundary)) {
+    failures.push(`ARCHITECTURE.md does not document ${strictBoundary}`);
+  }
+}
+
+const versioning = await readFile("docs/CONTRACT_VERSIONING.md", "utf8");
+for (const migrationBoundary of [
+  "The only accepted pair is legacy `planned` to new `unknown`",
+  "`LEGACY_STATUS_MIGRATION_FORBIDDEN`",
+  "evidence-enriching migration",
+]) {
+  if (!versioning.includes(migrationBoundary)) {
+    failures.push(`CONTRACT_VERSIONING.md does not document ${migrationBoundary}`);
+  }
+}
+
+const schemaReadme = await readFile("schema/README.md", "utf8");
+for (const contractId of [
+  "`cryptocomm-pack/v1`",
+  "`cryptocomm-pack-manifest/v1`",
+  "`cryptocomm-pack-lock/v1`",
+  "`cryptocomm-compatibility-record/v1`",
+]) {
+  if (!schemaReadme.includes(contractId)) {
+    failures.push(`schema/README.md does not document ${contractId}`);
   }
 }
 

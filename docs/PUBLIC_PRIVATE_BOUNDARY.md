@@ -36,10 +36,9 @@ vulnerability reporting for sensitive security reports.
 
 ## Referencing private evidence
 
-Future contracts may identify an external evidence record only through a separately
-reviewed, non-secret reference scheme. A public record must not contain a private
-location, access token, sensitive digest that enables correlation, or raw evidence.
-This bootstrap does not define or implement such a scheme.
+CCA-110 compatibility records may reference only content-bound synthetic or intentionally public evidence without embedding evidence bytes. Evidence map keys are bounded bundle-relative identifiers only. They are not repository authorities, network locators, private evidence paths, local absolute paths, or provenance records. The evidence value content-binds bytes but does not supply a location or access authority.
+
+Evidence provenance, private evidence reference design, access control, correlation risk, retention, and freshness remain deferred to a separately reviewed contract, including CCA-240. CCA-110 does not define or implement private evidence handling.
 
 ## External services
 

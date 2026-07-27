@@ -15,6 +15,8 @@ commitment. Each phase requires a separately scoped Issue and human decision.
 
 Candidate work, subject to explicit contract design:
 
+- frozen bootstrap preservation plus separate manifest, lock, and evidence-backed compatibility-record contracts;
+- explicit exact-byte content binding, source/producer/resolver identity, and fail-closed contract migration rules;
 - security property, threat, and attacker vocabularies;
 - evidence requirement and capability module contracts;
 - result records using the closed status vocabulary;

@@ -33,6 +33,16 @@ The bootstrap does not establish the eventual property, threat, attacker,
 capability, module, or bridge catalogs. A `planned` compatibility declaration is
 not proof of compatibility.
 
+## CCA-110 contract layer
+
+CCA-110 does not alter the bootstrap envelope. It adds:
+
+- a manifest that separates source-tree identity, producer identity, and path-keyed exact-byte artifact declarations;
+- a lock that binds exact manifest bytes, the same manifest source identity, resolver implementation identity, and optional compatibility-record references;
+- a compatibility record that binds an exact manifest subject to an exact generic target implementation/contract identity.
+
+The lock does not duplicate compatibility state as an independent authority and may bind at most one record per exact subject/target pair. Evidence keys are bundle-relative identifiers, not locations or provenance. The compatibility record does not grant approval. All three contracts preserve `executable=false`, `networkRequired=false`, and `secretsAllowed=false`.
+
 ## Non-goals
 
 The repository does not:

@@ -1,0 +1,271 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/itdojp/crypto-communications-assurance/schema/cryptocomm-pack-lock-v1.schema.json",
+  "title": "Cryptographic Communications Assurance Pack Lock v1",
+  "description": "Closed consumer-side resolution of one exact manifest and resolver implementation. It grants no execution, approval, compatibility, certification, security, or release authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "packId",
+    "packVersion",
+    "manifest",
+    "resolver",
+    "safety"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "cryptocomm-pack-lock/v1"
+    },
+    "packId": {
+      "$ref": "#/$defs/packId"
+    },
+    "packVersion": {
+      "$ref": "#/$defs/semanticVersion"
+    },
+    "manifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "digest",
+        "source"
+      ],
+      "properties": {
+        "digest": {
+          "$ref": "#/$defs/sha256Digest"
+        },
+        "source": {
+          "$ref": "#/$defs/sourceIdentity"
+        }
+      }
+    },
+    "resolver": {
+      "$ref": "#/$defs/implementationIdentity"
+    },
+    "compatibilityRecords": {
+      "description": "Exact content-bound compatibility-record references. A reference repeats subject and target bindings but never duplicates compatibility state as independent authority. Repository-local semantic validation rejects more than one record for the same exact subject and target pair.",
+      "type": "object",
+      "maxProperties": 256,
+      "propertyNames": {
+        "$ref": "#/$defs/recordId"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/compatibilityRecordReference"
+      }
+    },
+    "safety": {
+      "$ref": "#/$defs/safetyBoundary"
+    },
+    "fixtureClassification": {
+      "description": "Explicit non-authoritative marker used only by committed synthetic fixtures.",
+      "const": "synthetic-test-only"
+    }
+  },
+  "$defs": {
+    "packId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"
+    },
+    "semanticVersion": {
+      "type": "string",
+      "maxLength": 64,
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-(?!0[0-9]+(?:\\.|\\+|$))[0-9A-Za-z-]+(?:\\.(?!0[0-9]+(?:\\.|\\+|$))[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$"
+    },
+    "repositoryId": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 256,
+      "pattern": "^[a-z][a-z0-9.-]{0,31}:[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?:/[A-Za-z0-9][A-Za-z0-9._-]{0,127})+$"
+    },
+    "gitSha1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithm",
+        "value"
+      ],
+      "properties": {
+        "algorithm": {
+          "const": "git-sha1"
+        },
+        "value": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        }
+      }
+    },
+    "sourceIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repositoryId",
+        "revision",
+        "tree"
+      ],
+      "properties": {
+        "repositoryId": {
+          "$ref": "#/$defs/repositoryId"
+        },
+        "revision": {
+          "$ref": "#/$defs/gitSha1"
+        },
+        "tree": {
+          "$ref": "#/$defs/gitSha1"
+        }
+      }
+    },
+    "implementationIdentity": {
+      "description": "Stable resolver implementation identity and exact source revision; local paths, hostnames, tokens, current-time values, and human approval fields are not allowed.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "implementationId",
+        "version",
+        "sourceRepositoryId",
+        "sourceRevision"
+      ],
+      "properties": {
+        "implementationId": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 128,
+          "pattern": "^[a-z][a-z0-9.-]*(?:/[a-z0-9][a-z0-9._-]*)+$"
+        },
+        "version": {
+          "$ref": "#/$defs/semanticVersion"
+        },
+        "sourceRepositoryId": {
+          "$ref": "#/$defs/repositoryId"
+        },
+        "sourceRevision": {
+          "$ref": "#/$defs/gitSha1"
+        }
+      }
+    },
+    "sha256Digest": {
+      "description": "SHA-256 of exact referenced bytes; no JSON canonicalization is implied.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithm",
+        "value"
+      ],
+      "properties": {
+        "algorithm": {
+          "const": "sha256"
+        },
+        "value": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "contractIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contractId",
+        "version"
+      ],
+      "properties": {
+        "contractId": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 128,
+          "pattern": "^[a-z][a-z0-9-]*(?:/[a-z][a-z0-9-]*)*/v[1-9][0-9]*$"
+        },
+        "version": {
+          "$ref": "#/$defs/semanticVersion"
+        }
+      }
+    },
+    "compatibilitySubject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "packId",
+        "packVersion",
+        "manifestDigest",
+        "manifestSource"
+      ],
+      "properties": {
+        "packId": {
+          "$ref": "#/$defs/packId"
+        },
+        "packVersion": {
+          "$ref": "#/$defs/semanticVersion"
+        },
+        "manifestDigest": {
+          "$ref": "#/$defs/sha256Digest"
+        },
+        "manifestSource": {
+          "$ref": "#/$defs/sourceIdentity"
+        }
+      }
+    },
+    "compatibilityTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "implementation",
+        "contract"
+      ],
+      "properties": {
+        "implementation": {
+          "$ref": "#/$defs/implementationIdentity"
+        },
+        "contract": {
+          "$ref": "#/$defs/contractIdentity"
+        }
+      }
+    },
+    "recordId": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 128,
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"
+    },
+    "compatibilityRecordReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "digest",
+        "subject",
+        "target"
+      ],
+      "properties": {
+        "digest": {
+          "$ref": "#/$defs/sha256Digest"
+        },
+        "subject": {
+          "$ref": "#/$defs/compatibilitySubject"
+        },
+        "target": {
+          "$ref": "#/$defs/compatibilityTarget"
+        }
+      }
+    },
+    "safetyBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "executable",
+        "networkRequired",
+        "secretsAllowed"
+      ],
+      "properties": {
+        "executable": {
+          "const": false
+        },
+        "networkRequired": {
+          "const": false
+        },
+        "secretsAllowed": {
+          "const": false
+        }
+      }
+    }
+  }
+}

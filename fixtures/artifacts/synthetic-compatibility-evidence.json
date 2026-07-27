@@ -1,0 +1,7 @@
+{
+  "classification": "synthetic-test-only",
+  "assessment": "contract-shape-only",
+  "subject": "synthetic-pack-manifest",
+  "target": "synthetic-target-adapter",
+  "claimBoundary": "No real compatibility, security, approval, certification, or production-readiness claim."
+}

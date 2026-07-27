@@ -1,0 +1,392 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/itdojp/crypto-communications-assurance/schema/cryptocomm-compatibility-record-v1.schema.json",
+  "title": "Cryptographic Communications Assurance Compatibility Record v1",
+  "description": "Closed evidence-bound assessment of one exact pack manifest against one exact target implementation and contract. No state grants human approval, release authority, certification, production readiness, or a security claim.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "recordId",
+    "subject",
+    "target",
+    "state",
+    "safety"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "cryptocomm-compatibility-record/v1"
+    },
+    "recordId": {
+      "$ref": "#/$defs/recordId"
+    },
+    "subject": {
+      "$ref": "#/$defs/compatibilitySubject"
+    },
+    "target": {
+      "$ref": "#/$defs/compatibilityTarget"
+    },
+    "state": {
+      "enum": [
+        "unknown",
+        "compatible",
+        "incompatible",
+        "unsupported"
+      ]
+    },
+    "evidence": {
+      "description": "Content-addressed evidence references keyed only by bounded bundle-relative identifiers. Keys are not repository authorities, network locators, private or local paths, provenance records, freshness assertions, or access-control declarations.",
+      "type": "object",
+      "minProperties": 1,
+      "maxProperties": 256,
+      "propertyNames": {
+        "$ref": "#/$defs/evidenceIdentifier"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/evidenceReference"
+      }
+    },
+    "unsupported": {
+      "$ref": "#/$defs/unsupportedReason"
+    },
+    "safety": {
+      "$ref": "#/$defs/safetyBoundary"
+    },
+    "fixtureClassification": {
+      "description": "Explicit non-authoritative marker used only by committed synthetic fixtures.",
+      "const": "synthetic-test-only"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "required": [
+          "state"
+        ],
+        "properties": {
+          "state": {
+            "enum": [
+              "compatible",
+              "incompatible"
+            ]
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "evidence"
+        ],
+        "not": {
+          "required": [
+            "unsupported"
+          ],
+          "properties": {
+            "unsupported": {}
+          }
+        },
+        "properties": {
+          "evidence": {},
+          "unsupported": {}
+        }
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "state"
+        ],
+        "properties": {
+          "state": {
+            "const": "unsupported"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "unsupported"
+        ],
+        "properties": {
+          "unsupported": {}
+        }
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "state"
+        ],
+        "properties": {
+          "state": {
+            "const": "unknown"
+          }
+        }
+      },
+      "then": {
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "evidence"
+              ],
+              "properties": {
+                "evidence": {}
+              }
+            },
+            {
+              "required": [
+                "unsupported"
+              ],
+              "properties": {
+                "unsupported": {}
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "packId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"
+    },
+    "semanticVersion": {
+      "type": "string",
+      "maxLength": 64,
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-(?!0[0-9]+(?:\\.|\\+|$))[0-9A-Za-z-]+(?:\\.(?!0[0-9]+(?:\\.|\\+|$))[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$"
+    },
+    "repositoryId": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 256,
+      "pattern": "^[a-z][a-z0-9.-]{0,31}:[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?:/[A-Za-z0-9][A-Za-z0-9._-]{0,127})+$"
+    },
+    "gitSha1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithm",
+        "value"
+      ],
+      "properties": {
+        "algorithm": {
+          "const": "git-sha1"
+        },
+        "value": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        }
+      }
+    },
+    "sourceIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repositoryId",
+        "revision",
+        "tree"
+      ],
+      "properties": {
+        "repositoryId": {
+          "$ref": "#/$defs/repositoryId"
+        },
+        "revision": {
+          "$ref": "#/$defs/gitSha1"
+        },
+        "tree": {
+          "$ref": "#/$defs/gitSha1"
+        }
+      }
+    },
+    "implementationIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "implementationId",
+        "version",
+        "sourceRepositoryId",
+        "sourceRevision"
+      ],
+      "properties": {
+        "implementationId": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 128,
+          "pattern": "^[a-z][a-z0-9.-]*(?:/[a-z0-9][a-z0-9._-]*)+$"
+        },
+        "version": {
+          "$ref": "#/$defs/semanticVersion"
+        },
+        "sourceRepositoryId": {
+          "$ref": "#/$defs/repositoryId"
+        },
+        "sourceRevision": {
+          "$ref": "#/$defs/gitSha1"
+        }
+      }
+    },
+    "sha256Digest": {
+      "description": "SHA-256 of exact referenced bytes; no JSON canonicalization is implied.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithm",
+        "value"
+      ],
+      "properties": {
+        "algorithm": {
+          "const": "sha256"
+        },
+        "value": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "contractIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contractId",
+        "version"
+      ],
+      "properties": {
+        "contractId": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 128,
+          "pattern": "^[a-z][a-z0-9-]*(?:/[a-z][a-z0-9-]*)*/v[1-9][0-9]*$"
+        },
+        "version": {
+          "$ref": "#/$defs/semanticVersion"
+        }
+      }
+    },
+    "compatibilitySubject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "packId",
+        "packVersion",
+        "manifestDigest",
+        "manifestSource"
+      ],
+      "properties": {
+        "packId": {
+          "$ref": "#/$defs/packId"
+        },
+        "packVersion": {
+          "$ref": "#/$defs/semanticVersion"
+        },
+        "manifestDigest": {
+          "$ref": "#/$defs/sha256Digest"
+        },
+        "manifestSource": {
+          "$ref": "#/$defs/sourceIdentity"
+        }
+      }
+    },
+    "compatibilityTarget": {
+      "description": "Generic exact target identity suitable for local ae-framework or GenAI Repo Auditor adapters without a live API call.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "implementation",
+        "contract"
+      ],
+      "properties": {
+        "implementation": {
+          "$ref": "#/$defs/implementationIdentity"
+        },
+        "contract": {
+          "$ref": "#/$defs/contractIdentity"
+        }
+      }
+    },
+    "recordId": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 128,
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"
+    },
+    "evidenceIdentifier": {
+      "description": "Opaque bundle-relative identifier of at most eight slash-delimited segments. It is not a filesystem path, URL, repository identity, or provenance record.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,63}(?:/[a-z0-9][a-z0-9._-]{0,63}){0,7}$"
+    },
+    "mediaType": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 127,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9!#$&^_.+-]*/[A-Za-z0-9][A-Za-z0-9!#$&^_.+-]*$"
+    },
+    "evidenceReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "digest",
+        "mediaType",
+        "evidenceType"
+      ],
+      "properties": {
+        "digest": {
+          "$ref": "#/$defs/sha256Digest"
+        },
+        "mediaType": {
+          "$ref": "#/$defs/mediaType"
+        },
+        "evidenceType": {
+          "enum": [
+            "synthetic-test-result",
+            "public-test-result",
+            "public-analysis-report"
+          ]
+        }
+      }
+    },
+    "unsupportedReason": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reason",
+        "scope"
+      ],
+      "properties": {
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        }
+      }
+    },
+    "safetyBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "executable",
+        "networkRequired",
+        "secretsAllowed"
+      ],
+      "properties": {
+        "executable": {
+          "const": false
+        },
+        "networkRequired": {
+          "const": false
+        },
+        "secretsAllowed": {
+          "const": false
+        }
+      }
+    }
+  }
+}

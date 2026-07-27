@@ -1,0 +1,263 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/itdojp/crypto-communications-assurance/schema/cryptocomm-pack-manifest-v1.schema.json",
+  "title": "Cryptographic Communications Assurance Pack Manifest v1",
+  "description": "Closed publisher/source declaration for one immutable, content-bound, data-only pack. It grants no approval, compatibility, certification, security, or release authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "packId",
+    "packVersion",
+    "source",
+    "producer",
+    "artifacts",
+    "safety"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "cryptocomm-pack-manifest/v1"
+    },
+    "packId": {
+      "$ref": "#/$defs/packId"
+    },
+    "packVersion": {
+      "$ref": "#/$defs/semanticVersion"
+    },
+    "source": {
+      "$ref": "#/$defs/sourceIdentity"
+    },
+    "producer": {
+      "$ref": "#/$defs/implementationIdentity"
+    },
+    "artifacts": {
+      "description": "Artifact declarations keyed by bounded repository-relative POSIX paths. Digests cover exact artifact bytes without implicit JSON canonicalization.",
+      "type": "object",
+      "minProperties": 1,
+      "maxProperties": 1024,
+      "propertyNames": {
+        "$ref": "#/$defs/artifactPath"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/artifactDeclaration"
+      }
+    },
+    "safety": {
+      "$ref": "#/$defs/safetyBoundary"
+    },
+    "fixtureClassification": {
+      "description": "Explicit non-authoritative marker used only by committed synthetic fixtures.",
+      "const": "synthetic-test-only"
+    }
+  },
+  "$defs": {
+    "packId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"
+    },
+    "semanticVersion": {
+      "type": "string",
+      "maxLength": 64,
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-(?!0[0-9]+(?:\\.|\\+|$))[0-9A-Za-z-]+(?:\\.(?!0[0-9]+(?:\\.|\\+|$))[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$"
+    },
+    "repositoryId": {
+      "description": "Stable provider-scoped repository identity, not a URL, branch, hostname-local path, or credential-bearing locator.",
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 256,
+      "pattern": "^[a-z][a-z0-9.-]{0,31}:[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?:/[A-Za-z0-9][A-Za-z0-9._-]{0,127})+$"
+    },
+    "gitSha1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithm",
+        "value"
+      ],
+      "properties": {
+        "algorithm": {
+          "const": "git-sha1"
+        },
+        "value": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        }
+      }
+    },
+    "sourceIdentity": {
+      "description": "Identity of the source tree being packaged. It is not implicitly the commit that contains a generated manifest.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repositoryId",
+        "revision",
+        "tree"
+      ],
+      "properties": {
+        "repositoryId": {
+          "$ref": "#/$defs/repositoryId"
+        },
+        "revision": {
+          "$ref": "#/$defs/gitSha1"
+        },
+        "tree": {
+          "$ref": "#/$defs/gitSha1"
+        }
+      }
+    },
+    "implementationIdentity": {
+      "description": "Stable producer implementation identity and its exact source revision; it conveys no human approval.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "implementationId",
+        "version",
+        "sourceRepositoryId",
+        "sourceRevision"
+      ],
+      "properties": {
+        "implementationId": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 128,
+          "pattern": "^[a-z][a-z0-9.-]*(?:/[a-z0-9][a-z0-9._-]*)+$"
+        },
+        "version": {
+          "$ref": "#/$defs/semanticVersion"
+        },
+        "sourceRepositoryId": {
+          "$ref": "#/$defs/repositoryId"
+        },
+        "sourceRevision": {
+          "$ref": "#/$defs/gitSha1"
+        }
+      }
+    },
+    "sha256Digest": {
+      "description": "SHA-256 of exact referenced bytes; no JSON canonicalization is implied.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithm",
+        "value"
+      ],
+      "properties": {
+        "algorithm": {
+          "const": "sha256"
+        },
+        "value": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "artifactPath": {
+      "description": "Bounded repository-relative POSIX path; absolute paths, backslashes, and dot traversal segments are forbidden.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^(?!/)(?!.*\\\\)(?!\\.{1,2}(?:/|$))[A-Za-z0-9._-]+(?:/(?!\\.{1,2}(?:/|$))[A-Za-z0-9._-]+)*$"
+    },
+    "mediaType": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 127,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9!#$&^_.+-]*/[A-Za-z0-9][A-Za-z0-9!#$&^_.+-]*$"
+    },
+    "contractIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contractId"
+      ],
+      "properties": {
+        "contractId": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 128,
+          "pattern": "^[a-z][a-z0-9-]*(?:/[a-z][a-z0-9-]*)*/v[1-9][0-9]*$"
+        }
+      }
+    },
+    "artifactDeclaration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "digest",
+        "mediaType",
+        "artifactType"
+      ],
+      "properties": {
+        "digest": {
+          "$ref": "#/$defs/sha256Digest"
+        },
+        "mediaType": {
+          "$ref": "#/$defs/mediaType"
+        },
+        "artifactType": {
+          "enum": [
+            "contract-schema",
+            "contract-instance",
+            "catalog",
+            "profile",
+            "evidence-requirement",
+            "bridge-context",
+            "bridge-evidence",
+            "documentation",
+            "synthetic-fixture"
+          ]
+        },
+        "contract": {
+          "$ref": "#/$defs/contractIdentity"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "artifactType"
+            ],
+            "properties": {
+              "artifactType": {
+                "enum": [
+                  "contract-schema",
+                  "contract-instance"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "contract"
+            ],
+            "properties": {
+              "contract": {}
+            }
+          }
+        }
+      ]
+    },
+    "safetyBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "executable",
+        "networkRequired",
+        "secretsAllowed"
+      ],
+      "properties": {
+        "executable": {
+          "const": false
+        },
+        "networkRequired": {
+          "const": false
+        },
+        "secretsAllowed": {
+          "const": false
+        }
+      }
+    }
+  }
+}

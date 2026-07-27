@@ -26,9 +26,19 @@ Bootstrap / pre-alpha.
 
 No stable contract, compatibility commitment, production-readiness claim, or certification claim exists yet.
 
-The only machine-readable contract in this bootstrap is the closed, data-only
-[`cryptocomm-pack/v1`](schema/cryptocomm-pack-v1.schema.json) envelope. It does not
-contain a complete security property, threat, module, or integration catalog.
+The frozen bootstrap contract remains the closed, data-only
+[`cryptocomm-pack/v1`](schema/cryptocomm-pack-v1.schema.json) envelope. Its
+`planned` value remains intent only and is not reinterpreted as compatibility.
+
+CCA-110 adds three separate closed Draft 2020-12 contracts:
+
+- [`cryptocomm-pack-manifest/v1`](schema/cryptocomm-pack-manifest-v1.schema.json) for a publisher/source declaration of one immutable pack;
+- [`cryptocomm-pack-lock/v1`](schema/cryptocomm-pack-lock-v1.schema.json) for a consumer resolution of exact manifest bytes and resolver identity;
+- [`cryptocomm-compatibility-record/v1`](schema/cryptocomm-compatibility-record-v1.schema.json) for an evidence-bound assessment of one exact manifest against one exact target.
+
+These contracts do not contain a complete security property, threat, module, or integration catalog, and they make no actual compatibility claim about ae-framework or GenAI Repo Auditor. See [contract versioning](docs/CONTRACT_VERSIONING.md) and [ADR 0002](docs/decisions/0002-pack-manifest-lock-and-compatibility.md).
+
+Contract inputs use bounded strict UTF-8 JSON decoding before schema and semantic validation. SHA-256 continues to cover the exact original bytes; no JSON canonicalization is implied.
 
 ## Non-goals
 
@@ -78,6 +88,8 @@ pnpm run typecheck
 pnpm run lint
 pnpm run test
 pnpm run check:schemas
+pnpm run check:docs
+pnpm run lint:workflows
 pnpm run verify
 ```
 
