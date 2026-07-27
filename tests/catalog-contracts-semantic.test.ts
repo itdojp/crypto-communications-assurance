@@ -73,7 +73,7 @@ describe("CCA-120 deterministic catalog semantics", () => {
     ["unsafe safety", "property", "../fixtures/invalid/property-catalog-unsafe-safety.json", "SAFETY_BOUNDARY_VIOLATION"],
     ["unknown relationship", "threat", "../fixtures/invalid/threat-catalog-unknown-relationship.json", "RELATIONSHIP_UNKNOWN"],
     ["missing assumptions", "threat", "../fixtures/invalid/threat-catalog-missing-assumptions.json", "ASSUMPTIONS_REQUIRED"],
-  ] as const)("rejects %s with stable diagnostic %s", async (_name, kind, file, expected) => {
+  ] as const)("rejects %s (%s fixture at %s) with stable diagnostic %s", async (_name, kind, file, expected) => {
     const bytes = await loadBytes(file);
     const validation = kind === "property" ? validatePropertyCatalog(bytes) : kind === "attacker" ? validateAttackerCatalog(bytes) : validateThreatCatalog(bytes);
     expect(codes(validation)).toContain(expected);
