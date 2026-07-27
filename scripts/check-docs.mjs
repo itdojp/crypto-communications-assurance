@@ -173,6 +173,14 @@ const sourceBaseline = await readFile("docs/SOURCE_BASELINE.md", "utf8");
 for (const source of ["RFC 3552", "NIST SP 800-57 Part 1 Rev. 5", "NIST SP 800-30 Rev. 1", "RFC 4949", "RFC 9180", "RFC 9420"]) {
   if (!sourceBaseline.includes(source)) failures.push(`SOURCE_BASELINE.md does not document ${source}`);
 }
+for (const sectionBoundary of [
+  "3, 4.4, 5–5.6.4, 6.2, 7, 8–8.4, 9.5",
+  "2.3, 3.2 Tasks 2-1 through 2-3, 3.3, Appendices D–F",
+]) {
+  if (!sourceBaseline.includes(sectionBoundary)) {
+    failures.push(`SOURCE_BASELINE.md does not document catalog source boundary ${sectionBoundary}`);
+  }
+}
 
 if (failures.length > 0) {
   console.error(failures.join("\n"));
