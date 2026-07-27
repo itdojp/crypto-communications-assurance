@@ -25,7 +25,7 @@
     "properties": {
       "type": "object",
       "minProperties": 1,
-      "maxProperties": 40,
+      "maxProperties": 64,
       "propertyNames": {
         "$ref": "#/$defs/propertyId"
       },

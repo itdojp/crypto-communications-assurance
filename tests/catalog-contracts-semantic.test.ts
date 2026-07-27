@@ -100,8 +100,10 @@ describe("CCA-120 deterministic catalog semantics", () => {
       loadStrict<AttackerCatalog>("../pack/catalogs/v1/attacker-catalog.json"),
       loadStrict<ThreatCatalog>("../pack/catalogs/v1/threat-catalog.json"),
     ]);
-    expect(Object.keys(properties.properties)).toHaveLength(maximumPropertyEntries);
-    expect(Object.keys(attackers.capabilities)).toHaveLength(maximumCapabilityEntries);
+    expect(Object.keys(properties.properties)).toHaveLength(40);
+    expect(Object.keys(properties.properties).length).toBeLessThanOrEqual(maximumPropertyEntries);
+    expect(Object.keys(attackers.capabilities)).toHaveLength(28);
+    expect(Object.keys(attackers.capabilities).length).toBeLessThanOrEqual(maximumCapabilityEntries);
     expect(Object.keys(attackers.attackers)).toHaveLength(8);
     expect(Object.keys(attackers.attackers).length).toBeLessThanOrEqual(maximumAttackerEntries);
     expect(Object.keys(threats.threats)).toHaveLength(36);

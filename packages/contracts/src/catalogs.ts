@@ -47,10 +47,10 @@ export const propertyEvidenceKinds = [
 ] as const;
 export type PropertyEvidenceKind = (typeof propertyEvidenceKinds)[number];
 
-export const maximumPropertyEntries = 40;
-export const maximumCapabilityEntries = 28;
-export const maximumAttackerEntries = 10;
-export const maximumThreatEntries = 40;
+export const maximumPropertyEntries = 64;
+export const maximumCapabilityEntries = 48;
+export const maximumAttackerEntries = 16;
+export const maximumThreatEntries = 64;
 export const maximumPropertyReferences = 8;
 export const maximumAttackerCapabilityReferences = 16;
 export const maximumThreatReferences = 8;

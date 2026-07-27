@@ -18,7 +18,7 @@ SHA-256 covers exact referenced bytes; version 1 performs no implicit JSON canon
 
 Compatibility records use `unknown`, `compatible`, `incompatible`, or `unsupported`; only compatible/incompatible require content-addressed evidence, while unsupported requires explicit reason and scope. One lock can bind at most one record for an exact subject/target pair. Evidence map keys are bounded bundle-relative identifiers rather than repository authorities, network locators, private or local paths, or provenance records.
 
-CCA-120 entry identifiers use `property.<domain>.<name>`, `capability.<domain>.<name>`, `attacker.<name>`, and `threat.<domain>.<name>`. The catalog schemas are closed and bounded to 40 properties, 28 capabilities, 10 attacker models, and 40 threats. They contain no source/producer identity, execution status, risk score, control, evidence result, approval, or release field.
+CCA-120 entry identifiers use `property.<domain>.<name>`, `capability.<domain>.<name>`, `attacker.<name>`, and `threat.<domain>.<name>`. The catalog schemas are closed and bounded to 64 properties, 48 capabilities, 16 attacker models, and 64 threats. The initial reviewed artifacts contain 40 properties, 28 capabilities, 8 attacker models, and 36 threats. They contain no source/producer identity, execution status, risk score, control, evidence result, approval, or release field.
 
 Generic JSON Schema validation is separate from cross-artifact semantic validation in `packages/contracts`. Schema conformance alone establishes none of truth, completeness, compatibility, security, certification, human approval, production readiness, or release readiness.
 
