@@ -1,0 +1,197 @@
+{
+  "schemaVersion": "cryptocomm-attacker-catalog/v1",
+  "catalogId": "synthetic-attacker-fixture",
+  "catalogVersion": "0.0.0-synthetic.1",
+  "capabilities": {
+    "capability.network.observe": {
+      "id": "capability.network.observe",
+      "title": "Observe network traffic",
+      "definition": "Read communication units and exposed transport metadata on a scoped path.",
+      "domain": "network",
+      "assumptions": [
+        "The attacker has the stated degree of access to a communication path."
+      ],
+      "exclusions": [
+        "This capability does not imply endpoint, key-material, or physical compromise."
+      ],
+      "sourceRefs": [
+        "rfc3552:section-3"
+      ]
+    },
+    "capability.participation.authenticated-malicious": {
+      "id": "capability.participation.authenticated-malicious",
+      "title": "Authenticated malicious participation",
+      "definition": "Act through a valid participant identity while choosing inputs or state transitions adversarially.",
+      "domain": "participation",
+      "assumptions": [
+        "The attacker is admitted as an authenticated participant within a bounded context."
+      ],
+      "exclusions": [
+        "Authentication does not grant every role, permission, or endpoint capability."
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.3.2",
+        "rfc9420:section-16.12"
+      ]
+    },
+    "capability.endpoint.read-storage": {
+      "id": "capability.endpoint.read-storage",
+      "title": "Read endpoint storage",
+      "definition": "Read scoped persistent endpoint state and stored material.",
+      "domain": "endpoint",
+      "assumptions": [
+        "The attacker has the stated access to one scoped endpoint resource."
+      ],
+      "exclusions": [
+        "Access does not imply control of every endpoint, service, or external communication path."
+      ],
+      "sourceRefs": [
+        "nist-sp-800-30r1:section-2.3"
+      ]
+    },
+    "capability.infrastructure.control-intermediary": {
+      "id": "capability.infrastructure.control-intermediary",
+      "title": "Control an intermediary",
+      "definition": "Control a scoped intermediary that processes or forwards communication data.",
+      "domain": "infrastructure",
+      "assumptions": [
+        "The identified intermediary, relay, or service is within the attacker-controlled boundary."
+      ],
+      "exclusions": [
+        "Control does not imply compromise of end-to-end protected endpoints unless separately stated."
+      ],
+      "sourceRefs": [
+        "rfc3552:section-3.4",
+        "rfc9420:section-16.9"
+      ]
+    },
+    "capability.secret-compromise.long-term": {
+      "id": "capability.secret-compromise.long-term",
+      "title": "Compromise long-term secret",
+      "definition": "Obtain scoped long-term secret material.",
+      "domain": "secret-compromise",
+      "assumptions": [
+        "The specified class of secret material is available to the attacker for the scoped period."
+      ],
+      "exclusions": [
+        "No other secret class or time period is implicitly compromised."
+      ],
+      "sourceRefs": [
+        "nist-sp-800-57pt1r5:section-5.5",
+        "rfc9420:section-16.6"
+      ]
+    },
+    "capability.time-state.manipulate-clock": {
+      "id": "capability.time-state.manipulate-clock",
+      "title": "Manipulate clock input",
+      "definition": "Influence a scoped clock or time source used for a security decision.",
+      "domain": "time-state",
+      "assumptions": [
+        "The attacker can influence the stated local time or persistent-state input."
+      ],
+      "exclusions": [
+        "The capability does not imply arbitrary code execution or access to unrelated state."
+      ],
+      "sourceRefs": [
+        "nist-sp-800-30r1:section-2.3",
+        "rfc9420:section-14"
+      ]
+    },
+    "capability.input-resource.deliver-malformed-input": {
+      "id": "capability.input-resource.deliver-malformed-input",
+      "title": "Deliver malformed input",
+      "definition": "Supply syntactically or semantically malformed data to a scoped parser or state machine.",
+      "domain": "input-resource",
+      "assumptions": [
+        "The attacker can supply input or consume resources through an exposed interface."
+      ],
+      "exclusions": [
+        "The capability does not imply a vulnerability or successful denial of service."
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.3.3",
+        "rfc3552:section-4.6"
+      ]
+    },
+    "capability.supply-chain.modify-artifact": {
+      "id": "capability.supply-chain.modify-artifact",
+      "title": "Modify build or release artifact",
+      "definition": "Alter a scoped build input, build output, or release artifact before deployment.",
+      "domain": "supply-chain",
+      "assumptions": [
+        "The attacker can alter the specified pre-deployment artifact boundary."
+      ],
+      "exclusions": [
+        "The capability does not imply control of source history, signing authority, or deployed endpoints unless stated."
+      ],
+      "sourceRefs": [
+        "nist-sp-800-30r1:section-appendix-D"
+      ]
+    },
+    "capability.observation.traffic-pattern": {
+      "id": "capability.observation.traffic-pattern",
+      "title": "Observe traffic patterns",
+      "definition": "Observe scoped message sizes, timing, frequency, direction, or relationship metadata.",
+      "domain": "observation",
+      "assumptions": [
+        "The attacker can obtain the stated observable signal."
+      ],
+      "exclusions": [
+        "Observation does not imply message plaintext or secret-key access."
+      ],
+      "sourceRefs": [
+        "rfc3552:section-3.2",
+        "rfc9420:section-16.4"
+      ]
+    },
+    "capability.physical.access-device": {
+      "id": "capability.physical.access-device",
+      "title": "Physical device access",
+      "definition": "Interact physically with a scoped device, component, or interface.",
+      "domain": "physical",
+      "assumptions": [
+        "The attacker can interact physically with the scoped device or environment."
+      ],
+      "exclusions": [
+        "Physical access does not automatically imply successful secret extraction or persistent control."
+      ],
+      "sourceRefs": [
+        "nist-sp-800-30r1:section-appendix-D"
+      ]
+    }
+  },
+  "attackers": {
+    "attacker.synthetic-bounded-model": {
+      "id": "attacker.synthetic-bounded-model",
+      "title": "Synthetic bounded attacker model",
+      "definition": "Synthetic model used only to validate cross-catalog references.",
+      "capabilities": [
+        "capability.network.observe",
+        "capability.participation.authenticated-malicious",
+        "capability.endpoint.read-storage",
+        "capability.infrastructure.control-intermediary",
+        "capability.secret-compromise.long-term",
+        "capability.time-state.manipulate-clock",
+        "capability.input-resource.deliver-malformed-input",
+        "capability.supply-chain.modify-artifact",
+        "capability.observation.traffic-pattern",
+        "capability.physical.access-device"
+      ],
+      "assumptions": [
+        "The observer can access the identified path or radio/transport exposure."
+      ],
+      "exclusions": [
+        "No active network action, endpoint compromise, or secret-material compromise is assumed."
+      ],
+      "sourceRefs": [
+        "rfc3552:section-3.2"
+      ]
+    }
+  },
+  "safety": {
+    "executable": false,
+    "networkRequired": false,
+    "secretsAllowed": false
+  },
+  "fixtureClassification": "synthetic-test-only"
+}

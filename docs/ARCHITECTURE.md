@@ -20,7 +20,7 @@
 
 | Path | Bootstrap responsibility |
 | --- | --- |
-| `pack/` | Reserved root for later authoritative pack data. |
+| `pack/` | Authoritative JSON-first domain catalog data and a non-contract coverage review matrix. |
 | `packages/contracts/` | TypeScript validation helpers for shared contracts. |
 | `packages/cli/` | Reserved for a later local, non-authoritative CLI. |
 | `packages/bridge/` | Reserved for later content-bound bridge logic. |
@@ -34,9 +34,7 @@
 | `docs/` | Architecture, boundaries, semantics, roadmap, and decisions. |
 | `tests/` | Deterministic repository-local behavior checks. |
 
-Directories without bootstrap implementation contain an explanatory README. Their
-presence does not claim that a bridge, adapter, compatibility layer, or property
-catalog is implemented.
+Directories without implementation contain an explanatory README. Their presence does not claim that a bridge, adapter, compatibility layer, CLI, or upstream integration is implemented. The three CCA-120 catalog files under `pack/catalogs/v1/` are authoritative public data; the adjacent coverage matrix is review evidence rather than a fourth contract.
 
 ## Contract validation flow
 
@@ -47,6 +45,16 @@ catalog is implemented.
 5. Compatibility validation binds exact subject and target identities, record bytes, and required evidence references. A lock may contain at most one record for each exact subject/target pair; multiple supporting results belong in one record's evidence map.
 6. Both validation layers return deterministic local results. Neither fetches a URL, resolves an arbitrary path, executes an artifact, contacts an integration, or promotes evidence into approval.
 
+## Catalog validation flow
+
+1. The same CCA-110 strict decoder derives each catalog object from no more than 1,048,576 exact UTF-8 bytes and rejects invalid syntax, excess nesting, and duplicate decoded member names before later validation.
+2. A caller separately validates each object against its closed Draft 2020-12 schema.
+3. Pure semantic validators enforce stable map-key/entry identity, domain agreement, bounded maps and references, explicit assumptions and exclusions, safety flags, and required category coverage.
+4. Cross-catalog validation resolves property dependencies, attacker capability references, and threat capability/property references. It rejects self-dependencies, cycles, dangling references, unknown relationships, and duplicate semantic identifiers.
+5. CCA-110 manifest validation independently verifies exact catalog-byte SHA-256 bindings. Catalog semantic validation neither hashes itself into a catalog nor duplicates source/producer identity.
+
+Threat applicability to attacker models is derived through capability composition. Threat entries do not name attacker models as a second relationship authority. Property evidence kinds are abstract lanes, not execution results or approval.
+
 The authority boundaries are intentionally non-equivalent:
 
 - `bootstrap envelope != manifest`
@@ -55,6 +63,12 @@ The authority boundaries are intentionally non-equivalent:
 - `compatibility != human approval`
 - `schema validation != semantic validation`
 - `content binding != security proof`
+- `catalog entry != product claim`
+- `catalog coverage != security proof`
+- `threat != confirmed vulnerability`
+- `attacker model != universal requirement`
+- `evidence need != evidence result`
+- `reference source != compliance claim`
 
 SHA-256 covers the original exact bytes. JSON whitespace, member order, encoding, and line endings therefore affect content identity; strict decoding does not rewrite input and version 1 performs no implicit JSON canonicalization. A manifest has no self-digest.
 

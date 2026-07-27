@@ -1,0 +1,66 @@
+{
+  "schemaVersion": "cryptocomm-pack-manifest/v1",
+  "packId": "synthetic-cca-120-catalog-pack",
+  "packVersion": "0.0.0-synthetic.1",
+  "source": {
+    "repositoryId": "synthetic:example/cca-120-source",
+    "revision": {
+      "algorithm": "git-sha1",
+      "value": "3333333333333333333333333333333333333333"
+    },
+    "tree": {
+      "algorithm": "git-sha1",
+      "value": "4444444444444444444444444444444444444444"
+    }
+  },
+  "producer": {
+    "implementationId": "synthetic/catalog-fixture-writer",
+    "version": "0.0.0-synthetic.1",
+    "sourceRepositoryId": "synthetic:example/fixture-writer",
+    "sourceRevision": {
+      "algorithm": "git-sha1",
+      "value": "5555555555555555555555555555555555555555"
+    }
+  },
+  "artifacts": {
+    "pack/catalogs/v1/property-catalog.json": {
+      "digest": {
+        "algorithm": "sha256",
+        "value": "11c76e7c602714e7b860220babeaaf214a825eb6b1bc55677fb11265e2d3da90"
+      },
+      "mediaType": "application/json",
+      "artifactType": "catalog",
+      "contract": {
+        "contractId": "cryptocomm-property-catalog/v1"
+      }
+    },
+    "pack/catalogs/v1/attacker-catalog.json": {
+      "digest": {
+        "algorithm": "sha256",
+        "value": "66d8aacaabcb5edad809f8fe6c4ae4ea324c411178fd12f6e670843a694d4cc5"
+      },
+      "mediaType": "application/json",
+      "artifactType": "catalog",
+      "contract": {
+        "contractId": "cryptocomm-attacker-catalog/v1"
+      }
+    },
+    "pack/catalogs/v1/threat-catalog.json": {
+      "digest": {
+        "algorithm": "sha256",
+        "value": "f81921d192768ca84c6f9ded24fe7aed98cdc3f0f300f30d2d656ca47aee85d6"
+      },
+      "mediaType": "application/json",
+      "artifactType": "catalog",
+      "contract": {
+        "contractId": "cryptocomm-threat-catalog/v1"
+      }
+    }
+  },
+  "safety": {
+    "executable": false,
+    "networkRequired": false,
+    "secretsAllowed": false
+  },
+  "fixtureClassification": "synthetic-test-only"
+}

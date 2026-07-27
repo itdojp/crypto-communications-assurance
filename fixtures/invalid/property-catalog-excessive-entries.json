@@ -1,0 +1,1313 @@
+{
+  "schemaVersion": "cryptocomm-property-catalog/v1",
+  "catalogId": "synthetic-property-fixture",
+  "catalogVersion": "0.0.0-synthetic.1",
+  "properties": {
+    "property.confidentiality.synthetic-00": {
+      "id": "property.confidentiality.synthetic-00",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-01": {
+      "id": "property.confidentiality.synthetic-01",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-02": {
+      "id": "property.confidentiality.synthetic-02",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-03": {
+      "id": "property.confidentiality.synthetic-03",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-04": {
+      "id": "property.confidentiality.synthetic-04",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-05": {
+      "id": "property.confidentiality.synthetic-05",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-06": {
+      "id": "property.confidentiality.synthetic-06",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-07": {
+      "id": "property.confidentiality.synthetic-07",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-08": {
+      "id": "property.confidentiality.synthetic-08",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-09": {
+      "id": "property.confidentiality.synthetic-09",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-10": {
+      "id": "property.confidentiality.synthetic-10",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-11": {
+      "id": "property.confidentiality.synthetic-11",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-12": {
+      "id": "property.confidentiality.synthetic-12",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-13": {
+      "id": "property.confidentiality.synthetic-13",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-14": {
+      "id": "property.confidentiality.synthetic-14",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-15": {
+      "id": "property.confidentiality.synthetic-15",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-16": {
+      "id": "property.confidentiality.synthetic-16",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-17": {
+      "id": "property.confidentiality.synthetic-17",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-18": {
+      "id": "property.confidentiality.synthetic-18",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-19": {
+      "id": "property.confidentiality.synthetic-19",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-20": {
+      "id": "property.confidentiality.synthetic-20",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-21": {
+      "id": "property.confidentiality.synthetic-21",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-22": {
+      "id": "property.confidentiality.synthetic-22",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-23": {
+      "id": "property.confidentiality.synthetic-23",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-24": {
+      "id": "property.confidentiality.synthetic-24",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-25": {
+      "id": "property.confidentiality.synthetic-25",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-26": {
+      "id": "property.confidentiality.synthetic-26",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-27": {
+      "id": "property.confidentiality.synthetic-27",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-28": {
+      "id": "property.confidentiality.synthetic-28",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-29": {
+      "id": "property.confidentiality.synthetic-29",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-30": {
+      "id": "property.confidentiality.synthetic-30",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-31": {
+      "id": "property.confidentiality.synthetic-31",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-32": {
+      "id": "property.confidentiality.synthetic-32",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-33": {
+      "id": "property.confidentiality.synthetic-33",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-34": {
+      "id": "property.confidentiality.synthetic-34",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-35": {
+      "id": "property.confidentiality.synthetic-35",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-36": {
+      "id": "property.confidentiality.synthetic-36",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-37": {
+      "id": "property.confidentiality.synthetic-37",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-38": {
+      "id": "property.confidentiality.synthetic-38",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-39": {
+      "id": "property.confidentiality.synthetic-39",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-40": {
+      "id": "property.confidentiality.synthetic-40",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-41": {
+      "id": "property.confidentiality.synthetic-41",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-42": {
+      "id": "property.confidentiality.synthetic-42",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-43": {
+      "id": "property.confidentiality.synthetic-43",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-44": {
+      "id": "property.confidentiality.synthetic-44",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-45": {
+      "id": "property.confidentiality.synthetic-45",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-46": {
+      "id": "property.confidentiality.synthetic-46",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-47": {
+      "id": "property.confidentiality.synthetic-47",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-48": {
+      "id": "property.confidentiality.synthetic-48",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-49": {
+      "id": "property.confidentiality.synthetic-49",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-50": {
+      "id": "property.confidentiality.synthetic-50",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-51": {
+      "id": "property.confidentiality.synthetic-51",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-52": {
+      "id": "property.confidentiality.synthetic-52",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-53": {
+      "id": "property.confidentiality.synthetic-53",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-54": {
+      "id": "property.confidentiality.synthetic-54",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-55": {
+      "id": "property.confidentiality.synthetic-55",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-56": {
+      "id": "property.confidentiality.synthetic-56",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-57": {
+      "id": "property.confidentiality.synthetic-57",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-58": {
+      "id": "property.confidentiality.synthetic-58",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-59": {
+      "id": "property.confidentiality.synthetic-59",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-60": {
+      "id": "property.confidentiality.synthetic-60",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-61": {
+      "id": "property.confidentiality.synthetic-61",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-62": {
+      "id": "property.confidentiality.synthetic-62",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-63": {
+      "id": "property.confidentiality.synthetic-63",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.confidentiality.synthetic-64": {
+      "id": "property.confidentiality.synthetic-64",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    }
+  },
+  "safety": {
+    "executable": false,
+    "networkRequired": false,
+    "secretsAllowed": false
+  },
+  "fixtureClassification": "synthetic-test-only"
+}

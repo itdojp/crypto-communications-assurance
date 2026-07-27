@@ -7,7 +7,10 @@
 | `cryptocomm-pack/v1` | Frozen bootstrap envelope | Its existing meaning is immutable; `planned` remains intent only. |
 | `cryptocomm-pack-manifest/v1` | Publisher/source declaration for one immutable pack | New CCA-110 contract. |
 | `cryptocomm-pack-lock/v1` | Consumer resolution of exact manifest bytes and resolver identity | New CCA-110 contract. |
-| `cryptocomm-compatibility-record/v1` | Evidence-backed assessment of an exact subject against an exact target | New CCA-110 contract. |
+| `cryptocomm-compatibility-record/v1` | Evidence-backed assessment of an exact subject against an exact target | CCA-110 contract. |
+| `cryptocomm-property-catalog/v1` | Stable protocol-neutral property entries and bounded dependencies/evidence needs | Proposed CCA-120 contract. |
+| `cryptocomm-attacker-catalog/v1` | Separate capability and bounded attacker-model entries | Proposed CCA-120 contract. |
+| `cryptocomm-threat-catalog/v1` | Threat entries relating capabilities, preconditions, affected properties, and impact | Proposed CCA-120 contract. |
 
 Each value identifies one closed JSON Schema Draft 2020-12 contract. The manifest, lock, and compatibility record have separate identities because their authorities and content bindings differ.
 
@@ -20,6 +23,12 @@ Each value identifies one closed JSON Schema Draft 2020-12 contract. The manifes
 - Schema conformance is only schema conformance; it is not truth, completeness, compatibility, security, approval, certification, or release readiness.
 
 Because these contracts are closed, even an apparently optional field can change the accepted document set. Such evolution requires an explicit review and versioning decision rather than an unreviewed in-place edit.
+
+## Catalog identity evolution
+
+CCA-120 map keys and entry `id` values are immutable semantic identities. A material change to a property, capability, attacker model, or threat meaning requires a new identifier or a new contract/catalog major version. Titles and definitions may be clarified only when the accepted meaning and relationship authority do not change.
+
+The only v1 relationship authorities are property `dependsOn`, attacker `capabilities`, threat `capabilities`, and threat `affectedProperties`. Adding a new relationship or changing category meaning is a contract change, not an editorial update. Catalog source and producer identity remain in CCA-110 packaging rather than being added in place to catalog v1.
 
 ## Explicit migration
 

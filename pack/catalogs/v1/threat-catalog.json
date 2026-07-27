@@ -1,0 +1,959 @@
+{
+  "schemaVersion": "cryptocomm-threat-catalog/v1",
+  "catalogId": "cryptocomm-threats",
+  "catalogVersion": "0.1.0",
+  "threats": {
+    "threat.confidentiality.passive-message-disclosure": {
+      "id": "threat.confidentiality.passive-message-disclosure",
+      "title": "Passive message disclosure",
+      "definition": "An observer obtains protected message content from an exposed communication representation.",
+      "category": "confidentiality",
+      "capabilities": [
+        "capability.network.observe"
+      ],
+      "affectedProperties": [
+        "property.confidentiality.message"
+      ],
+      "preconditions": [
+        "Protected content is present on a path observable in a representation that exposes it."
+      ],
+      "assumptions": [
+        "The selected capability and precondition are both present within the explicitly evaluated scope."
+      ],
+      "exclusions": [
+        "This entry does not assert likelihood, severity, exploitability, vulnerability confirmation, mitigation, or product impact outside the bounded statement."
+      ],
+      "impact": "Scoped message content becomes available to an unintended observer.",
+      "sourceRefs": [
+        "rfc3552:section-3.2.1"
+      ]
+    },
+    "threat.confidentiality.secret-material-extraction": {
+      "id": "threat.confidentiality.secret-material-extraction",
+      "title": "Secret-material extraction",
+      "definition": "An attacker obtains secret keying material from scoped endpoint state or observation.",
+      "category": "confidentiality",
+      "capabilities": [
+        "capability.endpoint.read-memory",
+        "capability.observation.side-channel"
+      ],
+      "affectedProperties": [
+        "property.confidentiality.key-material"
+      ],
+      "preconditions": [
+        "Secret material or correlated processing is accessible within the scoped endpoint boundary."
+      ],
+      "assumptions": [
+        "The selected capability and precondition are both present within the explicitly evaluated scope."
+      ],
+      "exclusions": [
+        "This entry does not assert likelihood, severity, exploitability, vulnerability confirmation, mitigation, or product impact outside the bounded statement."
+      ],
+      "impact": "Scoped key material may be used outside its authorized handling boundary.",
+      "sourceRefs": [
+        "nist-sp-800-57pt1r5:section-5.5"
+      ]
+    },
+    "threat.confidentiality.compromised-service-disclosure": {
+      "id": "threat.confidentiality.compromised-service-disclosure",
+      "title": "Compromised service disclosure",
+      "definition": "A controlled service exposes content or key material available to its role.",
+      "category": "confidentiality",
+      "capabilities": [
+        "capability.infrastructure.control-service"
+      ],
+      "affectedProperties": [
+        "property.confidentiality.message",
+        "property.confidentiality.key-material"
+      ],
+      "preconditions": [
+        "The service receives protected content or material in a form its role can access."
+      ],
+      "assumptions": [
+        "The selected capability and precondition are both present within the explicitly evaluated scope."
+      ],
+      "exclusions": [
+        "This entry does not assert likelihood, severity, exploitability, vulnerability confirmation, mitigation, or product impact outside the bounded statement."
+      ],
+      "impact": "Information available to the scoped service may be disclosed.",
+      "sourceRefs": [
+        "nist-sp-800-30r1:section-2.3"
+      ]
+    },
+    "threat.integrity.in-transit-modification": {
+      "id": "threat.integrity.in-transit-modification",
+      "title": "In-transit message modification",
+      "definition": "An active path attacker alters protected input before receiver processing.",
+      "category": "integrity",
+      "capabilities": [
+        "capability.network.modify"
+      ],
+      "affectedProperties": [
+        "property.integrity.message"
+      ],
+      "preconditions": [
+        "The receiver processes data delivered through the attacker-controlled path."
+      ],
+      "assumptions": [
+        "The selected capability and precondition are both present within the explicitly evaluated scope."
+      ],
+      "exclusions": [
+        "This entry does not assert likelihood, severity, exploitability, vulnerability confirmation, mitigation, or product impact outside the bounded statement."
+      ],
+      "impact": "The receiver may act on content different from the sender-intended content.",
+      "sourceRefs": [
+        "rfc3552:section-3.3.4"
+      ]
+    },
+    "threat.integrity.endpoint-state-tampering": {
+      "id": "threat.integrity.endpoint-state-tampering",
+      "title": "Endpoint state tampering",
+      "definition": "An attacker changes security-relevant endpoint state outside an authorized transition.",
+      "category": "integrity",
+      "capabilities": [
+        "capability.endpoint.write-state"
+      ],
+      "affectedProperties": [
+        "property.integrity.state"
+      ],
+      "preconditions": [
+        "The attacker can write the scoped state before it is used."
+      ],
+      "assumptions": [
+        "The selected capability and precondition are both present within the explicitly evaluated scope."
+      ],
+      "exclusions": [
+        "This entry does not assert likelihood, severity, exploitability, vulnerability confirmation, mitigation, or product impact outside the bounded statement."
+      ],
+      "impact": "Subsequent security decisions may be based on unauthorized state.",
+      "sourceRefs": [
+        "nist-sp-800-30r1:section-2.3"
+      ]
+    },
+    "threat.integrity.configuration-transcript-tampering": {
+      "id": "threat.integrity.configuration-transcript-tampering",
+      "title": "Configuration or transcript tampering",
+      "definition": "An attacker alters security configuration or the transcript used for a decision.",
+      "category": "integrity",
+      "capabilities": [
+        "capability.supply-chain.modify-artifact",
+        "capability.endpoint.write-state"
+      ],
+      "affectedProperties": [
+        "property.integrity.configuration",
+        "property.integrity.transcript"
+      ],
+      "preconditions": [
+        "Configuration or transcript state is writable before validation or use."
+      ],
+      "assumptions": [
+        "The selected capability and precondition are both present within the explicitly evaluated scope."
+      ],
+      "exclusions": [
+        "This entry does not assert likelihood, severity, exploitability, vulnerability confirmation, mitigation, or product impact outside the bounded statement."
+      ],
+      "impact": "The evaluated security context may differ from the authorized or observed context.",
+      "sourceRefs": [
+        "rfc9180:section-9.6"
+      ]
+    },
+    "threat.authentication.sender-impersonation": {
+      "id": "threat.authentication.sender-impersonation",
+      "title": "Sender impersonation",
+      "definition": "An attacker causes a message to be accepted under another sender identity.",
+      "category": "authentication",
+      "capabilities": [
+        "capability.network.inject",
+        "capability.secret-compromise.long-term"
+      ],
+      "affectedProperties": [
+        "property.authentication.sender"
+      ],
+      "preconditions": [
+        "The receiver relies on a sender assertion affected by injected input or scoped secret compromise."
+      ],
+      "assumptions": [
+        "The selected capability and precondition are both present within the explicitly evaluated scope."
+      ],
+      "exclusions": [
+        "This entry does not assert likelihood, severity, exploitability, vulnerability confirmation, mitigation, or product impact outside the bounded statement."
+      ],
+      "impact": "A message may be attributed to the wrong sender.",
+      "sourceRefs": [
+        "rfc3552:section-2.1.3"
+      ]
+    },
+    "threat.authentication.peer-service-impersonation": {
+      "id": "threat.authentication.peer-service-impersonation",
+      "title": "Peer or service impersonation",
+      "definition": "An attacker presents a communication endpoint as an intended peer or service.",
+      "category": "authentication",
+      "capabilities": [
+        "capability.network.inject",
+        "capability.infrastructure.control-service"
+      ],
+      "affectedProperties": [
+        "property.authentication.peer",
+        "property.authentication.service"
+      ],
+      "preconditions": [
+        "The relying party establishes a peer or service identity through attacker-influenced input."
+      ],
+      "assumptions": [
+        "The selected capability and precondition are both present within the explicitly evaluated scope."
+      ],
+      "exclusions": [
+        "This entry does not assert likelihood, severity, exploitability, vulnerability confirmation, mitigation, or product impact outside the bounded statement."
+      ],
+      "impact": "A party may disclose data or accept actions under the wrong endpoint identity.",
+      "sourceRefs": [
+        "rfc3552:section-2.1.3"
+      ]
+    },
+    "threat.authentication.malicious-participant-misuse": {
+      "id": "threat.authentication.malicious-participant-misuse",
+      "title": "Authenticated participant misuse",
+      "definition": "A valid participant uses its scoped participation to submit adversarial messages or assertions.",
+      "category": "authentication",
+      "capabilities": [
+        "capability.participation.authenticated-malicious"
+      ],
+      "affectedProperties": [
+        "property.authentication.device",
+        "property.authentication.sender"
+      ],
+      "preconditions": [
+        "The participant is authenticated but can choose malicious inputs within its role."
+      ],
+      "assumptions": [
+        "The selected capability and precondition are both present within the explicitly evaluated scope."
+      ],
+      "exclusions": [
+        "This entry does not assert likelihood, severity, exploitability, vulnerability confirmation, mitigation, or product impact outside the bounded statement."
+      ],
+      "impact": "Authentication alone may be mistaken for authorization or benign behavior.",
+      "sourceRefs": [
+        "rfc3552:section-2.3.2"
+      ]
+    },
+    "threat.binding.identity-session-misbinding": {
+      "id": "threat.binding.identity-session-misbinding",
+      "title": "Identity or session misbinding",
+      "definition": "An authenticated identity or message is associated with the wrong session instance.",
+      "category": "binding",
+      "capabilities": [
+        "capability.network.inject",
+        "capability.network.replay"
+      ],
+      "affectedProperties": [
+        "property.binding.identity",
+        "property.binding.session"
+      ],
+      "preconditions": [
+        "Two or more identities or sessions can be confused at a binding boundary."
+      ],
+      "assumptions": [
+        "The selected capability and precondition are both present within the explicitly evaluated scope."
+      ],
+      "exclusions": [
+        "This entry does not assert likelihood, severity, exploitability, vulnerability confirmation, mitigation, or product impact outside the bounded statement."
+      ],
+      "impact": "A valid assertion may authorize or affect the wrong scoped session.",
+      "sourceRefs": [
+        "rfc9180:section-9.6"
+      ]
+    },
+    "threat.binding.context-epoch-confusion": {
+      "id": "threat.binding.context-epoch-confusion",
+      "title": "Context or epoch confusion",
+      "definition": "A value created for one context or epoch is accepted in another.",
+      "category": "binding",
+      "capabilities": [
+        "capability.network.replay",
+        "capability.endpoint.write-state"
+      ],
+      "affectedProperties": [
+        "property.binding.context-epoch"
+      ],
+      "preconditions": [
+        "Representations do not unambiguously distinguish the relevant context or epoch."
+      ],
+      "assumptions": [
+        "The selected capability and precondition are both present within the explicitly evaluated scope."
+      ],
+      "exclusions": [
+        "This entry does not assert likelihood, severity, exploitability, vulnerability confirmation, mitigation, or product impact outside the bounded statement."
+      ],
+      "impact": "Security decisions may reuse material or authority outside its intended domain.",
+      "sourceRefs": [
+        "rfc9180:section-9.6",
+        "rfc9420:section-14"
+      ]
+    },
+    "threat.binding.transcript-splicing": {
+      "id": "threat.binding.transcript-splicing",
+      "title": "Transcript splicing",
+      "definition": "An attacker combines valid transcript fragments from different exchanges into one accepted context.",
+      "category": "binding",
+      "capabilities": [
+        "capability.network.modify",
+        "capability.network.reorder"
+      ],
+      "affectedProperties": [
+        "property.binding.transcript",
+        "property.integrity.transcript"
+      ],
+      "preconditions": [
+        "The decision input does not bind every relevant transcript component and order."
+      ],
+      "assumptions": [
+        "The selected capability and precondition are both present within the explicitly evaluated scope."
+      ],
+      "exclusions": [
+        "This entry does not assert likelihood, severity, exploitability, vulnerability confirmation, mitigation, or product impact outside the bounded statement."
+      ],
+      "impact": "A decision may be accepted for an exchange that no party intended.",
+      "sourceRefs": [
+        "rfc9180:section-9.6"
+      ]
+    },
+    "threat.replay-ordering.replay-accepted": {
+      "id": "threat.replay-ordering.replay-accepted",
+      "title": "Replay accepted as new",
+      "definition": "Previously accepted input is reintroduced and treated as a new authorized event.",
+      "category": "replay-ordering",
+      "capabilities": [
+        "capability.network.replay"
+      ],
+      "affectedProperties": [
+        "property.replay-ordering.replay-duplicate"
+      ],
+      "preconditions": [
+        "The receiver cannot distinguish the captured instance from a new acceptable instance."
+      ],
+      "assumptions": [
+        "The selected capability and precondition are both present within the explicitly evaluated scope."
+      ],
+      "exclusions": [
+        "This entry does not assert likelihood, severity, exploitability, vulnerability confirmation, mitigation, or product impact outside the bounded statement."
+      ],
+      "impact": "A scoped action or state transition may be repeated.",
+      "sourceRefs": [
+        "rfc3552:section-3.3.1"
+      ]
+    },
+    "threat.replay-ordering.duplicate-side-effect": {
+      "id": "threat.replay-ordering.duplicate-side-effect",
+      "title": "Duplicate delivery side effect",
+      "definition": "Additional copies of one input trigger repeated non-idempotent effects.",
+      "category": "replay-ordering",
+      "capabilities": [
+        "capability.network.duplicate"
+      ],
+      "affectedProperties": [
+        "property.replay-ordering.replay-duplicate"
+      ],
+      "preconditions": [
+        "The receiver accepts duplicate delivery without detecting or safely handling it."
+      ],
+      "assumptions": [
+        "The selected capability and precondition are both present within the explicitly evaluated scope."
+      ],
+      "exclusions": [
+        "This entry does not assert likelihood, severity, exploitability, vulnerability confirmation, mitigation, or product impact outside the bounded statement."
+      ],
+      "impact": "The scoped action may occur more times than authorized.",
+      "sourceRefs": [
+        "rfc3552:section-3.3"
+      ]
+    },
+    "threat.replay-ordering.reordering-divergence": {
+      "id": "threat.replay-ordering.reordering-divergence",
+      "title": "Reordering causes state divergence",
+      "definition": "Inputs accepted in an unintended order produce conflicting or incorrect security state.",
+      "category": "replay-ordering",
+      "capabilities": [
+        "capability.network.reorder",
+        "capability.network.delay"
+      ],
+      "affectedProperties": [
+        "property.replay-ordering.ordering",
+        "property.integrity.state"
+      ],
+      "preconditions": [
+        "The state machine permits attacker-influenced ordering without an explicit resolution rule."
+      ],
+      "assumptions": [
+        "The selected capability and precondition are both present within the explicitly evaluated scope."
+      ],
+      "exclusions": [
+        "This entry does not assert likelihood, severity, exploitability, vulnerability confirmation, mitigation, or product impact outside the bounded statement."
+      ],
+      "impact": "Participants may hold divergent or unauthorized scoped state.",
+      "sourceRefs": [
+        "rfc9180:section-9.7.1",
+        "rfc9420:section-15.3"
+      ]
+    },
+    "threat.replay-ordering.rollback-freshness-bypass": {
+      "id": "threat.replay-ordering.rollback-freshness-bypass",
+      "title": "Rollback bypasses freshness",
+      "definition": "Older persistent state or clock input makes stale material appear current.",
+      "category": "replay-ordering",
+      "capabilities": [
+        "capability.time-state.rollback-persistent-state",
+        "capability.time-state.manipulate-clock"
+      ],
+      "affectedProperties": [
+        "property.replay-ordering.freshness",
+        "property.replay-ordering.rollback"
+      ],
+      "preconditions": [
+        "Freshness depends on attacker-influenced time or persisted state."
+      ],
+      "assumptions": [
+        "The selected capability and precondition are both present within the explicitly evaluated scope."
+      ],
+      "exclusions": [
+        "This entry does not assert likelihood, severity, exploitability, vulnerability confirmation, mitigation, or product impact outside the bounded statement."
+      ],
+      "impact": "Expired, superseded, or previously used authority may be accepted.",
+      "sourceRefs": [
+        "nist-sp-800-57pt1r5:section-7",
+        "rfc9420:section-14"
+      ]
+    },
+    "threat.randomness.nonce-reuse": {
+      "id": "threat.randomness.nonce-reuse",
+      "title": "Nonce reuse within a prohibited scope",
+      "definition": "A value required to be unique is repeated under the same scoped key and context.",
+      "category": "randomness",
+      "capabilities": [
+        "capability.endpoint.write-state",
+        "capability.time-state.rollback-persistent-state"
+      ],
+      "affectedProperties": [
+        "property.randomness.nonce-uniqueness"
+      ],
+      "preconditions": [
+        "Nonce state can repeat or be restored without detection."
+      ],
+      "assumptions": [
+        "The selected capability and precondition are both present within the explicitly evaluated scope."
+      ],
+      "exclusions": [
+        "This entry does not assert likelihood, severity, exploitability, vulnerability confirmation, mitigation, or product impact outside the bounded statement."
+      ],
+      "impact": "Security assumptions tied to scoped nonce uniqueness may no longer hold.",
+      "sourceRefs": [
+        "rfc9180:section-9.7"
+      ]
+    },
+    "threat.randomness.weak-randomness": {
+      "id": "threat.randomness.weak-randomness",
+      "title": "Insufficient or correlated randomness",
+      "definition": "Security-relevant random values do not meet their declared unpredictability or independence assumptions.",
+      "category": "randomness",
+      "capabilities": [
+        "capability.observation.side-channel",
+        "capability.physical.inject-fault"
+      ],
+      "affectedProperties": [
+        "property.randomness.entropy-assumptions"
+      ],
+      "preconditions": [
+        "Generation inputs or processing are biased, observable, repeated, or faulted within scope."
+      ],
+      "assumptions": [
+        "The selected capability and precondition are both present within the explicitly evaluated scope."
+      ],
+      "exclusions": [
+        "This entry does not assert likelihood, severity, exploitability, vulnerability confirmation, mitigation, or product impact outside the bounded statement."
+      ],
+      "impact": "An attacker may predict or correlate scoped security values.",
+      "sourceRefs": [
+        "nist-sp-800-57pt1r5:section-4.4",
+        "rfc9180:section-9.7"
+      ]
+    },
+    "threat.key-management.derivation-context-collision": {
+      "id": "threat.key-management.derivation-context-collision",
+      "title": "Key-derivation context collision",
+      "definition": "Derived material for distinct purposes is produced under an indistinguishable context.",
+      "category": "key-management",
+      "capabilities": [
+        "capability.endpoint.write-state"
+      ],
+      "affectedProperties": [
+        "property.key-management.derivation-context"
+      ],
+      "preconditions": [
+        "Purpose or context labels can collide or be omitted at the derivation boundary."
+      ],
+      "assumptions": [
+        "The selected capability and precondition are both present within the explicitly evaluated scope."
+      ],
+      "exclusions": [
+        "This entry does not assert likelihood, severity, exploitability, vulnerability confirmation, mitigation, or product impact outside the bounded statement."
+      ],
+      "impact": "Derived material may be accepted for an unintended purpose or domain.",
+      "sourceRefs": [
+        "rfc9180:section-9.6"
+      ]
+    },
+    "threat.key-management.key-role-reuse": {
+      "id": "threat.key-management.key-role-reuse",
+      "title": "Key role reuse",
+      "definition": "The same key material is used across roles that require separation.",
+      "category": "key-management",
+      "capabilities": [
+        "capability.participation.authenticated-malicious"
+      ],
+      "affectedProperties": [
+        "property.key-management.separation"
+      ],
+      "preconditions": [
+        "A participant or implementation can cause cross-role use of scoped material."
+      ],
+      "assumptions": [
+        "The selected capability and precondition are both present within the explicitly evaluated scope."
+      ],
+      "exclusions": [
+        "This entry does not assert likelihood, severity, exploitability, vulnerability confirmation, mitigation, or product impact outside the bounded statement."
+      ],
+      "impact": "Compromise or misuse in one role may affect another role.",
+      "sourceRefs": [
+        "nist-sp-800-57pt1r5:section-5.2"
+      ]
+    },
+    "threat.key-management.revoked-key-acceptance": {
+      "id": "threat.key-management.revoked-key-acceptance",
+      "title": "Revoked or superseded key acceptance",
+      "definition": "Material outside its authorized lifecycle is accepted for a new operation.",
+      "category": "key-management",
+      "capabilities": [
+        "capability.time-state.rollback-persistent-state",
+        "capability.infrastructure.control-service"
+      ],
+      "affectedProperties": [
+        "property.key-management.rotation",
+        "property.key-management.revocation"
+      ],
+      "preconditions": [
+        "Lifecycle or revocation state is stale, controlled, or not checked before use."
+      ],
+      "assumptions": [
+        "The selected capability and precondition are both present within the explicitly evaluated scope."
+      ],
+      "exclusions": [
+        "This entry does not assert likelihood, severity, exploitability, vulnerability confirmation, mitigation, or product impact outside the bounded statement."
+      ],
+      "impact": "A scoped operation may rely on material that is no longer authorized.",
+      "sourceRefs": [
+        "nist-sp-800-57pt1r5:section-7",
+        "nist-sp-800-57pt1r5:section-8.3.5"
+      ]
+    },
+    "threat.key-management.destruction-recovery-boundary-failure": {
+      "id": "threat.key-management.destruction-recovery-boundary-failure",
+      "title": "Destruction or recovery boundary failure",
+      "definition": "Material expected to be destroyed remains usable, or recovery restores unauthorized material or authority.",
+      "category": "key-management",
+      "capabilities": [
+        "capability.endpoint.read-storage",
+        "capability.endpoint.write-state"
+      ],
+      "affectedProperties": [
+        "property.key-management.destruction",
+        "property.key-management.recovery"
+      ],
+      "preconditions": [
+        "Residual or recovery storage is accessible or lifecycle metadata is not enforced."
+      ],
+      "assumptions": [
+        "The selected capability and precondition are both present within the explicitly evaluated scope."
+      ],
+      "exclusions": [
+        "This entry does not assert likelihood, severity, exploitability, vulnerability confirmation, mitigation, or product impact outside the bounded statement."
+      ],
+      "impact": "Scoped secret material or authority may persist or return outside policy.",
+      "sourceRefs": [
+        "nist-sp-800-57pt1r5:section-8.3"
+      ]
+    },
+    "threat.downgrade-agility.silent-downgrade": {
+      "id": "threat.downgrade-agility.silent-downgrade",
+      "title": "Silent downgrade",
+      "definition": "An attacker causes selection of a less protective option without an authenticated policy decision.",
+      "category": "downgrade-agility",
+      "capabilities": [
+        "capability.network.modify",
+        "capability.infrastructure.control-intermediary"
+      ],
+      "affectedProperties": [
+        "property.downgrade-agility.downgrade"
+      ],
+      "preconditions": [
+        "Choice negotiation or configuration can be modified without binding to policy and transcript."
+      ],
+      "assumptions": [
+        "The selected capability and precondition are both present within the explicitly evaluated scope."
+      ],
+      "exclusions": [
+        "This entry does not assert likelihood, severity, exploitability, vulnerability confirmation, mitigation, or product impact outside the bounded statement."
+      ],
+      "impact": "The communication may operate under protections outside the intended policy.",
+      "sourceRefs": [
+        "rfc9180:section-9.7.2"
+      ]
+    },
+    "threat.downgrade-agility.algorithm-confusion": {
+      "id": "threat.downgrade-agility.algorithm-confusion",
+      "title": "Algorithm or mode confusion",
+      "definition": "A result produced under one algorithm, mode, or purpose is interpreted under another.",
+      "category": "downgrade-agility",
+      "capabilities": [
+        "capability.network.inject",
+        "capability.endpoint.write-state"
+      ],
+      "affectedProperties": [
+        "property.downgrade-agility.algorithm-confusion"
+      ],
+      "preconditions": [
+        "The accepted representation does not unambiguously bind the relevant algorithm and context."
+      ],
+      "assumptions": [
+        "The selected capability and precondition are both present within the explicitly evaluated scope."
+      ],
+      "exclusions": [
+        "This entry does not assert likelihood, severity, exploitability, vulnerability confirmation, mitigation, or product impact outside the bounded statement."
+      ],
+      "impact": "A scoped security check may validate data under unintended semantics.",
+      "sourceRefs": [
+        "rfc9180:section-9.6"
+      ]
+    },
+    "threat.downgrade-agility.transition-lockout": {
+      "id": "threat.downgrade-agility.transition-lockout",
+      "title": "Unsafe agility transition",
+      "definition": "A supported transition leaves participants unable to agree on an authorized option or silently preserves an obsolete one.",
+      "category": "downgrade-agility",
+      "capabilities": [
+        "capability.infrastructure.control-service",
+        "capability.network.delete"
+      ],
+      "affectedProperties": [
+        "property.downgrade-agility.algorithm-agility",
+        "property.resilience.availability"
+      ],
+      "preconditions": [
+        "Transition policy or capability signaling can be withheld, split, or interpreted inconsistently."
+      ],
+      "assumptions": [
+        "The selected capability and precondition are both present within the explicitly evaluated scope."
+      ],
+      "exclusions": [
+        "This entry does not assert likelihood, severity, exploitability, vulnerability confirmation, mitigation, or product impact outside the bounded statement."
+      ],
+      "impact": "Communication may become unavailable or remain on an unintended option.",
+      "sourceRefs": [
+        "nist-sp-800-57pt1r5:section-5.6.4"
+      ]
+    },
+    "threat.compromise-recovery.historical-exposure-after-long-term-compromise": {
+      "id": "threat.compromise-recovery.historical-exposure-after-long-term-compromise",
+      "title": "Historical exposure after long-term compromise",
+      "definition": "Compromise of current long-term material reveals protected content from an earlier scoped period.",
+      "category": "compromise-recovery",
+      "capabilities": [
+        "capability.secret-compromise.long-term",
+        "capability.network.observe"
+      ],
+      "affectedProperties": [
+        "property.compromise-recovery.forward-secrecy",
+        "property.confidentiality.message"
+      ],
+      "preconditions": [
+        "Historical communication and current long-term material are both available to the attacker."
+      ],
+      "assumptions": [
+        "The selected capability and precondition are both present within the explicitly evaluated scope."
+      ],
+      "exclusions": [
+        "This entry does not assert likelihood, severity, exploitability, vulnerability confirmation, mitigation, or product impact outside the bounded statement."
+      ],
+      "impact": "Past scoped message content may become recoverable.",
+      "sourceRefs": [
+        "rfc9180:section-9.1",
+        "rfc9420:section-16.6"
+      ]
+    },
+    "threat.compromise-recovery.continued-access-after-recovery": {
+      "id": "threat.compromise-recovery.continued-access-after-recovery",
+      "title": "Continued access after recovery",
+      "definition": "An attacker retaining prior compromise material continues to access communication after the declared recovery point.",
+      "category": "compromise-recovery",
+      "capabilities": [
+        "capability.secret-compromise.session",
+        "capability.secret-compromise.derived",
+        "capability.network.observe"
+      ],
+      "affectedProperties": [
+        "property.compromise-recovery.post-compromise-recovery"
+      ],
+      "preconditions": [
+        "The recovery transition does not replace every scoped attacker-known dependency or attacker access persists."
+      ],
+      "assumptions": [
+        "The selected capability and precondition are both present within the explicitly evaluated scope."
+      ],
+      "exclusions": [
+        "This entry does not assert likelihood, severity, exploitability, vulnerability confirmation, mitigation, or product impact outside the bounded statement."
+      ],
+      "impact": "New scoped communications may remain exposed after a claimed recovery.",
+      "sourceRefs": [
+        "rfc9420:section-16.6"
+      ]
+    },
+    "threat.compromise-recovery.compromise-scope-propagation": {
+      "id": "threat.compromise-recovery.compromise-scope-propagation",
+      "title": "Unbounded compromise propagation",
+      "definition": "Compromise of one material class or participant silently extends to unrelated periods, roles, or participants.",
+      "category": "compromise-recovery",
+      "capabilities": [
+        "capability.secret-compromise.ephemeral",
+        "capability.secret-compromise.derived"
+      ],
+      "affectedProperties": [
+        "property.compromise-recovery.scope",
+        "property.key-management.separation"
+      ],
+      "preconditions": [
+        "Dependencies and separation boundaries are absent, ambiguous, or shared across scopes."
+      ],
+      "assumptions": [
+        "The selected capability and precondition are both present within the explicitly evaluated scope."
+      ],
+      "exclusions": [
+        "This entry does not assert likelihood, severity, exploitability, vulnerability confirmation, mitigation, or product impact outside the bounded statement."
+      ],
+      "impact": "The impact of a scoped compromise may exceed its declared boundary.",
+      "sourceRefs": [
+        "nist-sp-800-57pt1r5:section-5.5"
+      ]
+    },
+    "threat.metadata-privacy.traffic-relationship-inference": {
+      "id": "threat.metadata-privacy.traffic-relationship-inference",
+      "title": "Traffic relationship inference",
+      "definition": "An observer infers communicating parties, relationships, or activity from exposed metadata.",
+      "category": "metadata-privacy",
+      "capabilities": [
+        "capability.observation.traffic-pattern"
+      ],
+      "affectedProperties": [
+        "property.metadata-privacy.communication-metadata"
+      ],
+      "preconditions": [
+        "Relevant routing, identity, direction, or frequency metadata is observable."
+      ],
+      "assumptions": [
+        "The selected capability and precondition are both present within the explicitly evaluated scope."
+      ],
+      "exclusions": [
+        "This entry does not assert likelihood, severity, exploitability, vulnerability confirmation, mitigation, or product impact outside the bounded statement."
+      ],
+      "impact": "Scoped relationship or activity information may be disclosed.",
+      "sourceRefs": [
+        "rfc9420:section-16.4"
+      ]
+    },
+    "threat.metadata-privacy.length-timing-inference": {
+      "id": "threat.metadata-privacy.length-timing-inference",
+      "title": "Length or timing inference",
+      "definition": "An observer correlates message lengths or timing with protected activity.",
+      "category": "metadata-privacy",
+      "capabilities": [
+        "capability.observation.traffic-pattern"
+      ],
+      "affectedProperties": [
+        "property.metadata-privacy.observable-patterns"
+      ],
+      "preconditions": [
+        "Observable sizes or timing vary with protected inputs or events."
+      ],
+      "assumptions": [
+        "The selected capability and precondition are both present within the explicitly evaluated scope."
+      ],
+      "exclusions": [
+        "This entry does not assert likelihood, severity, exploitability, vulnerability confirmation, mitigation, or product impact outside the bounded statement."
+      ],
+      "impact": "Scoped information may be inferred without reading message content.",
+      "sourceRefs": [
+        "rfc9420:section-16.4",
+        "rfc9180:section-9.7"
+      ]
+    },
+    "threat.metadata-privacy.side-channel-correlation": {
+      "id": "threat.metadata-privacy.side-channel-correlation",
+      "title": "Side-channel correlation",
+      "definition": "A local observer correlates implementation-dependent signals with protected processing.",
+      "category": "metadata-privacy",
+      "capabilities": [
+        "capability.observation.side-channel",
+        "capability.physical.access-device"
+      ],
+      "affectedProperties": [
+        "property.metadata-privacy.observable-patterns",
+        "property.confidentiality.key-material"
+      ],
+      "preconditions": [
+        "The scoped device emits an observable signal correlated with protected state."
+      ],
+      "assumptions": [
+        "The selected capability and precondition are both present within the explicitly evaluated scope."
+      ],
+      "exclusions": [
+        "This entry does not assert likelihood, severity, exploitability, vulnerability confirmation, mitigation, or product impact outside the bounded statement."
+      ],
+      "impact": "Scoped activity or material may be inferred from non-protocol observations.",
+      "sourceRefs": [
+        "nist-sp-800-30r1:section-appendix-D"
+      ]
+    },
+    "threat.resilience.resource-exhaustion": {
+      "id": "threat.resilience.resource-exhaustion",
+      "title": "Resource exhaustion",
+      "definition": "Attacker-controlled requests or data consume bounded resources needed for authorized communication.",
+      "category": "resilience",
+      "capabilities": [
+        "capability.input-resource.exhaust-resources"
+      ],
+      "affectedProperties": [
+        "property.resilience.availability"
+      ],
+      "preconditions": [
+        "An exposed interface consumes material resources before enforcing a suitable bound."
+      ],
+      "assumptions": [
+        "The selected capability and precondition are both present within the explicitly evaluated scope."
+      ],
+      "exclusions": [
+        "This entry does not assert likelihood, severity, exploitability, vulnerability confirmation, mitigation, or product impact outside the bounded statement."
+      ],
+      "impact": "Authorized scoped communication may be delayed or unavailable.",
+      "sourceRefs": [
+        "rfc3552:section-4.6"
+      ]
+    },
+    "threat.resilience.malformed-input-unsafe-failure": {
+      "id": "threat.resilience.malformed-input-unsafe-failure",
+      "title": "Malformed input causes unsafe failure",
+      "definition": "Malformed input causes partial state mutation, ambiguous success, or another non-fail-closed outcome.",
+      "category": "resilience",
+      "capabilities": [
+        "capability.input-resource.deliver-malformed-input"
+      ],
+      "affectedProperties": [
+        "property.resilience.fail-closed",
+        "property.integrity.state"
+      ],
+      "preconditions": [
+        "Input reaches parsing or state-transition logic before complete validation."
+      ],
+      "assumptions": [
+        "The selected capability and precondition are both present within the explicitly evaluated scope."
+      ],
+      "exclusions": [
+        "This entry does not assert likelihood, severity, exploitability, vulnerability confirmation, mitigation, or product impact outside the bounded statement."
+      ],
+      "impact": "The system may expose an authorized-looking or inconsistent scoped state.",
+      "sourceRefs": [
+        "rfc3552:section-5"
+      ]
+    },
+    "threat.resilience.state-recovery-fork": {
+      "id": "threat.resilience.state-recovery-fork",
+      "title": "Recovery creates conflicting state",
+      "definition": "Recovery restores stale or inconsistent state that conflicts with other participants.",
+      "category": "resilience",
+      "capabilities": [
+        "capability.time-state.rollback-persistent-state",
+        "capability.network.delay"
+      ],
+      "affectedProperties": [
+        "property.resilience.state-recovery",
+        "property.replay-ordering.rollback"
+      ],
+      "preconditions": [
+        "Recovery input is not bound to the intended current context and transition history."
+      ],
+      "assumptions": [
+        "The selected capability and precondition are both present within the explicitly evaluated scope."
+      ],
+      "exclusions": [
+        "This entry does not assert likelihood, severity, exploitability, vulnerability confirmation, mitigation, or product impact outside the bounded statement."
+      ],
+      "impact": "Participants may resume with divergent or unauthorized scoped state.",
+      "sourceRefs": [
+        "rfc9420:section-14"
+      ]
+    },
+    "threat.evidence-publication.private-evidence-disclosure": {
+      "id": "threat.evidence-publication.private-evidence-disclosure",
+      "title": "Private evidence disclosure",
+      "definition": "Private evidence is placed into a public or unauthorized publication channel.",
+      "category": "evidence-publication",
+      "capabilities": [
+        "capability.endpoint.read-storage",
+        "capability.infrastructure.control-service"
+      ],
+      "affectedProperties": [
+        "property.evidence-publication.classification-boundary"
+      ],
+      "preconditions": [
+        "Evidence classification or publication authorization is absent, bypassed, or misapplied."
+      ],
+      "assumptions": [
+        "The selected capability and precondition are both present within the explicitly evaluated scope."
+      ],
+      "exclusions": [
+        "This entry does not assert likelihood, severity, exploitability, vulnerability confirmation, mitigation, or product impact outside the bounded statement."
+      ],
+      "impact": "Private scoped evidence may become publicly or broadly accessible.",
+      "sourceRefs": [
+        "nist-sp-800-30r1:section-3.3"
+      ]
+    },
+    "threat.evidence-publication.prohibited-content-inclusion": {
+      "id": "threat.evidence-publication.prohibited-content-inclusion",
+      "title": "Prohibited content inclusion",
+      "definition": "Secrets, customer data, or restricted findings are included in an artifact eligible for publication.",
+      "category": "evidence-publication",
+      "capabilities": [
+        "capability.supply-chain.modify-artifact",
+        "capability.endpoint.write-state"
+      ],
+      "affectedProperties": [
+        "property.evidence-publication.classification-boundary"
+      ],
+      "preconditions": [
+        "The publication input boundary accepts unreviewed or misclassified material."
+      ],
+      "assumptions": [
+        "The selected capability and precondition are both present within the explicitly evaluated scope."
+      ],
+      "exclusions": [
+        "This entry does not assert likelihood, severity, exploitability, vulnerability confirmation, mitigation, or product impact outside the bounded statement."
+      ],
+      "impact": "Prohibited content may enter public history or a distributed artifact.",
+      "sourceRefs": [
+        "nist-sp-800-30r1:section-3.3"
+      ]
+    }
+  },
+  "safety": {
+    "executable": false,
+    "networkRequired": false,
+    "secretsAllowed": false
+  }
+}

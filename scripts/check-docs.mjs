@@ -24,13 +24,19 @@ const requiredFiles = [
   "docs/STATUS_SEMANTICS.md",
   "docs/ROADMAP.md",
   "docs/CONTRACT_VERSIONING.md",
+  "docs/CATALOG_COVERAGE.md",
+  "docs/SOURCE_BASELINE.md",
   "docs/decisions/0001-repository-and-product-boundary.md",
   "docs/decisions/0002-pack-manifest-lock-and-compatibility.md",
+  "docs/decisions/0003-security-catalog-separation-and-relationships.md",
   "schema/cryptocomm-pack-v1.schema.json",
   "schema/README.md",
   "schema/cryptocomm-pack-manifest-v1.schema.json",
   "schema/cryptocomm-pack-lock-v1.schema.json",
   "schema/cryptocomm-compatibility-record-v1.schema.json",
+  "schema/cryptocomm-property-catalog-v1.schema.json",
+  "schema/cryptocomm-attacker-catalog-v1.schema.json",
+  "schema/cryptocomm-threat-catalog-v1.schema.json",
 ];
 
 const requiredDirectories = [
@@ -142,9 +148,37 @@ for (const contractId of [
   "`cryptocomm-pack-manifest/v1`",
   "`cryptocomm-pack-lock/v1`",
   "`cryptocomm-compatibility-record/v1`",
+  "`cryptocomm-property-catalog/v1`",
+  "`cryptocomm-attacker-catalog/v1`",
+  "`cryptocomm-threat-catalog/v1`",
 ]) {
   if (!schemaReadme.includes(contractId)) {
     failures.push(`schema/README.md does not document ${contractId}`);
+  }
+}
+
+const catalogCoverage = await readFile("docs/CATALOG_COVERAGE.md", "utf8");
+for (const boundary of [
+  "`catalog entry != product claim`",
+  "`catalog coverage != security proof`",
+  "`threat != confirmed vulnerability`",
+  "`attacker model != universal requirement`",
+  "`evidence need != evidence result`",
+  "`reference source != compliance claim`",
+]) {
+  if (!catalogCoverage.includes(boundary)) failures.push(`CATALOG_COVERAGE.md does not document ${boundary}`);
+}
+
+const sourceBaseline = await readFile("docs/SOURCE_BASELINE.md", "utf8");
+for (const source of ["RFC 3552", "NIST SP 800-57 Part 1 Rev. 5", "NIST SP 800-30 Rev. 1", "RFC 4949", "RFC 9180", "RFC 9420"]) {
+  if (!sourceBaseline.includes(source)) failures.push(`SOURCE_BASELINE.md does not document ${source}`);
+}
+for (const sectionBoundary of [
+  "3, 4.4, 5–5.6.4, 6.2, 7, 8–8.4, 9.5",
+  "2.3, 3.2 Tasks 2-1 through 2-3, 3.3, Appendices D–F",
+]) {
+  if (!sourceBaseline.includes(sectionBoundary)) {
+    failures.push(`SOURCE_BASELINE.md does not document catalog source boundary ${sectionBoundary}`);
   }
 }
 

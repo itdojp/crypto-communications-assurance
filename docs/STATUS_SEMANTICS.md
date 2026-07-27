@@ -28,6 +28,10 @@ readiness, or absence of vulnerabilities.
 - Synthetic and test-only evidence stays synthetic or test-only after a `pass`.
 - An absence of findings is not proof of absence of vulnerabilities.
 
+## Catalog evidence needs are not results
+
+CCA-120 property `requiredEvidenceKinds` values identify abstract evidence lanes such as `specification`, `behavioral-test`, `formal-model`, or `human-review`. They contain no status from this document. Naming an evidence need does not mean work executed, evidence exists, a result passed, or a human approved it. Result, provenance, and freshness contracts remain deferred to CCA-240.
+
 ## Minimum result record
 
 A durable result should record:

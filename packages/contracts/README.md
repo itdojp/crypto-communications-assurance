@@ -44,3 +44,38 @@ The package is not published. Validation conveys no human approval, compatibilit
 | `LEGACY_STATUS_MIGRATION_FORBIDDEN` | A legacy/new-state pair is not the sole accepted `planned` to `unknown` mapping. |
 
 Diagnostics are bounded, deterministic, machine-readable, and returned in stable code/path order. They are evidence only.
+
+## CCA-120 catalog validation
+
+CCA-120 reuses `decodeStrictJsonObject` for each property, attacker, and threat catalog. Callers separately apply the three closed schemas and then use `validatePropertyCatalog`, `validateAttackerCatalog`, `validateThreatCatalog`, or `validateCatalogSet` for deterministic semantic checks. The complete set validator derives all objects from the supplied exact bytes and performs no network, filesystem resolution, execution, cryptographic protocol, or external-tool operation.
+
+Semantic validation covers stable namespace syntax, map-key/ID consistency, duplicate semantic IDs, category/domain agreement, bounded maps and references, dangling property/capability references, self-dependency, property cycles, explicit assumptions/exclusions/preconditions/impact, required category coverage, and the data-only safety boundary.
+
+### Catalog diagnostic codes
+
+| Code | Meaning |
+| --- | --- |
+| `CATALOG_STRUCTURE_INVALID` | Strict-decoded data lacks a structure needed for semantic inspection. |
+| `CATALOG_ID_INVALID` | Catalog identity syntax is invalid or unbounded. |
+| `ENTRY_ID_INVALID` | Entry identity does not use its required namespace. |
+| `ENTRY_KEY_ID_MISMATCH` | Map key and contained entry ID differ. |
+| `DUPLICATE_ENTRY_ID` | Multiple entries declare one semantic ID. |
+| `ENTRY_DOMAIN_MISMATCH` | ID domain and category/domain field differ. |
+| `PROPERTY_REFERENCE_DANGLING` | No declared property satisfies a reference. |
+| `CAPABILITY_REFERENCE_DANGLING` | No declared capability satisfies a reference. |
+| `PROPERTY_SELF_DEPENDENCY` | A property directly depends on itself. |
+| `PROPERTY_DEPENDENCY_CYCLE` | The bounded property graph contains a cycle. |
+| `ATTACKER_CAPABILITIES_REQUIRED` | An attacker model has no capability reference. |
+| `THREAT_CAPABILITIES_REQUIRED` | A threat has no capability reference. |
+| `THREAT_PROPERTIES_REQUIRED` | A threat has no affected-property reference. |
+| `CATEGORY_UNKNOWN` | Category/domain is outside the closed vocabulary. |
+| `RELATIONSHIP_UNKNOWN` | Relationship field or reference namespace is not defined by v1. |
+| `EVIDENCE_KIND_UNKNOWN` | Abstract evidence lane is outside the closed vocabulary. |
+| `CATALOG_SIZE_LIMIT_EXCEEDED` | An entry map exceeds its bounded contract maximum. |
+| `REFERENCE_LIMIT_EXCEEDED` | A relationship exceeds its bounded reference maximum. |
+| `REQUIRED_CATEGORY_MISSING` | Complete catalog coverage omits a required scope category/domain. |
+| `SAFETY_BOUNDARY_VIOLATION` | Data-only/no-network/no-secret flags are not all false. |
+| `ASSUMPTIONS_REQUIRED` / `EXCLUSIONS_REQUIRED` | An entry omits an explicit scope boundary. |
+| `THREAT_PRECONDITIONS_REQUIRED` / `THREAT_IMPACT_REQUIRED` | A threat omits required bounded context. |
+
+Diagnostics are stable, bounded, machine-readable evidence. They are not findings, approvals, or risk decisions.
