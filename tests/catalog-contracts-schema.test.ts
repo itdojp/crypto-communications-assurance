@@ -12,8 +12,11 @@ import {
 
 const loadBytes = (relativePath: string): Promise<Buffer> =>
   readFile(new URL(relativePath, import.meta.url));
-const loadJson = async (relativePath: string): Promise<unknown> =>
-  JSON.parse((await loadBytes(relativePath)).toString("utf8")) as unknown;
+const loadJson = async (relativePath: string): Promise<unknown> => {
+  const decoded = decodeStrictJsonObject(await loadBytes(relativePath));
+  if (!decoded.valid) throw new Error(`${relativePath}: strict decode failed`);
+  return decoded.value;
+};
 const digest = (bytes: Uint8Array): string =>
   createHash("sha256").update(bytes).digest("hex");
 
@@ -134,7 +137,11 @@ describe("CCA-120 closed catalog schemas", () => {
 
   it("strict-decodes every new JSON artifact", async () => {
     const roots = ["../pack/catalogs/v1", "../fixtures/valid", "../fixtures/invalid"];
-    const selected: string[] = [];
+    const selected = [
+      "../schema/cryptocomm-property-catalog-v1.schema.json",
+      "../schema/cryptocomm-attacker-catalog-v1.schema.json",
+      "../schema/cryptocomm-threat-catalog-v1.schema.json",
+    ];
     for (const root of roots) {
       const directory = new URL(root + "/", import.meta.url);
       for (const name of await readdir(directory)) {
@@ -142,7 +149,7 @@ describe("CCA-120 closed catalog schemas", () => {
         if (root.includes("pack/") || name.includes("catalog")) selected.push(path.posix.join(root, name));
       }
     }
-    expect(selected.length).toBeGreaterThanOrEqual(26);
+    expect(selected.length).toBeGreaterThanOrEqual(29);
     for (const file of selected.sort()) {
       expect(decodeStrictJsonObject(await loadBytes(file)).valid, file).toBe(true);
     }
