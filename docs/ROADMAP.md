@@ -17,7 +17,7 @@ Candidate work, subject to explicit contract design:
 
 - frozen bootstrap preservation plus separate manifest, lock, and evidence-backed compatibility-record contracts;
 - explicit exact-byte content binding, source/producer/resolver identity, and fail-closed contract migration rules;
-- security property, threat, and attacker vocabularies;
+- security property, threat, and attacker vocabularies through three separate closed catalog contracts, stable identifiers, bounded relationships, public-safe catalog data, and explicit coverage review evidence;
 - evidence requirement and capability module contracts;
 - result records using the closed status vocabulary;
 - compatibility and contract-version negotiation rules.

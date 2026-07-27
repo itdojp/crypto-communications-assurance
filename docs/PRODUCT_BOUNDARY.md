@@ -43,6 +43,14 @@ CCA-110 does not alter the bootstrap envelope. It adds:
 
 The lock does not duplicate compatibility state as an independent authority and may bind at most one record per exact subject/target pair. Evidence keys are bundle-relative identifiers, not locations or provenance. The compatibility record does not grant approval. All three contracts preserve `executable=false`, `networkRequired=false`, and `secretsAllowed=false`.
 
+## CCA-120 catalog layer
+
+CCA-120 adds separate property, attacker, and threat catalogs. Properties describe scoped outcomes; capabilities describe attacker operations or access conditions; attacker models compose capabilities with explicit assumptions and exclusions; threats connect capabilities and preconditions to affected properties and bounded impact statements.
+
+Catalog entries are data and terminology. They are not controls, product claims, evidence results, human decisions, vulnerability confirmations, certifications, or universal requirements. Abstract required-evidence kinds identify expected evidence lanes only; they do not carry execution status, provenance, freshness, approval, or release meaning.
+
+The catalog artifacts repeat no source or producer identity. CCA-110 manifest and lock contracts remain the packaging and exact-byte identity authority. No fourth catalog-set or registry contract is introduced.
+
 ## Non-goals
 
 The repository does not:

@@ -40,6 +40,14 @@ These contracts do not contain a complete security property, threat, module, or 
 
 Contract inputs use bounded strict UTF-8 JSON decoding before schema and semantic validation. SHA-256 continues to cover the exact original bytes; no JSON canonicalization is implied.
 
+CCA-120 adds three closed, protocol-neutral catalog contracts and proposed public catalog artifacts:
+
+- [`cryptocomm-property-catalog/v1`](schema/cryptocomm-property-catalog-v1.schema.json): 40 security, privacy, recovery, resilience, and publication outcomes;
+- [`cryptocomm-attacker-catalog/v1`](schema/cryptocomm-attacker-catalog-v1.schema.json): 28 attacker capabilities and 8 bounded attacker models;
+- [`cryptocomm-threat-catalog/v1`](schema/cryptocomm-threat-catalog-v1.schema.json): 36 adverse events or paths that reference capabilities and affected properties.
+
+The [human-readable](docs/CATALOG_COVERAGE.md) and [machine-readable](pack/catalogs/v1/coverage-matrix.json) coverage matrices expose the bounded Issue scope for review. They are not a catalog-set contract, registry, product claim, security proof, or completeness claim. See [ADR 0003](docs/decisions/0003-security-catalog-separation-and-relationships.md) and the [terminology source baseline](docs/SOURCE_BASELINE.md).
+
 ## Non-goals
 
 This project does not:

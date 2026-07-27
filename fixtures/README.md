@@ -19,3 +19,11 @@ A fixture that passes validation remains synthetic. It cannot support a real-wor
 Compatibility evidence map keys such as `evidence/synthetic-compatibility-result` are bundle-relative identifiers. They are not filesystem paths or network locators; the test harness explicitly maps them to synthetic fixture bytes.
 
 SHA-256 values cover exact committed bytes. Editing a referenced fixture requires updating external bindings; no fixture contains its own digest.
+
+## CCA-120 catalog fixtures
+
+- `valid/property-catalog-v1.json`, `valid/attacker-catalog-v1.json`, and `valid/threat-catalog-v1.json` collectively form the explicitly synthetic positive cross-catalog set; no fourth catalog-set container exists.
+- `valid/cca-120-catalog-manifest-v1.json` is a synthetic CCA-110 manifest that binds the three authoritative public catalog byte sequences as `catalog` artifacts under fictional source and producer identities. It is not a live manifest or lock.
+- CCA-120 negative fixtures cover malformed and duplicate IDs, key/ID mismatch, dangling references, self-dependency, dependency cycles, empty required relationships, unknown category/relationship, excess map/reference bounds, unsafe safety flags, missing assumptions, and undeclared fields.
+
+Catalog fixture validation does not establish a product claim, vulnerability finding, compatibility, completeness, security proof, certification, or approval.

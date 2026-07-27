@@ -1,0 +1,263 @@
+{
+  "schemaVersion": "cryptocomm-property-catalog/v1",
+  "catalogId": "synthetic-property-fixture",
+  "catalogVersion": "0.0.0-synthetic.1",
+  "properties": {
+    "property.confidentiality.message": {
+      "id": "property.confidentiality.message",
+      "title": "Message confidentiality",
+      "definition": "Message content is not disclosed to parties outside the explicitly identified recipient set.",
+      "category": "confidentiality",
+      "assumptions": [
+        "The protected information and intended recipients are explicitly identified for the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not prescribe a protocol, algorithm, key size, storage product, or recipient policy."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.1"
+      ]
+    },
+    "property.integrity.message": {
+      "id": "property.confidentiality.message",
+      "title": "Message integrity",
+      "definition": "A receiver can detect unauthorized modification, insertion, deletion, or truncation of protected message content.",
+      "category": "integrity",
+      "assumptions": [
+        "The protected object and the state transition in which it is interpreted are explicitly identified."
+      ],
+      "exclusions": [
+        "This property does not establish origin authentication, availability, or correctness of the protected content."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "behavioral-test",
+        "adversarial-test"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.2"
+      ]
+    },
+    "property.authentication.peer": {
+      "id": "property.authentication.peer",
+      "title": "Peer authentication",
+      "definition": "A party can establish that the communicating peer has the intended scoped identity.",
+      "category": "authentication",
+      "assumptions": [
+        "The asserted identity type, relying party, and authentication direction are explicitly scoped."
+      ],
+      "exclusions": [
+        "This property does not grant authorization, approval, non-repudiation, or trust outside its scoped context."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.1.3"
+      ]
+    },
+    "property.binding.identity": {
+      "id": "property.binding.identity",
+      "title": "Identity binding",
+      "definition": "The asserted identity is unambiguously bound to the communication context in which it is relied upon.",
+      "category": "binding",
+      "assumptions": [
+        "Every value being bound has an unambiguous representation and lifecycle within the evaluated context."
+      ],
+      "exclusions": [
+        "This property does not define the encoding, protocol transcript, identity system, or session mechanism."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "behavioral-test",
+        "formal-model"
+      ],
+      "sourceRefs": [
+        "rfc9180:section-9.6",
+        "rfc9420:section-14"
+      ]
+    },
+    "property.replay-ordering.replay-duplicate": {
+      "id": "property.replay-ordering.replay-duplicate",
+      "title": "Replay and duplicate resistance",
+      "definition": "Previously accepted or duplicated protected input is not silently accepted as a new authorized event.",
+      "category": "replay-ordering",
+      "assumptions": [
+        "The receiver has an explicit state model for recognizing accepted message instances and transitions."
+      ],
+      "exclusions": [
+        "This property does not require a particular counter, clock, window, transport, or persistence mechanism."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "behavioral-test",
+        "adversarial-test"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-3.3",
+        "rfc9180:section-9.7",
+        "rfc9420:section-15.3"
+      ]
+    },
+    "property.randomness.nonce-uniqueness": {
+      "id": "property.randomness.nonce-uniqueness",
+      "title": "Nonce uniqueness",
+      "definition": "Values required to be unique are not reused within their explicitly defined key and context scope.",
+      "category": "randomness",
+      "assumptions": [
+        "The required uniqueness or unpredictability scope is explicitly defined for each generated value."
+      ],
+      "exclusions": [
+        "This property does not select a random generator, nonce construction, probability bound, or algorithm."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "nist-sp-800-57pt1r5:section-4.4",
+        "rfc9180:section-9.7"
+      ]
+    },
+    "property.key-management.derivation-context": {
+      "id": "property.key-management.derivation-context",
+      "title": "Key-derivation context binding",
+      "definition": "Derived key material is bound to its explicitly identified purpose, parties, context, and version.",
+      "category": "key-management",
+      "assumptions": [
+        "Key material, metadata, authorized use, and lifecycle authority are explicitly identified."
+      ],
+      "exclusions": [
+        "This property does not select a cryptographic primitive, key length, cryptoperiod, or custody product."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "runtime-control",
+        "operational-procedure",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "nist-sp-800-57pt1r5:section-5",
+        "nist-sp-800-57pt1r5:section-7"
+      ]
+    },
+    "property.downgrade-agility.downgrade": {
+      "id": "property.downgrade-agility.downgrade",
+      "title": "Downgrade resistance",
+      "definition": "An attacker cannot cause silent selection of a less protective option outside the authenticated policy and context.",
+      "category": "downgrade-agility",
+      "assumptions": [
+        "Negotiated or configured choices and their authenticated context are explicitly identified."
+      ],
+      "exclusions": [
+        "This property does not approve any algorithm or require a specific negotiation mechanism."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "nist-sp-800-57pt1r5:section-5.6.4",
+        "rfc9180:section-9.7.2"
+      ]
+    },
+    "property.compromise-recovery.scope": {
+      "id": "property.compromise-recovery.scope",
+      "title": "Compromise-scope explicitness",
+      "definition": "The effects of compromised long-term, session, ephemeral, or derived secret material are bounded and documented by material type and time window.",
+      "category": "compromise-recovery",
+      "assumptions": [
+        "The compromised material, affected period, parties, and recovery event are explicitly scoped."
+      ],
+      "exclusions": [
+        "This property is not universal and does not claim protection outside the stated compromise window."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "operational-procedure",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "nist-sp-800-57pt1r5:section-5.5",
+        "rfc9420:section-16.6"
+      ]
+    },
+    "property.metadata-privacy.communication-metadata": {
+      "id": "property.metadata-privacy.communication-metadata",
+      "title": "Communication-metadata privacy",
+      "definition": "Scoped identities, relationships, routing context, and communication attributes are not disclosed beyond the stated observer model.",
+      "category": "metadata-privacy",
+      "assumptions": [
+        "Observable fields and the observer capability under evaluation are explicitly identified."
+      ],
+      "exclusions": [
+        "This property does not claim that all traffic characteristics or external observations are hidden."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "adversarial-test",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "rfc9420:section-16.4",
+        "rfc9180:section-9.7"
+      ]
+    },
+    "property.resilience.fail-closed": {
+      "id": "property.resilience.fail-closed",
+      "title": "Fail-closed behavior",
+      "definition": "Invalid, unauthenticated, ambiguous, or unsupported security input cannot silently produce an authorized success state.",
+      "category": "resilience",
+      "assumptions": [
+        "The permitted failure mode and the state from which recovery is evaluated are explicitly defined."
+      ],
+      "exclusions": [
+        "This property does not set a service-level objective or guarantee recovery from every failure."
+      ],
+      "requiredEvidenceKinds": [
+        "specification",
+        "behavioral-test",
+        "operational-procedure"
+      ],
+      "sourceRefs": [
+        "rfc3552:section-2.3.3",
+        "rfc9420:section-14"
+      ]
+    },
+    "property.evidence-publication.classification-boundary": {
+      "id": "property.evidence-publication.classification-boundary",
+      "title": "Evidence-publication classification boundary",
+      "definition": "Publication preserves an explicit distinction among public-safe, private, and prohibited material and requires human publication authority.",
+      "category": "evidence-publication",
+      "assumptions": [
+        "Evidence classification and publication authority are assigned before material is exposed."
+      ],
+      "exclusions": [
+        "This property does not authorize publication, disclosure, risk acceptance, or release."
+      ],
+      "requiredEvidenceKinds": [
+        "operational-procedure",
+        "human-review"
+      ],
+      "sourceRefs": [
+        "nist-sp-800-30r1:section-3.3"
+      ]
+    }
+  },
+  "safety": {
+    "executable": false,
+    "networkRequired": false,
+    "secretsAllowed": false
+  },
+  "fixtureClassification": "synthetic-test-only"
+}

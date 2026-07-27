@@ -94,5 +94,6 @@ export function compileContractBytes(
   };
 }
 
+export * from "./catalogs.js";
 export * from "./semantic.js";
 export * from "./strict-json.js";

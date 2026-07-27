@@ -34,6 +34,12 @@ Do not commit, attach to a public Issue, or copy into a public PR:
 security boundary. Contributors must review staged changes and use GitHub private
 vulnerability reporting for sensitive security reports.
 
+## Public catalog material
+
+The CCA-120 authoritative catalogs contain protocol-neutral public definitions, assumptions, exclusions, relationships, and explanatory primary-source section identifiers. They contain no target-specific finding, customer data, private evidence, live source identity, credential, or approval field. The coverage matrix is a public review surface and not evidence that any product satisfies a property.
+
+CCA-120 catalog fixtures remain explicitly `synthetic-test-only`. The synthetic CCA-110 manifest content-binds public catalog bytes under fictional source and producer identities; it is not a release manifest or live repository claim.
+
 ## Referencing private evidence
 
 CCA-110 compatibility records may reference only content-bound synthetic or intentionally public evidence without embedding evidence bytes. Evidence map keys are bounded bundle-relative identifiers only. They are not repository authorities, network locators, private evidence paths, local absolute paths, or provenance records. The evidence value content-binds bytes but does not supply a location or access authority.
