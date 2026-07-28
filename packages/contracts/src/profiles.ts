@@ -1173,7 +1173,7 @@ function buildResolvedProfile(
   };
 }
 
-export function serializeResolvedProfile(profile: ResolvedProfile): Uint8Array {
+function serializeResolvedProfile(profile: ResolvedProfile): Uint8Array {
   return new TextEncoder().encode(`${JSON.stringify(profile, undefined, 2)}\n`);
 }
 
