@@ -51,6 +51,14 @@ Catalog entries are data and terminology. They are not controls, product claims,
 
 The catalog artifacts repeat no source or producer identity. CCA-110 manifest and lock contracts remain the packaging and exact-byte identity authority. No fourth catalog-set or registry contract is introduced.
 
+## CCA-130 module and profile layer
+
+CCA-130 adds a module catalog, explicit profile request, and deterministic resolved profile. A module groups CCA-120 assurance-scope selections with dependencies, assumptions, and exclusions. It is neither an attacker capability nor a product capability. The module catalog and request bind exact upstream bytes; they do not repeat CCA-110 source or producer identity.
+
+Resolution can be `complete` or `incomplete`, while individual modules remain `resolved`, `unknown`, `unsupported`, or `unresolvable`. These outcomes record composition only. A profile request is not approval; a resolved profile is not a product claim; a resolution outcome is not an evidence status; complete resolution is not product security. The resolver does not execute checks, assess product satisfaction, select a conflict winner, infer attacker models from threats, approve risk, or authorize publication/release.
+
+CCA-130 contains no CCA-240 execution status, evidence result/class, provenance, freshness, retention, access-control, or approval fields. Its unsupported private-provenance module makes that deferral visible without widening the product boundary.
+
 ## Non-goals
 
 The repository does not:

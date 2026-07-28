@@ -1,0 +1,284 @@
+{
+  "schemaVersion": "cryptocomm-resolved-profile/v1",
+  "profileId": "profile.synthetic.complete",
+  "state": "incomplete",
+  "inputBindings": {
+    "moduleCatalog": {
+      "contractId": "cryptocomm-capability-module-catalog/v1",
+      "catalogId": "synthetic-capability-modules",
+      "catalogVersion": "0.0.0-synthetic.1",
+      "digest": {
+        "algorithm": "sha256",
+        "value": "62b62bb9c497f8ecac66ff079de8579c85a25c31bb06ed9152df775694dbf5e4"
+      }
+    },
+    "propertyCatalog": {
+      "contractId": "cryptocomm-property-catalog/v1",
+      "catalogId": "synthetic-property-fixture",
+      "catalogVersion": "0.0.0-synthetic.1",
+      "digest": {
+        "algorithm": "sha256",
+        "value": "7de7b59f08f379686ad4bc3e466448c44b6a9b96423a9590bc0323ba033825da"
+      }
+    },
+    "attackerCatalog": {
+      "contractId": "cryptocomm-attacker-catalog/v1",
+      "catalogId": "synthetic-attacker-fixture",
+      "catalogVersion": "0.0.0-synthetic.1",
+      "digest": {
+        "algorithm": "sha256",
+        "value": "932edf0724cd3d0fef6c550294bb2fda0e459b3a18f0aee38c10b0e2532dfea7"
+      }
+    },
+    "threatCatalog": {
+      "contractId": "cryptocomm-threat-catalog/v1",
+      "catalogId": "synthetic-threat-fixture",
+      "catalogVersion": "0.0.0-synthetic.1",
+      "digest": {
+        "algorithm": "sha256",
+        "value": "07d0c1bb7f129760b99c3a593d469aa5b1eb7bba49a08f9800b5e1c8a4f45c9f"
+      }
+    }
+  },
+  "requestedModules": [
+    "module.synthetic.contributor",
+    "module.synthetic.dependent"
+  ],
+  "modules": {
+    "module.synthetic.base": {
+      "id": "module.synthetic.base",
+      "state": "resolved",
+      "requested": false,
+      "requiredBy": [
+        "module.synthetic.dependent"
+      ]
+    },
+    "module.synthetic.contributor": {
+      "id": "module.synthetic.contributor",
+      "state": "resolved",
+      "requested": true,
+      "requiredBy": []
+    },
+    "module.synthetic.dependent": {
+      "id": "module.synthetic.dependent",
+      "state": "resolved",
+      "requested": true,
+      "requiredBy": []
+    }
+  },
+  "selections": {
+    "properties": {
+      "property.authentication.peer": {
+        "id": "property.authentication.peer",
+        "sources": [
+          {
+            "sourceModuleId": "module.synthetic.contributor",
+            "inclusionReasons": [
+              "module-selection"
+            ]
+          }
+        ]
+      },
+      "property.confidentiality.message": {
+        "id": "property.confidentiality.message",
+        "sources": [
+          {
+            "sourceModuleId": "module.synthetic.base",
+            "inclusionReasons": [
+              "module-selection"
+            ]
+          }
+        ]
+      },
+      "property.integrity.message": {
+        "id": "property.integrity.message",
+        "sources": [
+          {
+            "sourceModuleId": "module.synthetic.dependent",
+            "inclusionReasons": [
+              "threat-affected-property"
+            ]
+          }
+        ]
+      }
+    },
+    "capabilities": {
+      "capability.endpoint.read-storage": {
+        "id": "capability.endpoint.read-storage",
+        "sources": [
+          {
+            "sourceModuleId": "module.synthetic.contributor",
+            "inclusionReasons": [
+              "attacker-capability"
+            ]
+          }
+        ]
+      },
+      "capability.infrastructure.control-intermediary": {
+        "id": "capability.infrastructure.control-intermediary",
+        "sources": [
+          {
+            "sourceModuleId": "module.synthetic.contributor",
+            "inclusionReasons": [
+              "attacker-capability"
+            ]
+          }
+        ]
+      },
+      "capability.input-resource.deliver-malformed-input": {
+        "id": "capability.input-resource.deliver-malformed-input",
+        "sources": [
+          {
+            "sourceModuleId": "module.synthetic.contributor",
+            "inclusionReasons": [
+              "attacker-capability"
+            ]
+          }
+        ]
+      },
+      "capability.network.observe": {
+        "id": "capability.network.observe",
+        "sources": [
+          {
+            "sourceModuleId": "module.synthetic.contributor",
+            "inclusionReasons": [
+              "attacker-capability"
+            ]
+          },
+          {
+            "sourceModuleId": "module.synthetic.dependent",
+            "inclusionReasons": [
+              "threat-capability"
+            ]
+          }
+        ]
+      },
+      "capability.observation.traffic-pattern": {
+        "id": "capability.observation.traffic-pattern",
+        "sources": [
+          {
+            "sourceModuleId": "module.synthetic.contributor",
+            "inclusionReasons": [
+              "attacker-capability"
+            ]
+          }
+        ]
+      },
+      "capability.participation.authenticated-malicious": {
+        "id": "capability.participation.authenticated-malicious",
+        "sources": [
+          {
+            "sourceModuleId": "module.synthetic.contributor",
+            "inclusionReasons": [
+              "attacker-capability"
+            ]
+          }
+        ]
+      },
+      "capability.physical.access-device": {
+        "id": "capability.physical.access-device",
+        "sources": [
+          {
+            "sourceModuleId": "module.synthetic.contributor",
+            "inclusionReasons": [
+              "attacker-capability"
+            ]
+          }
+        ]
+      },
+      "capability.secret-compromise.long-term": {
+        "id": "capability.secret-compromise.long-term",
+        "sources": [
+          {
+            "sourceModuleId": "module.synthetic.contributor",
+            "inclusionReasons": [
+              "attacker-capability"
+            ]
+          }
+        ]
+      },
+      "capability.supply-chain.modify-artifact": {
+        "id": "capability.supply-chain.modify-artifact",
+        "sources": [
+          {
+            "sourceModuleId": "module.synthetic.contributor",
+            "inclusionReasons": [
+              "attacker-capability"
+            ]
+          }
+        ]
+      },
+      "capability.time-state.manipulate-clock": {
+        "id": "capability.time-state.manipulate-clock",
+        "sources": [
+          {
+            "sourceModuleId": "module.synthetic.contributor",
+            "inclusionReasons": [
+              "attacker-capability"
+            ]
+          }
+        ]
+      }
+    },
+    "attackers": {
+      "attacker.synthetic-bounded-model": {
+        "id": "attacker.synthetic-bounded-model",
+        "sources": [
+          {
+            "sourceModuleId": "module.synthetic.contributor",
+            "inclusionReasons": [
+              "module-selection"
+            ]
+          }
+        ]
+      }
+    },
+    "threats": {
+      "threat.integrity.in-transit-modification": {
+        "id": "threat.integrity.in-transit-modification",
+        "sources": [
+          {
+            "sourceModuleId": "module.synthetic.dependent",
+            "inclusionReasons": [
+              "module-selection"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "assumptions": [
+    {
+      "sourceModuleId": "module.synthetic.base",
+      "statement": "Synthetic inputs are used only for deterministic repository-local validation."
+    },
+    {
+      "sourceModuleId": "module.synthetic.contributor",
+      "statement": "Synthetic inputs are used only for deterministic repository-local validation."
+    },
+    {
+      "sourceModuleId": "module.synthetic.dependent",
+      "statement": "Synthetic inputs are used only for deterministic repository-local validation."
+    }
+  ],
+  "exclusions": [
+    {
+      "sourceModuleId": "module.synthetic.base",
+      "statement": "No product, security, approval, execution, evidence, or release claim is made."
+    },
+    {
+      "sourceModuleId": "module.synthetic.contributor",
+      "statement": "No product, security, approval, execution, evidence, or release claim is made."
+    },
+    {
+      "sourceModuleId": "module.synthetic.dependent",
+      "statement": "No product, security, approval, execution, evidence, or release claim is made."
+    }
+  ],
+  "fixtureClassification": "synthetic-test-only",
+  "safety": {
+    "executable": false,
+    "networkRequired": false,
+    "secretsAllowed": false
+  }
+}

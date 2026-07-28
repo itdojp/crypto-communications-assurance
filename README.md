@@ -48,6 +48,16 @@ CCA-120 adds three closed, protocol-neutral catalog contracts and proposed publi
 
 The [human-readable](docs/CATALOG_COVERAGE.md) and [machine-readable](pack/catalogs/v1/coverage-matrix.json) coverage matrices expose the bounded Issue scope for review. They are not a catalog-set contract, registry, product claim, security proof, or completeness claim. See [ADR 0003](docs/decisions/0003-security-catalog-separation-and-relationships.md) and the [terminology source baseline](docs/SOURCE_BASELINE.md).
 
+CCA-130 adds three closed contracts, a 15-entry public protocol-neutral module catalog, and a pure deterministic resolver:
+
+- [`cryptocomm-capability-module-catalog/v1`](schema/cryptocomm-capability-module-catalog-v1.schema.json) defines available or unsupported reusable assurance-scope modules and exact-byte bindings to all three CCA-120 catalogs;
+- [`cryptocomm-profile-request/v1`](schema/cryptocomm-profile-request-v1.schema.json) records an explicit module selection and exact module-catalog binding;
+- [`cryptocomm-resolved-profile/v1`](schema/cryptocomm-resolved-profile-v1.schema.json) records literal module outcomes, catalog closure, source-module inclusion reasons, and source-attributed assumptions and exclusions.
+
+The resolver validates exact bytes and bindings, expands module/property dependencies, detects conflicts without precedence, preserves `resolved`, `unknown`, `unsupported`, and `unresolvable`, and emits byte-stable UTF-8 JSON. `complete` and `incomplete` are resolution states only. The module catalog creates no default, recommendation, strongest profile, product claim, execution request, evidence result, or approval. See [ADR 0004](docs/decisions/0004-capability-modules-and-deterministic-profile-resolution.md).
+
+The CCA-130 boundaries are explicit: `module != attacker capability`, `module != product capability`, `profile request != approval`, `resolved profile != product claim`, `resolution outcome != evidence status`, and `complete resolution != product security`.
+
 ## Non-goals
 
 This project does not:

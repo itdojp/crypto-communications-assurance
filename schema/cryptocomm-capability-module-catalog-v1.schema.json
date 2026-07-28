@@ -1,0 +1,422 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/itdojp/crypto-communications-assurance/schema/cryptocomm-capability-module-catalog-v1.schema.json",
+  "title": "Cryptographic Communication Capability Module Catalog v1",
+  "description": "Closed catalog of reusable assurance-scope modules bound to exact CCA-120 catalog bytes. Modules are descriptive data, not product capabilities, controls, execution, evidence, approval, or product claims.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "catalogId",
+    "catalogVersion",
+    "catalogBindings",
+    "modules",
+    "conflicts",
+    "safety"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "cryptocomm-capability-module-catalog/v1"
+    },
+    "catalogId": {
+      "$ref": "#/$defs/catalogId"
+    },
+    "catalogVersion": {
+      "$ref": "#/$defs/semanticVersion"
+    },
+    "catalogBindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "propertyCatalog",
+        "attackerCatalog",
+        "threatCatalog"
+      ],
+      "properties": {
+        "propertyCatalog": {
+          "$ref": "#/$defs/propertyCatalogBinding"
+        },
+        "attackerCatalog": {
+          "$ref": "#/$defs/attackerCatalogBinding"
+        },
+        "threatCatalog": {
+          "$ref": "#/$defs/threatCatalogBinding"
+        }
+      }
+    },
+    "modules": {
+      "type": "object",
+      "minProperties": 1,
+      "maxProperties": 64,
+      "propertyNames": {
+        "$ref": "#/$defs/moduleId"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/module"
+      }
+    },
+    "conflicts": {
+      "description": "Canonical unordered module-ID pairs. Repository-local semantic validation enforces canonical order and global uniqueness.",
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "$ref": "#/$defs/conflictPair"
+      }
+    },
+    "safety": {
+      "$ref": "#/$defs/safetyBoundary"
+    },
+    "fixtureClassification": {
+      "const": "synthetic-test-only"
+    }
+  },
+  "$defs": {
+    "catalogId": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 128,
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"
+    },
+    "semanticVersion": {
+      "type": "string",
+      "maxLength": 64,
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-(?!0[0-9]+(?:\\.|\\+|$))[0-9A-Za-z-]+(?:\\.(?!0[0-9]+(?:\\.|\\+|$))[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$"
+    },
+    "sha256Digest": {
+      "description": "SHA-256 of exact referenced bytes; no input canonicalization is implied.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithm",
+        "value"
+      ],
+      "properties": {
+        "algorithm": {
+          "const": "sha256"
+        },
+        "value": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "catalogBindingBase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contractId",
+        "catalogId",
+        "catalogVersion",
+        "digest"
+      ],
+      "properties": {
+        "contractId": {
+          "type": "string"
+        },
+        "catalogId": {
+          "$ref": "#/$defs/catalogId"
+        },
+        "catalogVersion": {
+          "$ref": "#/$defs/semanticVersion"
+        },
+        "digest": {
+          "$ref": "#/$defs/sha256Digest"
+        }
+      }
+    },
+    "propertyCatalogBinding": {
+      "$ref": "#/$defs/catalogBindingBase",
+      "type": "object",
+      "properties": {
+        "contractId": {
+          "const": "cryptocomm-property-catalog/v1"
+        }
+      }
+    },
+    "attackerCatalogBinding": {
+      "$ref": "#/$defs/catalogBindingBase",
+      "type": "object",
+      "properties": {
+        "contractId": {
+          "const": "cryptocomm-attacker-catalog/v1"
+        }
+      }
+    },
+    "threatCatalogBinding": {
+      "$ref": "#/$defs/catalogBindingBase",
+      "type": "object",
+      "properties": {
+        "contractId": {
+          "const": "cryptocomm-threat-catalog/v1"
+        }
+      }
+    },
+    "moduleId": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 128,
+      "pattern": "^module\\.([a-z][a-z0-9-]{0,31})\\.([a-z][a-z0-9-]{0,63})$"
+    },
+    "propertyId": {
+      "type": "string",
+      "minLength": 12,
+      "maxLength": 128,
+      "pattern": "^property\\.([a-z][a-z0-9-]{0,31})\\.([a-z][a-z0-9-]{0,63})$"
+    },
+    "capabilityId": {
+      "type": "string",
+      "minLength": 14,
+      "maxLength": 128,
+      "pattern": "^capability\\.([a-z][a-z0-9-]{0,31})\\.([a-z][a-z0-9-]{0,63})$"
+    },
+    "attackerId": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 96,
+      "pattern": "^attacker\\.([a-z][a-z0-9-]{0,63})$"
+    },
+    "threatId": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 128,
+      "pattern": "^threat\\.([a-z][a-z0-9-]{0,31})\\.([a-z][a-z0-9-]{0,63})$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024
+    },
+    "boundedStatements": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 512
+      }
+    },
+    "selections": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "properties",
+        "capabilities",
+        "attackers",
+        "threats"
+      ],
+      "properties": {
+        "properties": {
+          "type": "array",
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/propertyId"
+          }
+        },
+        "capabilities": {
+          "type": "array",
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/capabilityId"
+          }
+        },
+        "attackers": {
+          "type": "array",
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/attackerId"
+          }
+        },
+        "threats": {
+          "type": "array",
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/threatId"
+          }
+        }
+      },
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "properties": {
+              "type": "array",
+              "minItems": 1
+            }
+          }
+        },
+        {
+          "type": "object",
+          "properties": {
+            "capabilities": {
+              "type": "array",
+              "minItems": 1
+            }
+          }
+        },
+        {
+          "type": "object",
+          "properties": {
+            "attackers": {
+              "type": "array",
+              "minItems": 1
+            }
+          }
+        },
+        {
+          "type": "object",
+          "properties": {
+            "threats": {
+              "type": "array",
+              "minItems": 1
+            }
+          }
+        }
+      ]
+    },
+    "availableModule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "title",
+        "description",
+        "state",
+        "selections",
+        "requires",
+        "assumptions",
+        "exclusions"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/moduleId"
+        },
+        "title": {
+          "$ref": "#/$defs/title"
+        },
+        "description": {
+          "$ref": "#/$defs/description"
+        },
+        "state": {
+          "const": "available"
+        },
+        "selections": {
+          "$ref": "#/$defs/selections"
+        },
+        "requires": {
+          "type": "array",
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/moduleId"
+          }
+        },
+        "assumptions": {
+          "$ref": "#/$defs/boundedStatements"
+        },
+        "exclusions": {
+          "$ref": "#/$defs/boundedStatements"
+        }
+      }
+    },
+    "unsupportedModule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "title",
+        "description",
+        "state",
+        "reason",
+        "scope",
+        "assumptions",
+        "exclusions"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/moduleId"
+        },
+        "title": {
+          "$ref": "#/$defs/title"
+        },
+        "description": {
+          "$ref": "#/$defs/description"
+        },
+        "state": {
+          "const": "unsupported"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "assumptions": {
+          "$ref": "#/$defs/boundedStatements"
+        },
+        "exclusions": {
+          "$ref": "#/$defs/boundedStatements"
+        }
+      }
+    },
+    "module": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/availableModule"
+        },
+        {
+          "$ref": "#/$defs/unsupportedModule"
+        }
+      ]
+    },
+    "conflictPair": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "uniqueItems": true,
+      "prefixItems": [
+        {
+          "$ref": "#/$defs/moduleId"
+        },
+        {
+          "$ref": "#/$defs/moduleId"
+        }
+      ],
+      "items": false
+    },
+    "safetyBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "executable",
+        "networkRequired",
+        "secretsAllowed"
+      ],
+      "properties": {
+        "executable": {
+          "const": false
+        },
+        "networkRequired": {
+          "const": false
+        },
+        "secretsAllowed": {
+          "const": false
+        }
+      }
+    }
+  }
+}

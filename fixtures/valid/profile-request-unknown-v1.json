@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "cryptocomm-profile-request/v1",
+  "profileId": "profile.synthetic.unknown",
+  "moduleCatalog": {
+    "contractId": "cryptocomm-capability-module-catalog/v1",
+    "catalogId": "synthetic-capability-modules",
+    "catalogVersion": "0.0.0-synthetic.1",
+    "digest": {
+      "algorithm": "sha256",
+      "value": "62b62bb9c497f8ecac66ff079de8579c85a25c31bb06ed9152df775694dbf5e4"
+    }
+  },
+  "requestedModules": [
+    "module.synthetic.absent"
+  ],
+  "safety": {
+    "executable": false,
+    "networkRequired": false,
+    "secretsAllowed": false
+  },
+  "fixtureClassification": "synthetic-test-only"
+}

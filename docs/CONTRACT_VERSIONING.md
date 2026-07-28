@@ -11,6 +11,9 @@
 | `cryptocomm-property-catalog/v1` | Stable protocol-neutral property entries and bounded dependencies/evidence needs | Proposed CCA-120 contract. |
 | `cryptocomm-attacker-catalog/v1` | Separate capability and bounded attacker-model entries | Proposed CCA-120 contract. |
 | `cryptocomm-threat-catalog/v1` | Threat entries relating capabilities, preconditions, affected properties, and impact | Proposed CCA-120 contract. |
+| `cryptocomm-capability-module-catalog/v1` | Exact-bound available/unsupported assurance-scope modules, dependencies, and canonical conflicts | Proposed CCA-130 contract. |
+| `cryptocomm-profile-request/v1` | Explicit module selection bound to exact module-catalog bytes | Proposed CCA-130 contract. |
+| `cryptocomm-resolved-profile/v1` | Deterministic closure, literal module outcomes, and source traceability | Proposed CCA-130 contract. |
 
 Each value identifies one closed JSON Schema Draft 2020-12 contract. The manifest, lock, and compatibility record have separate identities because their authorities and content bindings differ.
 
@@ -29,6 +32,14 @@ Because these contracts are closed, even an apparently optional field can change
 CCA-120 map keys and entry `id` values are immutable semantic identities. A material change to a property, capability, attacker model, or threat meaning requires a new identifier or a new contract/catalog major version. Titles and definitions may be clarified only when the accepted meaning and relationship authority do not change.
 
 The only v1 relationship authorities are property `dependsOn`, attacker `capabilities`, threat `capabilities`, and threat `affectedProperties`. Adding a new relationship or changing category meaning is a contract change, not an editorial update. Catalog source and producer identity remain in CCA-110 packaging rather than being added in place to catalog v1.
+
+## Module and profile identity evolution
+
+CCA-130 uses stable `module.<domain>.<name>` and `profile.<domain>.<name>` identifiers. A material change to a module's selections, dependency meaning, assumptions, exclusions, availability meaning, or unsupported scope requires a new module ID or a new contract/catalog major version. Adding conflict precedence or another relationship authority is a contract change, not an editorial update.
+
+The module catalog binds exact CCA-120 contract/catalog identities and bytes. A request similarly binds exact module-catalog identity and bytes. A resolved profile repeats the four bindings actually used; it does not repeat CCA-110 source/producer fields or carry the raw request-byte digest. Editing whitespace or member order in an input changes its digest even when it strict-decodes to equivalent JSON.
+
+Resolved-profile serialization is part of the v1 contract behavior: UTF-8, two spaces, LF, one final newline, fixed field order, sorted maps, and sorted set-like arrays. Changing output ordering, closure rules, inclusion-reason meaning, or literal `resolved`/`unknown`/`unsupported`/`unresolvable` and `complete`/`incomplete` semantics requires explicit version review. These resolution outcomes must never be migrated implicitly into CCA-240 execution/evidence status.
 
 ## Explicit migration
 
