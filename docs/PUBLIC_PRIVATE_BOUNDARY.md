@@ -40,6 +40,10 @@ The CCA-120 authoritative catalogs contain protocol-neutral public definitions, 
 
 CCA-120 catalog fixtures remain explicitly `synthetic-test-only`. The synthetic CCA-110 manifest content-binds public catalog bytes under fictional source and producer identities; it is not a release manifest or live repository claim.
 
+The CCA-130 public module catalog contains protocol-neutral selections, dependencies, assumptions, exclusions, conflicts, and exact public CCA-120 bindings only. It carries no target identity, live source identity, private evidence, product claim, or approval. The explicit unsupported private-provenance module defines a deferral boundary and is not a private-evidence locator or access authority.
+
+CCA-130 requests, resolved profiles, and their CCA-110 manifest fixture are `synthetic-test-only`. Source-module inclusion reasons do not identify a live producer or product. The resolver neither reads private evidence nor defines provenance, freshness, retention, access control, correlation, risk acceptance, or publication authority; those remain outside Git and deferred to CCA-240 or later review.
+
 ## Referencing private evidence
 
 CCA-110 compatibility records may reference only content-bound synthetic or intentionally public evidence without embedding evidence bytes. Evidence map keys are bounded bundle-relative identifiers only. They are not repository authorities, network locators, private evidence paths, local absolute paths, or provenance records. The evidence value content-binds bytes but does not supply a location or access authority.

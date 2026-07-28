@@ -1,0 +1,194 @@
+{
+  "schemaVersion": "cryptocomm-capability-module-catalog/v1",
+  "catalogId": "synthetic-capability-modules",
+  "catalogVersion": "0.0.0-synthetic.1",
+  "catalogBindings": {
+    "propertyCatalog": {
+      "contractId": "cryptocomm-property-catalog/v1",
+      "catalogId": "synthetic-property-fixture",
+      "catalogVersion": "0.0.0-synthetic.1",
+      "digest": {
+        "algorithm": "sha256",
+        "value": "7de7b59f08f379686ad4bc3e466448c44b6a9b96423a9590bc0323ba033825da"
+      }
+    },
+    "attackerCatalog": {
+      "contractId": "cryptocomm-attacker-catalog/v1",
+      "catalogId": "synthetic-attacker-fixture",
+      "catalogVersion": "0.0.0-synthetic.1",
+      "digest": {
+        "algorithm": "sha256",
+        "value": "932edf0724cd3d0fef6c550294bb2fda0e459b3a18f0aee38c10b0e2532dfea7"
+      }
+    },
+    "threatCatalog": {
+      "contractId": "cryptocomm-threat-catalog/v1",
+      "catalogId": "synthetic-threat-fixture",
+      "catalogVersion": "0.0.0-synthetic.1",
+      "digest": {
+        "algorithm": "sha256",
+        "value": "07d0c1bb7f129760b99c3a593d469aa5b1eb7bba49a08f9800b5e1c8a4f45c9f"
+      }
+    }
+  },
+  "modules": {
+    "module.synthetic.base": {
+      "id": "module.synthetic.other",
+      "title": "Synthetic base",
+      "description": "Synthetic test-only module used to exercise deterministic CCA-130 resolution.",
+      "state": "available",
+      "selections": {
+        "properties": [
+          "property.confidentiality.message"
+        ],
+        "capabilities": [],
+        "attackers": [],
+        "threats": []
+      },
+      "requires": [],
+      "assumptions": [
+        "Synthetic inputs are used only for deterministic repository-local validation."
+      ],
+      "exclusions": [
+        "No product, security, approval, execution, evidence, or release claim is made."
+      ]
+    },
+    "module.synthetic.conflict-a": {
+      "id": "module.synthetic.conflict-a",
+      "title": "Synthetic conflict-a",
+      "description": "Synthetic test-only module used to exercise deterministic CCA-130 resolution.",
+      "state": "available",
+      "selections": {
+        "properties": [
+          "property.binding.identity"
+        ],
+        "capabilities": [],
+        "attackers": [],
+        "threats": []
+      },
+      "requires": [],
+      "assumptions": [
+        "Synthetic inputs are used only for deterministic repository-local validation."
+      ],
+      "exclusions": [
+        "No product, security, approval, execution, evidence, or release claim is made."
+      ]
+    },
+    "module.synthetic.conflict-b": {
+      "id": "module.synthetic.conflict-b",
+      "title": "Synthetic conflict-b",
+      "description": "Synthetic test-only module used to exercise deterministic CCA-130 resolution.",
+      "state": "available",
+      "selections": {
+        "properties": [
+          "property.randomness.nonce-uniqueness"
+        ],
+        "capabilities": [],
+        "attackers": [],
+        "threats": []
+      },
+      "requires": [],
+      "assumptions": [
+        "Synthetic inputs are used only for deterministic repository-local validation."
+      ],
+      "exclusions": [
+        "No product, security, approval, execution, evidence, or release claim is made."
+      ]
+    },
+    "module.synthetic.contributor": {
+      "id": "module.synthetic.contributor",
+      "title": "Synthetic contributor",
+      "description": "Synthetic test-only module used to exercise deterministic CCA-130 resolution.",
+      "state": "available",
+      "selections": {
+        "properties": [
+          "property.authentication.peer"
+        ],
+        "capabilities": [],
+        "attackers": [
+          "attacker.synthetic-bounded-model"
+        ],
+        "threats": []
+      },
+      "requires": [],
+      "assumptions": [
+        "Synthetic inputs are used only for deterministic repository-local validation."
+      ],
+      "exclusions": [
+        "No product, security, approval, execution, evidence, or release claim is made."
+      ]
+    },
+    "module.synthetic.dependent": {
+      "id": "module.synthetic.dependent",
+      "title": "Synthetic dependent",
+      "description": "Synthetic test-only module used to exercise deterministic CCA-130 resolution.",
+      "state": "available",
+      "selections": {
+        "properties": [],
+        "capabilities": [],
+        "attackers": [],
+        "threats": [
+          "threat.integrity.in-transit-modification"
+        ]
+      },
+      "requires": [
+        "module.synthetic.base"
+      ],
+      "assumptions": [
+        "Synthetic inputs are used only for deterministic repository-local validation."
+      ],
+      "exclusions": [
+        "No product, security, approval, execution, evidence, or release claim is made."
+      ]
+    },
+    "module.synthetic.depends-conflict-a": {
+      "id": "module.synthetic.depends-conflict-a",
+      "title": "Synthetic depends-conflict-a",
+      "description": "Synthetic test-only module used to exercise deterministic CCA-130 resolution.",
+      "state": "available",
+      "selections": {
+        "properties": [
+          "property.replay-ordering.replay-duplicate"
+        ],
+        "capabilities": [],
+        "attackers": [],
+        "threats": []
+      },
+      "requires": [
+        "module.synthetic.conflict-a"
+      ],
+      "assumptions": [
+        "Synthetic inputs are used only for deterministic repository-local validation."
+      ],
+      "exclusions": [
+        "No product, security, approval, execution, evidence, or release claim is made."
+      ]
+    },
+    "module.synthetic.unsupported": {
+      "id": "module.synthetic.unsupported",
+      "title": "Synthetic unsupported module",
+      "description": "Synthetic test-only unsupported module form.",
+      "state": "unsupported",
+      "reason": "The synthetic fixture deliberately represents unavailable scope.",
+      "scope": "synthetic unsupported resolution scenario",
+      "assumptions": [
+        "Synthetic inputs are used only for deterministic repository-local validation."
+      ],
+      "exclusions": [
+        "No product, security, approval, execution, evidence, or release claim is made."
+      ]
+    }
+  },
+  "conflicts": [
+    [
+      "module.synthetic.conflict-a",
+      "module.synthetic.conflict-b"
+    ]
+  ],
+  "safety": {
+    "executable": false,
+    "networkRequired": false,
+    "secretsAllowed": false
+  },
+  "fixtureClassification": "synthetic-test-only"
+}

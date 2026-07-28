@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "cryptocomm-profile-request/v1",
+  "profileId": "profile.synthetic.authoritative-dependency",
+  "moduleCatalog": {
+    "contractId": "cryptocomm-capability-module-catalog/v1",
+    "catalogId": "cryptocomm-capability-modules",
+    "catalogVersion": "0.1.0",
+    "digest": {
+      "algorithm": "sha256",
+      "value": "fc04473aaa15ad5ebe9de5e102ee9f65ca877c42fe5e7830d08d59145eea28c3"
+    }
+  },
+  "requestedModules": [
+    "module.keys.derivation-separation"
+  ],
+  "safety": {
+    "executable": false,
+    "networkRequired": false,
+    "secretsAllowed": false
+  },
+  "fixtureClassification": "synthetic-test-only"
+}

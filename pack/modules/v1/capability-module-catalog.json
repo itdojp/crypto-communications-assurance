@@ -1,0 +1,462 @@
+{
+  "schemaVersion": "cryptocomm-capability-module-catalog/v1",
+  "catalogId": "cryptocomm-capability-modules",
+  "catalogVersion": "0.1.0",
+  "catalogBindings": {
+    "propertyCatalog": {
+      "contractId": "cryptocomm-property-catalog/v1",
+      "catalogId": "cryptocomm-properties",
+      "catalogVersion": "0.1.0",
+      "digest": {
+        "algorithm": "sha256",
+        "value": "11c76e7c602714e7b860220babeaaf214a825eb6b1bc55677fb11265e2d3da90"
+      }
+    },
+    "attackerCatalog": {
+      "contractId": "cryptocomm-attacker-catalog/v1",
+      "catalogId": "cryptocomm-attackers",
+      "catalogVersion": "0.1.0",
+      "digest": {
+        "algorithm": "sha256",
+        "value": "66d8aacaabcb5edad809f8fe6c4ae4ea324c411178fd12f6e670843a694d4cc5"
+      }
+    },
+    "threatCatalog": {
+      "contractId": "cryptocomm-threat-catalog/v1",
+      "catalogId": "cryptocomm-threats",
+      "catalogVersion": "0.1.0",
+      "digest": {
+        "algorithm": "sha256",
+        "value": "f81921d192768ca84c6f9ded24fe7aed98cdc3f0f300f30d2d656ca47aee85d6"
+      }
+    }
+  },
+  "modules": {
+    "module.authentication.peer-sender": {
+      "id": "module.authentication.peer-sender",
+      "title": "Peer and sender authentication scope",
+      "description": "Selects peer, sender, device, and service authentication outcomes and bounded impersonation or malicious-participant threats.",
+      "state": "available",
+      "selections": {
+        "properties": [
+          "property.authentication.device",
+          "property.authentication.peer",
+          "property.authentication.sender",
+          "property.authentication.service"
+        ],
+        "capabilities": [],
+        "attackers": [
+          "attacker.active-network-controller",
+          "attacker.authenticated-malicious-peer"
+        ],
+        "threats": [
+          "threat.authentication.malicious-participant-misuse",
+          "threat.authentication.peer-service-impersonation",
+          "threat.authentication.sender-impersonation"
+        ]
+      },
+      "requires": [
+        "module.communication.confidentiality-integrity"
+      ],
+      "assumptions": [
+        "The operator identifies the peer, sender, device, and service identities relevant to the assessed communication boundary."
+      ],
+      "exclusions": [
+        "Authentication scope does not assert identity proofing quality, authorization, approval, or product conformance."
+      ]
+    },
+    "module.binding.identity-session-transcript": {
+      "id": "module.binding.identity-session-transcript",
+      "title": "Identity, session, and transcript binding scope",
+      "description": "Selects identity, role, session, context or epoch, and transcript binding outcomes plus misbinding and transcript-splicing threats.",
+      "state": "available",
+      "selections": {
+        "properties": [
+          "property.binding.context-epoch",
+          "property.binding.identity",
+          "property.binding.role",
+          "property.binding.session",
+          "property.binding.transcript"
+        ],
+        "capabilities": [],
+        "attackers": [],
+        "threats": [
+          "threat.binding.context-epoch-confusion",
+          "threat.binding.identity-session-misbinding",
+          "threat.binding.transcript-splicing"
+        ]
+      },
+      "requires": [
+        "module.authentication.peer-sender"
+      ],
+      "assumptions": [
+        "The assessed design declares the identity, role, session, context or epoch, and transcript boundaries that require binding."
+      ],
+      "exclusions": [
+        "Selection does not infer that any runtime identity or transcript has been validated."
+      ]
+    },
+    "module.communication.confidentiality-integrity": {
+      "id": "module.communication.confidentiality-integrity",
+      "title": "Communication confidentiality and integrity scope",
+      "description": "Selects protocol-neutral message, key-material, message-integrity, and state-integrity outcomes together with representative disclosure and modification threats.",
+      "state": "available",
+      "selections": {
+        "properties": [
+          "property.confidentiality.key-material",
+          "property.confidentiality.message",
+          "property.integrity.message",
+          "property.integrity.state"
+        ],
+        "capabilities": [
+          "capability.network.modify",
+          "capability.network.observe"
+        ],
+        "attackers": [
+          "attacker.passive-network-observer"
+        ],
+        "threats": [
+          "threat.confidentiality.passive-message-disclosure",
+          "threat.confidentiality.secret-material-extraction",
+          "threat.integrity.in-transit-modification"
+        ]
+      },
+      "requires": [],
+      "assumptions": [
+        "The assessment scope identifies which communication content and key material are intended to remain confidential and which state transitions require integrity."
+      ],
+      "exclusions": [
+        "Selection does not prescribe a cipher, protocol, key size, implementation, or deployment architecture."
+      ]
+    },
+    "module.compromise.forward-secrecy": {
+      "id": "module.compromise.forward-secrecy",
+      "title": "Forward-secrecy assumptions",
+      "description": "Selects compromise-scope and forward-secrecy outcomes with historical-exposure threats under explicitly bounded compromise assumptions.",
+      "state": "available",
+      "selections": {
+        "properties": [
+          "property.compromise-recovery.forward-secrecy",
+          "property.compromise-recovery.scope"
+        ],
+        "capabilities": [],
+        "attackers": [
+          "attacker.secret-material-adversary"
+        ],
+        "threats": [
+          "threat.compromise-recovery.historical-exposure-after-long-term-compromise"
+        ]
+      },
+      "requires": [
+        "module.communication.confidentiality-integrity",
+        "module.keys.derivation-separation"
+      ],
+      "assumptions": [
+        "The operator explicitly declares which secret classes may be compromised and which earlier communication intervals are in scope."
+      ],
+      "exclusions": [
+        "Selection does not assert that forward secrecy is achieved or that historical material is absent."
+      ]
+    },
+    "module.compromise.post-compromise-recovery": {
+      "id": "module.compromise.post-compromise-recovery",
+      "title": "Post-compromise recovery assumptions",
+      "description": "Selects compromise-scope and post-compromise-recovery outcomes with continued-access and compromise-propagation threats.",
+      "state": "available",
+      "selections": {
+        "properties": [
+          "property.compromise-recovery.post-compromise-recovery",
+          "property.compromise-recovery.scope"
+        ],
+        "capabilities": [],
+        "attackers": [],
+        "threats": [
+          "threat.compromise-recovery.compromise-scope-propagation",
+          "threat.compromise-recovery.continued-access-after-recovery"
+        ]
+      },
+      "requires": [
+        "module.keys.lifecycle",
+        "module.resilience.fail-closed-state-recovery"
+      ],
+      "assumptions": [
+        "The assessed design declares the compromise event, recovery transition, recovery authority, and interval for which recovery is evaluated."
+      ],
+      "exclusions": [
+        "Selection does not assert that a compromise occurred, recovery succeeded, or residual access was eliminated."
+      ]
+    },
+    "module.evidence.private-provenance": {
+      "id": "module.evidence.private-provenance",
+      "title": "Private evidence provenance",
+      "description": "Marks private-evidence provenance as unsupported by CCA-130 because provenance, freshness, retention, and access semantics remain reserved for CCA-240.",
+      "state": "unsupported",
+      "reason": "CCA-130 defines descriptive module composition only and has no private-evidence provenance contract.",
+      "scope": "CCA-240 evidence provenance, freshness, retention, and access semantics",
+      "assumptions": [
+        "A later separately authorized contract is required before private evidence can be referenced with provenance semantics."
+      ],
+      "exclusions": [
+        "This unsupported entry does not authorize private-evidence access, collection, retention, correlation, or publication."
+      ]
+    },
+    "module.evidence.publication-boundary": {
+      "id": "module.evidence.publication-boundary",
+      "title": "Evidence publication boundary scope",
+      "description": "Selects the public or private classification-boundary outcome with prohibited-content and private-evidence disclosure threats.",
+      "state": "available",
+      "selections": {
+        "properties": [
+          "property.evidence-publication.classification-boundary"
+        ],
+        "capabilities": [],
+        "attackers": [],
+        "threats": [
+          "threat.evidence-publication.private-evidence-disclosure",
+          "threat.evidence-publication.prohibited-content-inclusion"
+        ]
+      },
+      "requires": [],
+      "assumptions": [
+        "The operator explicitly classifies material before any publication decision outside profile resolution."
+      ],
+      "exclusions": [
+        "Selection does not authorize evidence access, disclosure, publication, retention, approval, or release."
+      ]
+    },
+    "module.keys.derivation-separation": {
+      "id": "module.keys.derivation-separation",
+      "title": "Key derivation and separation scope",
+      "description": "Selects derivation-context and key-role separation outcomes with context-collision and role-reuse threats.",
+      "state": "available",
+      "selections": {
+        "properties": [
+          "property.key-management.derivation-context",
+          "property.key-management.separation"
+        ],
+        "capabilities": [],
+        "attackers": [],
+        "threats": [
+          "threat.key-management.derivation-context-collision",
+          "threat.key-management.key-role-reuse"
+        ]
+      },
+      "requires": [
+        "module.binding.identity-session-transcript",
+        "module.randomness.nonce-entropy"
+      ],
+      "assumptions": [
+        "The operator identifies the intended derivation contexts and distinct key roles within the assessed scope."
+      ],
+      "exclusions": [
+        "Selection does not prescribe a KDF, cryptographic algorithm, label format, or key size."
+      ]
+    },
+    "module.keys.lifecycle": {
+      "id": "module.keys.lifecycle",
+      "title": "Key lifecycle scope",
+      "description": "Selects storage, rotation, revocation, destruction, and recovery outcomes with bounded lifecycle-boundary threats.",
+      "state": "available",
+      "selections": {
+        "properties": [
+          "property.key-management.destruction",
+          "property.key-management.recovery",
+          "property.key-management.revocation",
+          "property.key-management.rotation",
+          "property.key-management.storage"
+        ],
+        "capabilities": [],
+        "attackers": [
+          "attacker.endpoint-state-adversary"
+        ],
+        "threats": [
+          "threat.key-management.destruction-recovery-boundary-failure",
+          "threat.key-management.revoked-key-acceptance"
+        ]
+      },
+      "requires": [],
+      "assumptions": [
+        "The assessed scope declares the key lifecycle states and the authority responsible for each transition."
+      ],
+      "exclusions": [
+        "Selection does not define operational custody, retention, access control, or risk acceptance."
+      ]
+    },
+    "module.negotiation.downgrade-agility": {
+      "id": "module.negotiation.downgrade-agility",
+      "title": "Downgrade resistance and algorithm agility scope",
+      "description": "Selects downgrade, algorithm-confusion, and agility outcomes with bounded negotiation and transition threats.",
+      "state": "available",
+      "selections": {
+        "properties": [
+          "property.downgrade-agility.algorithm-agility",
+          "property.downgrade-agility.algorithm-confusion",
+          "property.downgrade-agility.downgrade"
+        ],
+        "capabilities": [],
+        "attackers": [],
+        "threats": [
+          "threat.downgrade-agility.algorithm-confusion",
+          "threat.downgrade-agility.silent-downgrade",
+          "threat.downgrade-agility.transition-lockout"
+        ]
+      },
+      "requires": [
+        "module.binding.identity-session-transcript"
+      ],
+      "assumptions": [
+        "The assessed design declares its negotiation inputs, accepted transition states, and algorithm identifiers."
+      ],
+      "exclusions": [
+        "Selection does not recommend an algorithm, cipher suite, transition schedule, or universal strongest configuration."
+      ]
+    },
+    "module.privacy.metadata": {
+      "id": "module.privacy.metadata",
+      "title": "Communication metadata privacy scope",
+      "description": "Selects communication-metadata and observable-pattern outcomes with traffic-analysis and side-channel correlation threats.",
+      "state": "available",
+      "selections": {
+        "properties": [
+          "property.metadata-privacy.communication-metadata",
+          "property.metadata-privacy.observable-patterns"
+        ],
+        "capabilities": [],
+        "attackers": [
+          "attacker.passive-network-observer"
+        ],
+        "threats": [
+          "threat.metadata-privacy.length-timing-inference",
+          "threat.metadata-privacy.side-channel-correlation",
+          "threat.metadata-privacy.traffic-relationship-inference"
+        ]
+      },
+      "requires": [],
+      "assumptions": [
+        "The operator identifies which metadata, timing, length, and communication relationships are intended to be protected."
+      ],
+      "exclusions": [
+        "Selection does not assert traffic-analysis resistance, anonymity, unlinkability, or side-channel absence."
+      ]
+    },
+    "module.randomness.nonce-entropy": {
+      "id": "module.randomness.nonce-entropy",
+      "title": "Nonce and randomness assumptions",
+      "description": "Selects nonce-uniqueness and entropy-assumption outcomes with bounded reuse and weak-randomness threats.",
+      "state": "available",
+      "selections": {
+        "properties": [
+          "property.randomness.entropy-assumptions",
+          "property.randomness.nonce-uniqueness"
+        ],
+        "capabilities": [],
+        "attackers": [],
+        "threats": [
+          "threat.randomness.nonce-reuse",
+          "threat.randomness.weak-randomness"
+        ]
+      },
+      "requires": [],
+      "assumptions": [
+        "The assessed design documents every randomness source and every scope in which nonce uniqueness is required."
+      ],
+      "exclusions": [
+        "Selection does not choose, implement, seed, or certify a random-number generator."
+      ]
+    },
+    "module.replay.ordering-freshness": {
+      "id": "module.replay.ordering-freshness",
+      "title": "Replay, ordering, freshness, and rollback scope",
+      "description": "Selects replay or duplicate rejection, ordering, freshness, and rollback outcomes with representative network and persistent-state threats.",
+      "state": "available",
+      "selections": {
+        "properties": [
+          "property.replay-ordering.freshness",
+          "property.replay-ordering.ordering",
+          "property.replay-ordering.replay-duplicate",
+          "property.replay-ordering.rollback"
+        ],
+        "capabilities": [
+          "capability.network.duplicate",
+          "capability.network.reorder",
+          "capability.network.replay",
+          "capability.time-state.rollback-persistent-state"
+        ],
+        "attackers": [],
+        "threats": [
+          "threat.replay-ordering.duplicate-side-effect",
+          "threat.replay-ordering.reordering-divergence",
+          "threat.replay-ordering.replay-accepted",
+          "threat.replay-ordering.rollback-freshness-bypass"
+        ]
+      },
+      "requires": [
+        "module.binding.identity-session-transcript"
+      ],
+      "assumptions": [
+        "The assessment scope declares the ordering, freshness, duplicate-handling, and durable-state boundaries that matter to the product."
+      ],
+      "exclusions": [
+        "Selection does not prescribe a sequence-number, clock, nonce, storage, or recovery mechanism."
+      ]
+    },
+    "module.resilience.fail-closed-state-recovery": {
+      "id": "module.resilience.fail-closed-state-recovery",
+      "title": "Fail-closed behavior and state recovery scope",
+      "description": "Selects fail-closed, availability, and state-recovery outcomes with resource, malformed-input, and state-fork threats.",
+      "state": "available",
+      "selections": {
+        "properties": [
+          "property.resilience.availability",
+          "property.resilience.fail-closed",
+          "property.resilience.state-recovery"
+        ],
+        "capabilities": [],
+        "attackers": [],
+        "threats": [
+          "threat.resilience.malformed-input-unsafe-failure",
+          "threat.resilience.resource-exhaustion",
+          "threat.resilience.state-recovery-fork"
+        ]
+      },
+      "requires": [
+        "module.replay.ordering-freshness"
+      ],
+      "assumptions": [
+        "The assessed product boundary declares safe failure behavior, availability expectations, and authoritative recovery state."
+      ],
+      "exclusions": [
+        "Selection does not define service-level objectives, operational incident response, or proof of fail-closed behavior."
+      ]
+    },
+    "module.threat.active-network-adversary": {
+      "id": "module.threat.active-network-adversary",
+      "title": "Active network adversary scope",
+      "description": "Selects the bounded active-network-controller attacker model so its declared capability set remains explicit in a resolved profile.",
+      "state": "available",
+      "selections": {
+        "properties": [],
+        "capabilities": [],
+        "attackers": [
+          "attacker.active-network-controller"
+        ],
+        "threats": []
+      },
+      "requires": [
+        "module.communication.confidentiality-integrity"
+      ],
+      "assumptions": [
+        "The assessed threat model permits the bounded network operations declared by the selected attacker model."
+      ],
+      "exclusions": [
+        "Selection does not infer attacker presence, exploitability, likelihood, severity, or a confirmed vulnerability."
+      ]
+    }
+  },
+  "conflicts": [],
+  "safety": {
+    "executable": false,
+    "networkRequired": false,
+    "secretsAllowed": false
+  }
+}

@@ -32,6 +32,12 @@ readiness, or absence of vulnerabilities.
 
 CCA-120 property `requiredEvidenceKinds` values identify abstract evidence lanes such as `specification`, `behavioral-test`, `formal-model`, or `human-review`. They contain no status from this document. Naming an evidence need does not mean work executed, evidence exists, a result passed, or a human approved it. Result, provenance, and freshness contracts remain deferred to CCA-240.
 
+## Profile resolution outcomes are not results
+
+CCA-130 module outcomes `resolved`, `unknown`, `unsupported`, and `unresolvable` describe deterministic composition. Overall `complete` and `incomplete` describe whether every visible module resolved. None is a check status from the table above. In particular, module `unsupported` is not the execution status `unsupported`; the artifact and vocabulary context must remain explicit.
+
+Resolution performs no assurance check and emits no evidence result. `resolved` does not mean `pass`; `unresolvable` does not mean `fail` or `tool-error`; `complete` does not mean product satisfaction, product security, approval, certification, production readiness, or release readiness. CCA-240 retains execution/evidence status, provenance, and freshness semantics.
+
 ## Minimum result record
 
 A durable result should record:

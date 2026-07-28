@@ -27,3 +27,11 @@ SHA-256 values cover exact committed bytes. Editing a referenced fixture require
 - CCA-120 negative fixtures cover malformed and duplicate IDs, key/ID mismatch, dangling references, self-dependency, dependency cycles, empty required relationships, unknown category/relationship, excess map/reference bounds, unsafe safety flags, missing assumptions, and undeclared fields.
 
 Catalog fixture validation does not establish a product claim, vulnerability finding, compatibility, completeness, security proof, certification, or approval.
+
+## CCA-130 module and profile fixtures
+
+CCA-130 adds 11 positive synthetic artifacts: one module catalog, eight profile requests, one golden resolved profile, and one CCA-110 manifest. The requests cover complete multi-module resolution, dependency closure, an unknown module, an unsupported module, conflict propagation, two order permutations of one semantic request, and authoritative property-dependency closure. `valid/resolved-profile-complete-v1.json` is the byte-golden UTF-8/LF result. `valid/cca-130-profile-manifest-v1.json` binds exact synthetic module-catalog, request, and resolved-profile bytes under fictional source/producer identities; it is not a live release manifest or lock.
+
+The 25 new negative artifacts cover malformed module/profile IDs, key/ID mismatch, all four dangling catalog-selection classes, self/dangling/duplicate/cyclic dependencies, duplicate/excessive selections, invalid unsupported form, self/non-canonical/reversed-duplicate/dangling conflicts, intrinsic dependency-closure conflict, catalog and module-catalog digest mismatch, unsafe safety flags, undeclared fields, duplicate requests, and an inconsistent resolved profile.
+
+Unknown, unsupported, and unresolvable results in these fixtures are literal resolution outcomes. They are not execution/evidence statuses. Complete synthetic resolution does not establish product satisfaction, approval, security, certification, production readiness, or release authorization.

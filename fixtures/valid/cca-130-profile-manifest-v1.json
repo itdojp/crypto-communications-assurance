@@ -1,0 +1,66 @@
+{
+  "schemaVersion": "cryptocomm-pack-manifest/v1",
+  "packId": "synthetic-cca-130-profile-fixture",
+  "packVersion": "0.0.0-synthetic.1",
+  "source": {
+    "repositoryId": "synthetic:example/cca-130-profile-source",
+    "revision": {
+      "algorithm": "git-sha1",
+      "value": "7777777777777777777777777777777777777777"
+    },
+    "tree": {
+      "algorithm": "git-sha1",
+      "value": "8888888888888888888888888888888888888888"
+    }
+  },
+  "producer": {
+    "implementationId": "synthetic.example/cca-130-fixture-producer",
+    "version": "0.0.0-synthetic.1",
+    "sourceRepositoryId": "synthetic:example/cca-130-fixture-producer",
+    "sourceRevision": {
+      "algorithm": "git-sha1",
+      "value": "9999999999999999999999999999999999999999"
+    }
+  },
+  "artifacts": {
+    "fixtures/valid/capability-module-catalog-v1.json": {
+      "digest": {
+        "algorithm": "sha256",
+        "value": "62b62bb9c497f8ecac66ff079de8579c85a25c31bb06ed9152df775694dbf5e4"
+      },
+      "mediaType": "application/json",
+      "artifactType": "catalog",
+      "contract": {
+        "contractId": "cryptocomm-capability-module-catalog/v1"
+      }
+    },
+    "fixtures/valid/profile-request-complete-v1.json": {
+      "digest": {
+        "algorithm": "sha256",
+        "value": "4e0b63573e9794fca32e1710ea32a6e61f4cc475407b9a0e4da75867979ebe28"
+      },
+      "mediaType": "application/json",
+      "artifactType": "profile",
+      "contract": {
+        "contractId": "cryptocomm-profile-request/v1"
+      }
+    },
+    "fixtures/valid/resolved-profile-complete-v1.json": {
+      "digest": {
+        "algorithm": "sha256",
+        "value": "c606205d7c1fc5b5049875f37deaa4daaaf06b15a2eabeb8032e3ee7b1ce7be5"
+      },
+      "mediaType": "application/json",
+      "artifactType": "profile",
+      "contract": {
+        "contractId": "cryptocomm-resolved-profile/v1"
+      }
+    }
+  },
+  "safety": {
+    "executable": false,
+    "networkRequired": false,
+    "secretsAllowed": false
+  },
+  "fixtureClassification": "synthetic-test-only"
+}

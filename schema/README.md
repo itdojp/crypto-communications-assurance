@@ -11,6 +11,9 @@ JSON files in this directory are the authoritative machine contracts. Every sche
 | `cryptocomm-property-catalog/v1` | ID-keyed protocol-neutral property outcomes, bounded dependencies, and abstract evidence needs. |
 | `cryptocomm-attacker-catalog/v1` | Separate ID-keyed attacker capabilities and bounded attacker models. |
 | `cryptocomm-threat-catalog/v1` | ID-keyed bounded threats referencing capabilities and affected properties. |
+| `cryptocomm-capability-module-catalog/v1` | Reusable available/unsupported assurance-scope modules, dependencies, conflicts, and exact CCA-120 catalog bindings. |
+| `cryptocomm-profile-request/v1` | Explicit operator module selection bound to exact module-catalog bytes. |
+| `cryptocomm-resolved-profile/v1` | Deterministic module/catalog closure with literal resolution outcomes and source traceability. |
 
 The bootstrap contract is not renamed, replaced, or reinterpreted by the three CCA-110 contracts.
 
@@ -22,4 +25,8 @@ CCA-120 entry identifiers use `property.<domain>.<name>`, `capability.<domain>.<
 
 Generic JSON Schema validation is separate from cross-artifact semantic validation in `packages/contracts`. Schema conformance alone establishes none of truth, completeness, compatibility, security, certification, human approval, production readiness, or release readiness.
 
-See [Contract versioning and migration](../docs/CONTRACT_VERSIONING.md), [ADR 0002](../docs/decisions/0002-pack-manifest-lock-and-compatibility.md), and [ADR 0003](../docs/decisions/0003-security-catalog-separation-and-relationships.md).
+CCA-130 uses `module.<domain>.<name>` and `profile.<domain>.<name>`. A module catalog contains at most 64 modules, eight requirements per available module, 32 direct selections per entry class, and 64 canonical conflict pairs. A request selects one to 32 unique module IDs. Available modules require a direct catalog selection; unsupported modules instead contain bounded reason/scope and no selections or dependencies. All forms require explicit assumptions and exclusions.
+
+Module-catalog bindings repeat each CCA-120 contract ID, catalog ID, catalog version, and exact-byte SHA-256. Requests similarly bind exact module-catalog bytes; resolved profiles repeat every exact binding used. Resolved outputs use `resolved`, `unknown`, `unsupported`, or `unresolvable` per module and `complete` or `incomplete` overall. These are not CCA-240 execution/evidence statuses. Deterministic encoding uses UTF-8, two spaces, LF, one final newline, fixed field order, sorted maps, and sorted set-like arrays.
+
+See [Contract versioning and migration](../docs/CONTRACT_VERSIONING.md), [ADR 0002](../docs/decisions/0002-pack-manifest-lock-and-compatibility.md), [ADR 0003](../docs/decisions/0003-security-catalog-separation-and-relationships.md), and [ADR 0004](../docs/decisions/0004-capability-modules-and-deterministic-profile-resolution.md).

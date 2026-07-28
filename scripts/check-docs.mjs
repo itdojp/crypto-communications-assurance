@@ -29,6 +29,7 @@ const requiredFiles = [
   "docs/decisions/0001-repository-and-product-boundary.md",
   "docs/decisions/0002-pack-manifest-lock-and-compatibility.md",
   "docs/decisions/0003-security-catalog-separation-and-relationships.md",
+  "docs/decisions/0004-capability-modules-and-deterministic-profile-resolution.md",
   "schema/cryptocomm-pack-v1.schema.json",
   "schema/README.md",
   "schema/cryptocomm-pack-manifest-v1.schema.json",
@@ -37,6 +38,10 @@ const requiredFiles = [
   "schema/cryptocomm-property-catalog-v1.schema.json",
   "schema/cryptocomm-attacker-catalog-v1.schema.json",
   "schema/cryptocomm-threat-catalog-v1.schema.json",
+  "schema/cryptocomm-capability-module-catalog-v1.schema.json",
+  "schema/cryptocomm-profile-request-v1.schema.json",
+  "schema/cryptocomm-resolved-profile-v1.schema.json",
+  "pack/modules/v1/capability-module-catalog.json",
 ];
 
 const requiredDirectories = [
@@ -113,6 +118,12 @@ for (const distinction of [
   "`compatibility != human approval`",
   "`schema validation != semantic validation`",
   "`content binding != security proof`",
+  "`module != attacker capability`",
+  "`module != product capability`",
+  "`profile request != approval`",
+  "`resolved profile != product claim`",
+  "`resolution outcome != evidence status`",
+  "`complete resolution != product security`",
 ]) {
   if (!architecture.includes(distinction)) {
     failures.push(`ARCHITECTURE.md does not document ${distinction}`);
@@ -151,6 +162,9 @@ for (const contractId of [
   "`cryptocomm-property-catalog/v1`",
   "`cryptocomm-attacker-catalog/v1`",
   "`cryptocomm-threat-catalog/v1`",
+  "`cryptocomm-capability-module-catalog/v1`",
+  "`cryptocomm-profile-request/v1`",
+  "`cryptocomm-resolved-profile/v1`",
 ]) {
   if (!schemaReadme.includes(contractId)) {
     failures.push(`schema/README.md does not document ${contractId}`);

@@ -79,3 +79,13 @@ Semantic validation covers stable namespace syntax, map-key/ID consistency, dupl
 | `THREAT_PRECONDITIONS_REQUIRED` / `THREAT_IMPACT_REQUIRED` | A threat omits required bounded context. |
 
 Diagnostics are stable, bounded, machine-readable evidence. They are not findings, approvals, or risk decisions.
+
+## CCA-130 module and profile resolution
+
+`validateCapabilityModuleCatalog` strict-decodes and schema-validates exact property, attacker, threat, and module-catalog bytes, then applies CCA-120 semantics, module semantics, and exact binding verification. `resolveProfile` additionally strict-decodes/schema-validates an exact request, verifies its exact module-catalog binding, and returns either bounded diagnostics with no profile or a deterministic resolved profile plus its encoded bytes. `validateResolvedProfile` re-resolves exact inputs and accepts only the exact deterministic byte sequence.
+
+Module validation covers `module.<domain>.<name>` syntax, map-key/ID equality, per-class selection bounds/uniqueness/targets, self/duplicate/dangling/cyclic dependencies, available/unsupported discrimination, canonical unique conflict pairs, intrinsic dependency-closure conflicts, and the data-only safety boundary. Catalog and request bindings compare contract ID, catalog ID, catalog version, and SHA-256 of original bytes.
+
+Resolution normalizes request order, expands module dependencies, preserves literal `unknown` and `unsupported`, applies conflicts without selecting a winner, propagates `unresolvable`, combines selections only from `resolved` modules, expands property dependencies, includes attacker/threat capability relations and threat-affected properties, and never infers attacker models from threats. Every selection retains source-module/inclusion-reason pairs; assumptions and exclusions retain source module IDs.
+
+Serialization uses UTF-8, two spaces, LF, one final newline, fixed field order, sorted maps, and sorted set-like arrays. Diagnostics are capped at 256 and sorted by code/path. Profile resolution carries no execution, evidence, provenance, approval, certification, product-security, or release authority.
