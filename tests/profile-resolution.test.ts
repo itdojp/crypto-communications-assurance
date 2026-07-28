@@ -10,6 +10,7 @@ import {
   type ProfileDiagnosticCode,
   type ProfileResolutionInput,
   type ProfileResolutionResult,
+  type ResolvedSelection,
 } from "../packages/contracts/src/index.js";
 
 const loadBytes = (relativePath: string): Promise<Buffer> =>
@@ -47,6 +48,24 @@ const requireSuccess = (result: ProfileResolutionResult) => {
   expect(result.valid).toBe(true);
   if (!result.valid) throw new Error(JSON.stringify(result.diagnostics));
   return result;
+};
+
+const loadStrict = async <T extends object>(relativePath: string): Promise<T> => {
+  const decoded = decodeStrictJsonObject<T>(await loadBytes(relativePath));
+  if (!decoded.valid) throw new Error(`${relativePath}: strict decode failed`);
+  return decoded.value;
+};
+
+const expectSourceReason = (
+  selection: ResolvedSelection | undefined,
+  sourceModuleId: string,
+  reason: string,
+): void => {
+  expect(selection, `${sourceModuleId}: missing selection`).toBeDefined();
+  expect(
+    selection?.sources.find((source) => source.sourceModuleId === sourceModuleId)
+      ?.inclusionReasons,
+  ).toContain(reason);
 };
 
 describe("CCA-130 deterministic profile resolution", () => {
@@ -186,6 +205,122 @@ describe("CCA-130 deterministic profile resolution", () => {
       await resolveFixture("../fixtures/valid/profile-request-dependency-v1.json"),
     );
     expect(Object.keys(dependencyOnly.profile.selections.attackers)).toEqual([]);
+  });
+
+  it("keeps source-module inclusion records complete for every closure route", async () => {
+    const result = requireSuccess(
+      await resolveFixture("../fixtures/valid/profile-request-complete-v1.json"),
+    );
+    const [modules, properties, attackers, threats] = await Promise.all([
+      loadStrict<{
+        modules: Record<
+          string,
+          {
+            state: "available" | "unsupported";
+            selections?: {
+              properties: string[];
+              capabilities: string[];
+              attackers: string[];
+              threats: string[];
+            };
+          }
+        >;
+      }>("../fixtures/valid/capability-module-catalog-v1.json"),
+      loadStrict<{
+        properties: Record<string, { dependsOn?: string[] }>;
+      }>("../fixtures/valid/property-catalog-v1.json"),
+      loadStrict<{
+        attackers: Record<string, { capabilities: string[] }>;
+      }>("../fixtures/valid/attacker-catalog-v1.json"),
+      loadStrict<{
+        threats: Record<
+          string,
+          { capabilities: string[]; affectedProperties: string[] }
+        >;
+      }>("../fixtures/valid/threat-catalog-v1.json"),
+    ]);
+
+    for (const [moduleId, outcome] of Object.entries(result.profile.modules)) {
+      if (outcome.state !== "resolved") continue;
+      const module = modules.modules[moduleId];
+      if (module?.state !== "available" || module.selections === undefined) {
+        throw new Error(`${moduleId}: resolved module definition absent`);
+      }
+      for (const propertyId of module.selections.properties) {
+        expectSourceReason(
+          result.profile.selections.properties[propertyId],
+          moduleId,
+          "module-selection",
+        );
+      }
+      for (const capabilityId of module.selections.capabilities) {
+        expectSourceReason(
+          result.profile.selections.capabilities[capabilityId],
+          moduleId,
+          "module-selection",
+        );
+      }
+      for (const attackerId of module.selections.attackers) {
+        expectSourceReason(
+          result.profile.selections.attackers[attackerId],
+          moduleId,
+          "module-selection",
+        );
+        for (const capabilityId of attackers.attackers[attackerId]?.capabilities ?? []) {
+          expectSourceReason(
+            result.profile.selections.capabilities[capabilityId],
+            moduleId,
+            "attacker-capability",
+          );
+        }
+      }
+      for (const threatId of module.selections.threats) {
+        expectSourceReason(
+          result.profile.selections.threats[threatId],
+          moduleId,
+          "module-selection",
+        );
+        const threat = threats.threats[threatId];
+        for (const capabilityId of threat?.capabilities ?? []) {
+          expectSourceReason(
+            result.profile.selections.capabilities[capabilityId],
+            moduleId,
+            "threat-capability",
+          );
+        }
+        for (const propertyId of threat?.affectedProperties ?? []) {
+          expectSourceReason(
+            result.profile.selections.properties[propertyId],
+            moduleId,
+            "threat-affected-property",
+          );
+        }
+      }
+    }
+
+    for (const selection of Object.values(result.profile.selections.properties)) {
+      for (const source of selection.sources) {
+        expect(result.profile.modules[source.sourceModuleId]?.state).toBe("resolved");
+        for (const dependency of properties.properties[selection.id]?.dependsOn ?? []) {
+          expectSourceReason(
+            result.profile.selections.properties[dependency],
+            source.sourceModuleId,
+            "property-dependency",
+          );
+        }
+      }
+    }
+    for (const selectionMap of [
+      result.profile.selections.capabilities,
+      result.profile.selections.attackers,
+      result.profile.selections.threats,
+    ]) {
+      for (const selection of Object.values(selectionMap)) {
+        for (const source of selection.sources) {
+          expect(result.profile.modules[source.sourceModuleId]?.state).toBe("resolved");
+        }
+      }
+    }
   });
 
   it("expands property dependencies and retains their exact source-module reason", async () => {
