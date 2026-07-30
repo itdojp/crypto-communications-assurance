@@ -336,6 +336,45 @@ describe("CCA-240 semantic validation and deterministic assessment", () => {
     }
   });
 
+  it("assesses an exact zero-byte input fingerprint", async () => {
+    const fixture = await loadStrict<FreshnessAssessment>(
+      "../fixtures/valid/cca-240/freshness-fresh-v1.json",
+    );
+    const emptyFingerprint = {
+      bindingId: "input.synthetic.empty",
+      digest: {
+        algorithm: "sha256" as const,
+        value: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      },
+      byteLength: 0,
+    };
+    const assessment: FreshnessAssessment = {
+      ...fixture,
+      dimensions: {
+        ...fixture.dimensions,
+        input: {
+          selected: true,
+          availability: "available",
+          expected: emptyFingerprint,
+          observed: emptyFingerprint,
+          outcome: "match",
+        },
+      },
+    };
+    const bytes = serializeEvidenceContract(assessment);
+    expect(validateFreshnessAssessment(bytes)).toEqual({
+      valid: true,
+      diagnostics: [],
+    });
+    const result = assessFreshness(requestFromAssessment(assessment));
+    expect(result).toMatchObject({
+      valid: true,
+      assessment: { state: "fresh" },
+    });
+    if (!result.valid) return;
+    expect(Buffer.from(result.bytes)).toEqual(Buffer.from(bytes));
+  });
+
   it("makes mismatch outrank revocation and stale outrank unavailable facts", async () => {
     const mismatch = await loadStrict<FreshnessAssessment>(
       "../fixtures/valid/cca-240/freshness-mismatched-v1.json",

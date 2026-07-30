@@ -78,8 +78,10 @@ tags, abbreviated revisions, URLs, hostnames, and local paths are not subject
 identity.
 
 Every input binds its stable ID, original-byte SHA-256, byte length, media type,
-and applicable contract identity. External bytes are never re-serialized before
-hashing. Producer identity is either an immutable software implementation or an
+and applicable contract identity. Empty input bytes are valid and remain an
+explicit zero-length SHA-256 binding, including in selected freshness
+fingerprints. External bytes are never re-serialized before hashing. Producer
+identity is either an immutable software implementation or an
 opaque human operator ID. Human-produced evidence remains evidence, not approval.
 A tool is either identified by stable tool/version/implementation identity or
 explicitly `not-applicable`. Environment identity is explicitly `recorded` or
