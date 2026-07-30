@@ -14,6 +14,10 @@
 | `cryptocomm-capability-module-catalog/v1` | Exact-bound available/unsupported assurance-scope modules, dependencies, and canonical conflicts | Proposed CCA-130 contract. |
 | `cryptocomm-profile-request/v1` | Explicit module selection bound to exact module-catalog bytes | Proposed CCA-130 contract. |
 | `cryptocomm-resolved-profile/v1` | Deterministic closure, literal module outcomes, and source traceability | Proposed CCA-130 contract. |
+| `cryptocomm-execution-result/v1` | Literal status-discriminated execution/non-execution fact | CCA-240 v1 contract. |
+| `cryptocomm-evidence-provenance/v1` | Exact execution binding, subject/input/producer/tool/environment/scope identity, classification, and artifact references | CCA-240 v1 contract. |
+| `cryptocomm-freshness-assessment/v1` | Pure caller-fact freshness comparison | CCA-240 v1 contract. |
+| `cryptocomm-evidence-binding-set/v1` | Minimal exact-byte composition root | CCA-240 v1 contract. |
 
 Each value identifies one closed JSON Schema Draft 2020-12 contract. The manifest, lock, and compatibility record have separate identities because their authorities and content bindings differ.
 
@@ -40,6 +44,20 @@ CCA-130 uses stable `module.<domain>.<name>` and `profile.<domain>.<name>` ident
 The module catalog binds exact CCA-120 contract/catalog identities and bytes. A request similarly binds exact module-catalog identity and bytes. A resolved profile repeats the four bindings actually used; it does not repeat CCA-110 source/producer fields or carry the raw request-byte digest. Editing whitespace or member order in an input changes its digest even when it strict-decodes to equivalent JSON.
 
 Resolved-profile serialization is part of the v1 contract behavior: UTF-8, two spaces, LF, one final newline, fixed field order, sorted maps, and sorted set-like arrays. Changing output ordering, closure rules, inclusion-reason meaning, or literal `resolved`/`unknown`/`unsupported`/`unresolvable` and `complete`/`incomplete` semantics requires explicit version review. These resolution outcomes must never be migrated implicitly into CCA-240 execution/evidence status.
+
+## Evidence contract evolution
+
+CCA-240 v1 keeps execution, provenance, freshness, and composition under separate
+contract IDs. The seven execution states, three permitted origin/use pairs, three
+subject forms, public/private artifact discrimination, five freshness states and
+decision order, and exact three-record binding root are immutable v1 meanings.
+
+A later contract must not silently promote non-execution to pass, synthetic to
+real, test-only to policy-evaluable, freshness to sufficiency, scanner output to a
+confirmed vulnerability, or any evidence to human approval/certification/release.
+Adding private sidecars/storage, policy decisions, approval, satisfaction,
+certification, risk acceptance, release authority, or upstream mappings requires
+a new separately authorized contract/Issue rather than an optional v1 field.
 
 ## Explicit migration
 

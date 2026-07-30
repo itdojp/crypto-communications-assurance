@@ -1,0 +1,77 @@
+{
+  "artifacts": {
+    "fixtures/valid/cca-240/evidence-binding-set-complete-v1.json": {
+      "artifactType": "contract-instance",
+      "contract": {
+        "contractId": "cryptocomm-evidence-binding-set/v1"
+      },
+      "digest": {
+        "algorithm": "sha256",
+        "value": "ce6a1a3a16c262f713d64e65ec0a5d0d03962c6509e00c6654730977ecc9a5de"
+      },
+      "mediaType": "application/json"
+    },
+    "fixtures/valid/cca-240/execution-pass-v1.json": {
+      "artifactType": "contract-instance",
+      "contract": {
+        "contractId": "cryptocomm-execution-result/v1"
+      },
+      "digest": {
+        "algorithm": "sha256",
+        "value": "213a8a3d7b92f014f19b6944e2dbcadb992827f40eb14578bec3e946c0fdd0f2"
+      },
+      "mediaType": "application/json"
+    },
+    "fixtures/valid/cca-240/freshness-fresh-v1.json": {
+      "artifactType": "contract-instance",
+      "contract": {
+        "contractId": "cryptocomm-freshness-assessment/v1"
+      },
+      "digest": {
+        "algorithm": "sha256",
+        "value": "c63061d1ee66e55ddcc528823b893e3b75eaca3340603de0e13f6844c89a0227"
+      },
+      "mediaType": "application/json"
+    },
+    "fixtures/valid/cca-240/provenance-public-synthetic-test-only-v1.json": {
+      "artifactType": "contract-instance",
+      "contract": {
+        "contractId": "cryptocomm-evidence-provenance/v1"
+      },
+      "digest": {
+        "algorithm": "sha256",
+        "value": "9c27dcea66fdaa01be53006f448a71f4c6f9326ac54f33fef6555dd93080bfbe"
+      },
+      "mediaType": "application/json"
+    }
+  },
+  "fixtureClassification": "synthetic-test-only",
+  "packId": "synthetic-cca-240-evidence",
+  "packVersion": "1.0.0",
+  "producer": {
+    "implementationId": "synthetic/crypto-communications-assurance",
+    "sourceRepositoryId": "example.test:synthetic/crypto-communications-assurance",
+    "sourceRevision": {
+      "algorithm": "git-sha1",
+      "value": "1111111111111111111111111111111111111111"
+    },
+    "version": "0.0.0"
+  },
+  "safety": {
+    "executable": false,
+    "networkRequired": false,
+    "secretsAllowed": false
+  },
+  "schemaVersion": "cryptocomm-pack-manifest/v1",
+  "source": {
+    "repositoryId": "example.test:synthetic/crypto-communications-assurance",
+    "revision": {
+      "algorithm": "git-sha1",
+      "value": "1111111111111111111111111111111111111111"
+    },
+    "tree": {
+      "algorithm": "git-sha1",
+      "value": "2222222222222222222222222222222222222222"
+    }
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "artifactRoles": [
+    "diagnostic",
+    "log",
+    "partial",
+    "substantive-result"
+  ],
+  "documentId": "cca-240-execution-status-matrix-v1",
+  "statuses": {
+    "fail": {
+      "attempted": true,
+      "completed": true,
+      "executionOccurred": true,
+      "permittedArtifactRoles": [
+        "diagnostic",
+        "log",
+        "partial",
+        "substantive-result"
+      ],
+      "substantiveResult": "criteria-not-met"
+    },
+    "not-run": {
+      "attempted": false,
+      "completed": false,
+      "executionOccurred": false,
+      "permittedArtifactRoles": [
+        "diagnostic",
+        "log"
+      ],
+      "substantiveResult": "none"
+    },
+    "pass": {
+      "attempted": true,
+      "completed": true,
+      "executionOccurred": true,
+      "permittedArtifactRoles": [
+        "diagnostic",
+        "log",
+        "partial",
+        "substantive-result"
+      ],
+      "substantiveResult": "criteria-met"
+    },
+    "skip": {
+      "attempted": false,
+      "completed": false,
+      "executionOccurred": false,
+      "permittedArtifactRoles": [
+        "diagnostic",
+        "log"
+      ],
+      "substantiveResult": "none"
+    },
+    "timeout": {
+      "attempted": true,
+      "completed": false,
+      "executionOccurred": true,
+      "permittedArtifactRoles": [
+        "diagnostic",
+        "log",
+        "partial"
+      ],
+      "substantiveResult": "none"
+    },
+    "tool-error": {
+      "attempted": true,
+      "completed": false,
+      "executionOccurred": "phase-dependent",
+      "permittedArtifactRoles": {
+        "execution": [
+          "diagnostic",
+          "log",
+          "partial"
+        ],
+        "post-processing": [
+          "diagnostic",
+          "log",
+          "partial"
+        ],
+        "preflight": [
+          "diagnostic",
+          "log"
+        ]
+      },
+      "substantiveResult": "none"
+    },
+    "unsupported": {
+      "attempted": false,
+      "completed": false,
+      "executionOccurred": false,
+      "permittedArtifactRoles": [
+        "diagnostic",
+        "log"
+      ],
+      "substantiveResult": "none"
+    }
+  }
+}

@@ -42,13 +42,24 @@ CCA-120 catalog fixtures remain explicitly `synthetic-test-only`. The synthetic 
 
 The CCA-130 public module catalog contains protocol-neutral selections, dependencies, assumptions, exclusions, conflicts, and exact public CCA-120 bindings only. It carries no target identity, live source identity, private evidence, product claim, or approval. The explicit unsupported private-provenance module defines a deferral boundary and is not a private-evidence locator or access authority.
 
-CCA-130 requests, resolved profiles, and their CCA-110 manifest fixture are `synthetic-test-only`. Source-module inclusion reasons do not identify a live producer or product. The resolver neither reads private evidence nor defines provenance, freshness, retention, access control, correlation, risk acceptance, or publication authority; those remain outside Git and deferred to CCA-240 or later review.
+CCA-130 requests, resolved profiles, and their CCA-110 manifest fixture are `synthetic-test-only`. Source-module inclusion reasons do not identify a live producer or product. The resolver neither reads private evidence nor defines provenance, freshness, retention, access control, correlation, risk acceptance, or publication authority; CCA-240 adds separate public provenance/freshness facts while private operations remain deferred.
 
 ## Referencing private evidence
 
 CCA-110 compatibility records may reference only content-bound synthetic or intentionally public evidence without embedding evidence bytes. Evidence map keys are bounded bundle-relative identifiers only. They are not repository authorities, network locators, private evidence paths, local absolute paths, or provenance records. The evidence value content-binds bytes but does not supply a location or access authority.
 
-Evidence provenance, private evidence reference design, access control, correlation risk, retention, and freshness remain deferred to a separately reviewed contract, including CCA-240. CCA-110 does not define or implement private evidence handling.
+CCA-240 `public-content` references expose exact SHA-256, byte length, media type,
+and artifact role only for bytes approved for public binding. `private-opaque`
+references expose only a bounded operator-controlled opaque ID, literal private
+classification, logical artifact ID, and permitted role. They structurally forbid
+plaintext digest, byte length, media type, storage location, customer identity,
+local path, and private storage metadata.
+
+The public opaque reference binds no private bytes and does not prove sidecar
+availability. Private storage, sidecar contracts, exact private digests, HMAC,
+encryption/key lifecycle, credentials, access control, correlation governance,
+and retention remain outside CCA-240 v1. CCA-110 still does not define private
+evidence handling.
 
 ## External services
 

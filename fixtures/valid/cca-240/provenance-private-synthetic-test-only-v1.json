@@ -1,0 +1,95 @@
+{
+  "artifacts": [
+    {
+      "artifactId": "artifact.synthetic.partial",
+      "classification": "private",
+      "kind": "private-opaque",
+      "opaqueId": "opaque.SyntheticPrivateReference001",
+      "role": "partial"
+    }
+  ],
+  "diagnostics": [],
+  "environment": {
+    "architecture": "x86_64",
+    "environmentId": "environment.synthetic.linux",
+    "kind": "recorded",
+    "operatingSystem": "linux",
+    "runtimeVersion": "22.22.2"
+  },
+  "evidenceOrigin": "synthetic",
+  "executionResult": {
+    "byteLength": 2805,
+    "contractId": "cryptocomm-execution-result/v1",
+    "digest": {
+      "algorithm": "sha256",
+      "value": "92fa507b7cb82d25c6eb3a35644a1b62bdc7a608a472cebc41062f5bc5e4c6b4"
+    },
+    "recordId": "result.synthetic.timeout"
+  },
+  "fixtureClassification": "synthetic-test-only",
+  "inputBindings": [
+    {
+      "byteLength": 65,
+      "digest": {
+        "algorithm": "sha256",
+        "value": "2098c99aa0eaa5f61bca935a56d5c0498c8afc96b920e0316d77b1c334a601d8"
+      },
+      "inputId": "input.synthetic.placeholder",
+      "mediaType": "application/json"
+    }
+  ],
+  "producer": {
+    "implementation": {
+      "implementationId": "producer.synthetic.cca240",
+      "sourceRepositoryId": "example.test:synthetic/crypto-communications-assurance",
+      "sourceRevision": {
+        "algorithm": "git-sha1",
+        "value": "1111111111111111111111111111111111111111"
+      },
+      "version": "1.0.0"
+    },
+    "kind": "software"
+  },
+  "provenanceId": "provenance.synthetic.private",
+  "safety": {
+    "executable": false,
+    "networkRequired": false,
+    "secretsAllowed": false
+  },
+  "schemaVersion": "cryptocomm-evidence-provenance/v1",
+  "scope": {
+    "description": "Synthetic repository-local CCA-240 contract fixture scope.",
+    "exclusions": [
+      "live systems",
+      "private evidence"
+    ],
+    "scopeId": "scope.synthetic.repository"
+  },
+  "subject": {
+    "commit": {
+      "algorithm": "git-sha1",
+      "value": "1111111111111111111111111111111111111111"
+    },
+    "kind": "git-revision",
+    "repositoryId": "example.test:synthetic/crypto-communications-assurance",
+    "tree": {
+      "algorithm": "git-sha1",
+      "value": "2222222222222222222222222222222222222222"
+    }
+  },
+  "tool": {
+    "implementation": {
+      "implementationId": "tool.synthetic.runner",
+      "sourceRepositoryId": "example.test:synthetic/crypto-communications-assurance",
+      "sourceRevision": {
+        "algorithm": "git-sha1",
+        "value": "1111111111111111111111111111111111111111"
+      },
+      "version": "1.0.0"
+    },
+    "kind": "identified",
+    "toolId": "tool.synthetic.runner",
+    "version": "1.0.0"
+  },
+  "useRestriction": "test-only"
+}

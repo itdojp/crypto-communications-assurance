@@ -2,15 +2,797 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/itdojp/crypto-communications-assurance/schema/cryptocomm-evidence-provenance-v1.schema.json",
   "title": "Cryptographic Communication Evidence Provenance v1",
-  "description": "Closed contract skeleton for exact subject, input, producer, tool, environment, scope, classification, and artifact provenance. It is not human approval.",
+  "description": "Closed provenance for exact subject/input/producer/tool/environment/scope facts and public-content or private-opaque artifact references. Human production is not human approval.",
   "type": "object",
   "additionalProperties": false,
   "required": [
-    "schemaVersion"
+    "schemaVersion",
+    "provenanceId",
+    "executionResult",
+    "subject",
+    "inputBindings",
+    "producer",
+    "tool",
+    "environment",
+    "scope",
+    "evidenceOrigin",
+    "useRestriction",
+    "artifacts",
+    "diagnostics",
+    "safety"
   ],
   "properties": {
     "schemaVersion": {
       "const": "cryptocomm-evidence-provenance/v1"
+    },
+    "provenanceId": {
+      "$ref": "#/$defs/recordId"
+    },
+    "executionResult": {
+      "$ref": "#/$defs/executionBinding"
+    },
+    "subject": {
+      "$ref": "#/$defs/subject"
+    },
+    "inputBindings": {
+      "$ref": "#/$defs/inputBindings"
+    },
+    "producer": {
+      "$ref": "#/$defs/producer"
+    },
+    "tool": {
+      "$ref": "#/$defs/tool"
+    },
+    "environment": {
+      "$ref": "#/$defs/environment"
+    },
+    "scope": {
+      "$ref": "#/$defs/scope"
+    },
+    "evidenceOrigin": {
+      "enum": [
+        "synthetic",
+        "real"
+      ]
+    },
+    "useRestriction": {
+      "enum": [
+        "test-only",
+        "policy-evaluable"
+      ]
+    },
+    "artifacts": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 64,
+      "items": {
+        "$ref": "#/$defs/artifact"
+      }
+    },
+    "diagnostics": {
+      "$ref": "#/$defs/diagnostics"
+    },
+    "fixtureClassification": {
+      "const": "synthetic-test-only"
+    },
+    "safety": {
+      "$ref": "#/$defs/safety"
     }
+  },
+  "$defs": {
+    "boundedId": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 128,
+      "pattern": "^[a-z][a-z0-9-]*(?:\\.[a-z][a-z0-9-]*)+$"
+    },
+    "recordId": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 128,
+      "pattern": "^[a-z][a-z0-9.-]{2,127}$"
+    },
+    "contractId": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 128,
+      "pattern": "^[a-z][a-z0-9-]*(?:/[a-z][a-z0-9-]*)*/v[1-9][0-9]*$"
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[0-9A-Za-z][0-9A-Za-z.+-]{0,63}$"
+    },
+    "repositoryId": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 256,
+      "pattern": "^[a-z][a-z0-9.-]{0,31}:[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?:/[A-Za-z0-9][A-Za-z0-9._-]{0,127})+$"
+    },
+    "gitSha1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithm",
+        "value"
+      ],
+      "properties": {
+        "algorithm": {
+          "const": "git-sha1"
+        },
+        "value": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        }
+      }
+    },
+    "sha256Digest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithm",
+        "value"
+      ],
+      "properties": {
+        "algorithm": {
+          "const": "sha256"
+        },
+        "value": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "mediaType": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 127,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9!#$&^_.+-]*/[A-Za-z0-9][A-Za-z0-9!#$&^_.+-]*$"
+    },
+    "timestamp": {
+      "type": "string",
+      "minLength": 20,
+      "maxLength": 30,
+      "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-([0-2][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,9})?Z$"
+    },
+    "reasonCode": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 64,
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"
+    },
+    "boundedText": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "authorityId": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 128,
+      "pattern": "^authority\\.[a-z][a-z0-9-]*(?:\\.[a-z0-9][a-z0-9-]*)+$"
+    },
+    "exactBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contractId",
+        "recordId",
+        "digest",
+        "byteLength"
+      ],
+      "properties": {
+        "contractId": {
+          "$ref": "#/$defs/contractId"
+        },
+        "recordId": {
+          "$ref": "#/$defs/recordId"
+        },
+        "digest": {
+          "$ref": "#/$defs/sha256Digest"
+        },
+        "byteLength": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1048576
+        }
+      }
+    },
+    "exactContentBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "digest",
+        "byteLength"
+      ],
+      "properties": {
+        "digest": {
+          "$ref": "#/$defs/sha256Digest"
+        },
+        "byteLength": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1048576
+        }
+      }
+    },
+    "bindingFingerprint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bindingId",
+        "digest",
+        "byteLength"
+      ],
+      "properties": {
+        "bindingId": {
+          "$ref": "#/$defs/boundedId"
+        },
+        "digest": {
+          "$ref": "#/$defs/sha256Digest"
+        },
+        "byteLength": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1048576
+        }
+      }
+    },
+    "contractIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contractId",
+        "recordId"
+      ],
+      "properties": {
+        "contractId": {
+          "$ref": "#/$defs/contractId"
+        },
+        "recordId": {
+          "$ref": "#/$defs/recordId"
+        }
+      }
+    },
+    "manifestSubject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "manifest"
+      ],
+      "properties": {
+        "kind": {
+          "const": "cca-110-manifest"
+        },
+        "manifest": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "contractId",
+            "recordId",
+            "digest",
+            "byteLength"
+          ],
+          "properties": {
+            "contractId": {
+              "const": "cryptocomm-pack-manifest/v1"
+            },
+            "recordId": {
+              "$ref": "#/$defs/recordId"
+            },
+            "digest": {
+              "$ref": "#/$defs/sha256Digest"
+            },
+            "byteLength": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1048576
+            }
+          }
+        }
+      }
+    },
+    "gitSubject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "repositoryId",
+        "commit",
+        "tree"
+      ],
+      "properties": {
+        "kind": {
+          "const": "git-revision"
+        },
+        "repositoryId": {
+          "$ref": "#/$defs/repositoryId"
+        },
+        "commit": {
+          "$ref": "#/$defs/gitSha1"
+        },
+        "tree": {
+          "$ref": "#/$defs/gitSha1"
+        }
+      }
+    },
+    "contractArtifactSubject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "artifact"
+      ],
+      "properties": {
+        "kind": {
+          "const": "contract-artifact"
+        },
+        "artifact": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "contractId",
+            "recordId",
+            "digest",
+            "byteLength"
+          ],
+          "properties": {
+            "contractId": {
+              "$ref": "#/$defs/contractId"
+            },
+            "recordId": {
+              "$ref": "#/$defs/recordId"
+            },
+            "digest": {
+              "$ref": "#/$defs/sha256Digest"
+            },
+            "byteLength": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1048576
+            }
+          }
+        }
+      }
+    },
+    "subject": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/manifestSubject"
+        },
+        {
+          "$ref": "#/$defs/gitSubject"
+        },
+        {
+          "$ref": "#/$defs/contractArtifactSubject"
+        }
+      ]
+    },
+    "inputBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "inputId",
+        "digest",
+        "byteLength",
+        "mediaType"
+      ],
+      "properties": {
+        "inputId": {
+          "$ref": "#/$defs/boundedId"
+        },
+        "digest": {
+          "$ref": "#/$defs/sha256Digest"
+        },
+        "byteLength": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1048576
+        },
+        "mediaType": {
+          "$ref": "#/$defs/mediaType"
+        },
+        "contract": {
+          "$ref": "#/$defs/contractIdentity"
+        }
+      }
+    },
+    "inputBindings": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 64,
+      "items": {
+        "$ref": "#/$defs/inputBinding"
+      }
+    },
+    "softwareIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "implementationId",
+        "version",
+        "sourceRepositoryId",
+        "sourceRevision"
+      ],
+      "properties": {
+        "implementationId": {
+          "$ref": "#/$defs/boundedId"
+        },
+        "version": {
+          "$ref": "#/$defs/version"
+        },
+        "sourceRepositoryId": {
+          "$ref": "#/$defs/repositoryId"
+        },
+        "sourceRevision": {
+          "$ref": "#/$defs/gitSha1"
+        }
+      }
+    },
+    "softwareProducer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "implementation"
+      ],
+      "properties": {
+        "kind": {
+          "const": "software"
+        },
+        "implementation": {
+          "$ref": "#/$defs/softwareIdentity"
+        }
+      }
+    },
+    "humanProducer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "operatorId"
+      ],
+      "properties": {
+        "kind": {
+          "const": "human"
+        },
+        "operatorId": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 128,
+          "pattern": "^operator\\.[A-Za-z0-9_-]{1,119}$"
+        }
+      }
+    },
+    "producer": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/softwareProducer"
+        },
+        {
+          "$ref": "#/$defs/humanProducer"
+        }
+      ]
+    },
+    "identifiedTool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "toolId",
+        "version",
+        "implementation"
+      ],
+      "properties": {
+        "kind": {
+          "const": "identified"
+        },
+        "toolId": {
+          "$ref": "#/$defs/boundedId"
+        },
+        "version": {
+          "$ref": "#/$defs/version"
+        },
+        "implementation": {
+          "$ref": "#/$defs/softwareIdentity"
+        }
+      }
+    },
+    "notApplicableTool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "reason"
+      ],
+      "properties": {
+        "kind": {
+          "const": "not-applicable"
+        },
+        "reason": {
+          "$ref": "#/$defs/boundedText"
+        }
+      }
+    },
+    "tool": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/identifiedTool"
+        },
+        {
+          "$ref": "#/$defs/notApplicableTool"
+        }
+      ]
+    },
+    "recordedEnvironment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "environmentId",
+        "operatingSystem",
+        "architecture"
+      ],
+      "properties": {
+        "kind": {
+          "const": "recorded"
+        },
+        "environmentId": {
+          "$ref": "#/$defs/boundedId"
+        },
+        "operatingSystem": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._+-]+$"
+        },
+        "architecture": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 32,
+          "pattern": "^[A-Za-z0-9._+-]+$"
+        },
+        "runtimeVersion": {
+          "$ref": "#/$defs/version"
+        },
+        "immutableImageDigest": {
+          "$ref": "#/$defs/sha256Digest"
+        }
+      }
+    },
+    "notRecordedEnvironment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "reason"
+      ],
+      "properties": {
+        "kind": {
+          "const": "not-recorded"
+        },
+        "reason": {
+          "$ref": "#/$defs/boundedText"
+        }
+      }
+    },
+    "environment": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/recordedEnvironment"
+        },
+        {
+          "$ref": "#/$defs/notRecordedEnvironment"
+        }
+      ]
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scopeId",
+        "description",
+        "exclusions"
+      ],
+      "properties": {
+        "scopeId": {
+          "$ref": "#/$defs/boundedId"
+        },
+        "description": {
+          "$ref": "#/$defs/boundedText"
+        },
+        "exclusions": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 32,
+          "items": {
+            "$ref": "#/$defs/boundedText"
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "executable",
+        "networkRequired",
+        "secretsAllowed"
+      ],
+      "properties": {
+        "executable": {
+          "const": false
+        },
+        "networkRequired": {
+          "const": false
+        },
+        "secretsAllowed": {
+          "const": false
+        }
+      }
+    },
+    "diagnostic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "path",
+        "message"
+      ],
+      "properties": {
+        "code": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 96,
+          "pattern": "^[A-Z][A-Z0-9_]+$"
+        },
+        "path": {
+          "type": "string",
+          "maxLength": 512,
+          "pattern": "^(?:/(?:[^~/]|~[01])*)*$"
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        }
+      }
+    },
+    "diagnostics": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 256,
+      "items": {
+        "$ref": "#/$defs/diagnostic"
+      }
+    },
+    "publicArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "artifactId",
+        "role",
+        "digest",
+        "byteLength",
+        "mediaType"
+      ],
+      "properties": {
+        "kind": {
+          "const": "public-content"
+        },
+        "artifactId": {
+          "$ref": "#/$defs/boundedId"
+        },
+        "role": {
+          "enum": [
+            "substantive-result",
+            "partial",
+            "diagnostic",
+            "log"
+          ]
+        },
+        "digest": {
+          "$ref": "#/$defs/sha256Digest"
+        },
+        "byteLength": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1048576
+        },
+        "mediaType": {
+          "$ref": "#/$defs/mediaType"
+        }
+      }
+    },
+    "privateArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "artifactId",
+        "classification",
+        "role",
+        "opaqueId"
+      ],
+      "properties": {
+        "kind": {
+          "const": "private-opaque"
+        },
+        "artifactId": {
+          "$ref": "#/$defs/boundedId"
+        },
+        "classification": {
+          "const": "private"
+        },
+        "role": {
+          "enum": [
+            "substantive-result",
+            "partial",
+            "diagnostic",
+            "log"
+          ]
+        },
+        "opaqueId": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 128,
+          "pattern": "^opaque\\.[A-Za-z0-9_-]{1,120}$"
+        }
+      }
+    },
+    "artifact": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/publicArtifact"
+        },
+        {
+          "$ref": "#/$defs/privateArtifact"
+        }
+      ]
+    },
+    "executionBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contractId",
+        "recordId",
+        "digest",
+        "byteLength"
+      ],
+      "properties": {
+        "contractId": {
+          "const": "cryptocomm-execution-result/v1"
+        },
+        "recordId": {
+          "$ref": "#/$defs/recordId"
+        },
+        "digest": {
+          "$ref": "#/$defs/sha256Digest"
+        },
+        "byteLength": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1048576
+        }
+      }
+    }
+  },
+  "not": {
+    "properties": {
+      "evidenceOrigin": {
+        "const": "synthetic"
+      },
+      "useRestriction": {
+        "const": "policy-evaluable"
+      }
+    },
+    "required": [
+      "evidenceOrigin",
+      "useRestriction"
+    ]
   }
 }

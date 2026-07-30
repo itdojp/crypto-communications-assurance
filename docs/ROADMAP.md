@@ -19,7 +19,7 @@ Candidate work, subject to explicit contract design:
 - explicit exact-byte content binding, source/producer/resolver identity, and fail-closed contract migration rules;
 - security property, threat, and attacker vocabularies through three separate closed catalog contracts, stable identifiers, bounded relationships, public-safe catalog data, and explicit coverage review evidence;
 - exact-bound capability module catalog, explicit profile request, and deterministic resolved-profile contracts; evidence-result contracts remain separate;
-- result records using the closed status vocabulary;
+- separate CCA-240 execution/provenance/freshness/binding contracts using the closed status vocabulary and exact-byte composition;
 - compatibility and contract-version negotiation rules.
 
 This phase does not implement cryptographic primitives or protocols.
@@ -28,9 +28,9 @@ This phase does not implement cryptographic primitives or protocols.
 
 Candidate work:
 
-- ae-framework-compatible assurance inputs and public synthetic fixtures;
-- GenAI Repo Auditor-compatible audit inputs and target templates;
-- public compatibility suites that do not call either external system during unit
+- future ae-framework bridge inputs and public synthetic fixtures, without a compatibility claim until separately validated;
+- future GenAI Repo Auditor bridge inputs and target templates, without a compatibility claim until separately validated;
+- public mapping suites that do not call either external system during unit
   tests.
 
 The upstream repositories remain independently governed and are not modified from
@@ -41,9 +41,9 @@ this repository.
 Candidate work:
 
 - deterministic transformations between versioned contracts;
-- artifact digest verification and provenance records;
-- private evidence reference design that preserves the public/private boundary;
-- explicit failure, timeout, unsupported, and tool-error propagation.
+- bridge preservation of CCA-240 exact artifact/provenance bindings;
+- private storage/sidecar design that preserves the CCA-240 public opaque boundary;
+- bridge preservation of literal failure, timeout, unsupported, and tool-error states.
 
 No adapter may turn tool evidence into human approval.
 

@@ -1,10 +1,11 @@
 # Contracts package
 
-This private package provides three separate repository-local validation layers:
+This private package provides separate repository-local validation authorities:
 
 1. `decodeStrictJsonObject` decodes at most 1,048,576 exact input bytes as fatal UTF-8 and strict JSON with at most 128 nested object/array containers. It rejects comments, trailing commas, trailing data, a non-object root, and duplicate decoded member names at every nesting level (including duplicates expressed with JSON escapes).
 2. `compileContractBytes` passes only that strict-decoded object to a caller-supplied closed Draft 2020-12 schema compiled with strict AJV behavior. `compileContract` remains the generic schema-compilation primitive for already decoded trusted values.
 3. Pure semantic validators strict-decode the exact supplied manifest, lock, and compatibility-record bytes and check cross-artifact bindings without network, filesystem resolution, execution, or mutation. Callers must separately schema-validate each object decoded from those same exact bytes before treating semantic results as contract validation.
+4. CCA-240 validators preserve strict decode, schema conformance, cross-contract semantics, pure freshness assessment, and deterministic serialization as separate operations. The binding-set validator verifies exact original bytes and repeated identities without canonicalizing external input.
 
 The decoder does not canonicalize or rewrite JSON. SHA-256 binding continues to cover the original byte sequence supplied by the caller, not a re-serialized object. The 1,048,576-byte limit applies independently to each manifest, lock, and compatibility record and is checked before UTF-8 decoding. The 128-container limit is checked with a non-recursive structural preflight before parsing, and duplicate traversal is also non-recursive.
 
@@ -89,3 +90,23 @@ Module validation covers `module.<domain>.<name>` syntax, map-key/ID equality, p
 Resolution normalizes request order, expands module dependencies, preserves literal `unknown` and `unsupported`, applies conflicts without selecting a winner, propagates `unresolvable`, combines selections only from `resolved` modules, expands property dependencies, includes attacker/threat capability relations and threat-affected properties, and never infers attacker models from threats. Every selection retains source-module/inclusion-reason pairs; assumptions and exclusions retain source module IDs.
 
 Serialization uses UTF-8, two spaces, LF, one final newline, fixed field order, sorted maps, and sorted set-like arrays. Diagnostics are capped at 256 and sorted by code/path. Profile resolution carries no execution, evidence, provenance, approval, certification, product-security, or release authority.
+
+## CCA-240 evidence contracts
+
+`evidence.ts` validates the four CCA-240 contracts and exports a caller-fact-only
+`assessFreshness` function plus deterministic serializers. The pure assessor uses
+the fixed `not-assessed` -> `mismatched` -> `stale` -> `unknown` -> `fresh`
+decision order. It reads no current time, network, mutable revision, environment,
+or external authority. Callers provide `asOf`, comparison bytes/fingerprints,
+clock trust when selected, lifecycle applicability, and bounded authority IDs.
+
+CCA-240 caps exact inputs and artifact references at 64, private opaque references
+at the same 64-artifact ceiling, and diagnostics at 256. Semantic diagnostics are
+deduplicated and sorted by code/path/message. Generated JSON is byte-stable for
+identical semantic inputs; external bytes are always hashed as supplied.
+
+The module does not implement evidence sufficiency, claim satisfaction, human
+approval, certification, risk acceptance, release authority, private sidecars or
+storage, HMAC/encryption, credentials, an upstream adapter, or a compatibility
+claim. `pass` is not evidence-requirement satisfaction, `fresh` is not
+sufficiency, and a binding set is not evidence storage.

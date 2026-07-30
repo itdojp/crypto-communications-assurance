@@ -21,7 +21,7 @@
 
 | Path | Bootstrap responsibility |
 | --- | --- |
-| `pack/` | Authoritative JSON-first domain catalog data and a non-contract coverage review matrix. |
+| `pack/` | Authoritative JSON-first domain catalog data and non-contract status/classification/coverage review matrices. |
 | `packages/contracts/` | TypeScript validation helpers for shared contracts. |
 | `packages/cli/` | Reserved for a later local, non-authoritative CLI. |
 | `packages/bridge/` | Reserved for later content-bound bridge logic. |
@@ -68,6 +68,26 @@ Threat applicability to attacker models is derived through capability compositio
 8. A valid request always produces `complete` or `incomplete` output. Invalid JSON/contracts/semantics or any exact binding mismatch produces bounded deterministic diagnostics and no resolved profile.
 9. Output is UTF-8 JSON with two-space indentation, LF, one final newline, fixed field order, lexicographically sorted maps, and sorted set-like arrays. No timestamp, run ID, hostname, local path, mutable branch, credential, request-byte digest, or generated approval is emitted.
 
+## Evidence validation and freshness flow
+
+1. Execution result, evidence provenance, freshness assessment, and binding set
+   bytes pass through the existing strict decoder and their separate closed
+   Draft 2020-12 schemas.
+2. Execution schemas enforce literal occurrence, required/forbidden fields, and
+   artifact roles. A non-completed state cannot carry a substantive result.
+3. Provenance repeats exact subject/input/producer/tool/environment/scope facts,
+   binds exact execution-result bytes, preserves origin/use classification, and
+   separates public content from private opaque references.
+4. The pure assessor receives caller `asOf`, selected expected/observed bindings,
+   clock trust, and lifecycle facts with authority IDs. It reads no current time,
+   network, branch/tag, host environment, or external authority.
+5. The binding-set validator recomputes every original-byte SHA-256 and byte
+   length, checks contract/record IDs and the entire repeated identity chain, and
+   requires one explicit freshness record.
+6. Deterministic serialization is separate from external byte validation. It
+   sorts generated object keys and set-like arrays but never canonicalizes bytes
+   before digest verification.
+
 The authority boundaries are intentionally non-equivalent:
 
 - `bootstrap envelope != manifest`
@@ -88,6 +108,16 @@ The authority boundaries are intentionally non-equivalent:
 - `resolved profile != product claim`
 - `resolution outcome != evidence status`
 - `complete resolution != product security`
+- `pass != evidence requirement satisfied`
+- `real != fresh`
+- `policy-evaluable != policy satisfied`
+- `fresh != sufficient`
+- `evidence result != human approval`
+- `scanner finding != confirmed vulnerability`
+- `no findings != satisfied claim`
+- `local proof != machine-checked proof`
+- `runtime mitigation != absence of a bug`
+- `binding set != evidence storage`
 
 SHA-256 covers the original exact bytes. JSON whitespace, member order, encoding, and line endings therefore affect content identity; strict decoding does not rewrite input and version 1 performs no implicit JSON canonicalization. A manifest has no self-digest.
 
@@ -109,7 +139,7 @@ See [`PUBLIC_PRIVATE_BOUNDARY.md`](PUBLIC_PRIVATE_BOUNDARY.md) and
 
 `cryptocomm-pack/v1` is a frozen bootstrap envelope. Its `planned` value states intent only. The CCA-110 validation layer accepts exactly one legacy migration pair, `planned` to `unknown`; all other combinations involving legacy `planned`, `compatible`, or `unsupported` and any new state fail closed. It performs no evidence-enriching migration. CCA-110 uses a separate compatibility record with `unknown`, `compatible`, `incompatible`, and `unsupported` states.
 
-`compatible` and `incompatible` require exact subject/target identity and content-addressed evidence. `unsupported` requires a bounded reason and scope. `unknown` makes no compatibility claim. Evidence map keys are bounded bundle-relative identifiers only: they are not repository authorities, network locators, private paths, local absolute paths, or provenance records. Provenance, access control, retention, correlation risk, and freshness remain deferred to CCA-240. No state communicates human approval, release approval, certification, production readiness, protocol security, or vulnerability absence.
+`compatible` and `incompatible` require exact subject/target identity and content-addressed evidence. `unsupported` requires a bounded reason and scope. `unknown` makes no compatibility claim. Evidence map keys are bounded bundle-relative identifiers only: they are not repository authorities, network locators, private paths, local absolute paths, or provenance records. CCA-240 adds separate provenance and freshness contracts without changing CCA-110 meanings. Access control, retention, private storage/sidecars, and private correlation mechanisms remain deferred. No state communicates human approval, release approval, certification, production readiness, protocol security, or vulnerability absence.
 
 CCA-130 module outcomes `resolved`, `unknown`, `unsupported`, and `unresolvable`, plus overall `complete` and `incomplete`, are a separate vocabulary from check execution/evidence status. They carry no CCA-240 provenance, freshness, retention, access, risk, approval, certification, or release semantics. A complete resolution proves only that deterministic expansion encountered no unresolved module outcome for the bound inputs.
 

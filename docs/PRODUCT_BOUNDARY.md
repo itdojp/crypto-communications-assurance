@@ -59,6 +59,21 @@ Resolution can be `complete` or `incomplete`, while individual modules remain `r
 
 CCA-130 contains no CCA-240 execution status, evidence result/class, provenance, freshness, retention, access-control, or approval fields. Its unsupported private-provenance module makes that deferral visible without widening the product boundary.
 
+## CCA-240 evidence contract layer
+
+CCA-240 adds separate execution-result, evidence-provenance,
+freshness-assessment, and exact-byte binding-set contracts. It records facts about
+one declared check, explicit subject/input/producer/tool/environment/scope
+identity, public-content or private-opaque artifact references, and a reproducible
+freshness comparison from caller facts.
+
+The layer does not decide that a CCA-120 evidence lane or product claim is
+satisfied. `real` is not `fresh`; `policy-evaluable` is not policy-satisfied;
+`fresh` is not sufficient; a result is not human approval; and the binding set is
+not evidence storage. No private storage/sidecar, HMAC/encryption, credential,
+policy/approval/release contract, upstream adapter, CLI, live probe, or
+cryptographic implementation is introduced.
+
 ## Non-goals
 
 The repository does not:
