@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/itdojp/crypto-communications-assurance/schema/cryptocomm-freshness-assessment-v1.schema.json",
+  "title": "Cryptographic Communication Freshness Assessment v1",
+  "description": "Closed contract skeleton for one pure caller-fact-based freshness assessment. Freshness is not execution, sufficiency, approval, certification, or release authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "cryptocomm-freshness-assessment/v1"
+    }
+  }
+}

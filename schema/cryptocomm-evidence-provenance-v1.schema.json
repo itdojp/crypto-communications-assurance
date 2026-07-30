@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/itdojp/crypto-communications-assurance/schema/cryptocomm-evidence-provenance-v1.schema.json",
+  "title": "Cryptographic Communication Evidence Provenance v1",
+  "description": "Closed contract skeleton for exact subject, input, producer, tool, environment, scope, classification, and artifact provenance. It is not human approval.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "cryptocomm-evidence-provenance/v1"
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/itdojp/crypto-communications-assurance/schema/cryptocomm-evidence-binding-set-v1.schema.json",
+  "title": "Cryptographic Communication Evidence Binding Set v1",
+  "description": "Closed contract skeleton for the minimal exact-byte composition root. It is not evidence storage, sufficiency, approval, certification, or release authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "cryptocomm-evidence-binding-set/v1"
+    }
+  }
+}
