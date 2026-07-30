@@ -250,6 +250,65 @@ describe("CCA-240 closed evidence contracts", () => {
     ).toBe(false);
   });
 
+  it("accepts leap days and rejects impossible calendar timestamps", async () => {
+    const executionValue = await loadJson<{
+      execution: { startedAt: string; completedAt: string };
+    }>("../fixtures/valid/cca-240/execution-pass-v1.json");
+    const freshnessValue = await loadJson<{ asOf: string }>(
+      "../fixtures/valid/cca-240/freshness-fresh-v1.json",
+    );
+
+    for (const date of ["2024-02-29", "2000-02-29", "2026-12-31"]) {
+      expect(
+        execution(
+          serializeEvidenceContract({
+            ...executionValue,
+            execution: {
+              ...executionValue.execution,
+              startedAt: `${date}T12:00:00Z`,
+              completedAt: `${date}T12:00:01.123456789Z`,
+            },
+          }),
+        ).valid,
+        date,
+      ).toBe(true);
+      expect(
+        freshness(
+          serializeEvidenceContract({
+            ...freshnessValue,
+            asOf: `${date}T12:00:00Z`,
+          }),
+        ).valid,
+        date,
+      ).toBe(true);
+    }
+
+    for (const date of ["1900-02-29", "2026-02-29", "2026-02-31", "2026-04-31"]) {
+      expect(
+        execution(
+          serializeEvidenceContract({
+            ...executionValue,
+            execution: {
+              ...executionValue.execution,
+              startedAt: `${date}T12:00:00Z`,
+              completedAt: `${date}T12:00:01Z`,
+            },
+          }),
+        ).valid,
+        date,
+      ).toBe(false);
+      expect(
+        freshness(
+          serializeEvidenceContract({
+            ...freshnessValue,
+            asOf: `${date}T12:00:00Z`,
+          }),
+        ).valid,
+        date,
+      ).toBe(false);
+    }
+  });
+
   it.each([
     "execution-missing-status-field.json",
     "execution-cross-status-field.json",

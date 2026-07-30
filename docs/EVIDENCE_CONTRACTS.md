@@ -35,6 +35,11 @@ only that the declared check completed and its declared criteria were met.
 status evaluates a catalog evidence requirement, claim, approval, certification,
 or release gate.
 
+All timestamps are caller-supplied UTC values with one to nine optional
+fractional-second digits. Their closed schema validates calendar day/month and
+Gregorian leap-year combinations; a lexically shaped but impossible date is not
+an instant and is rejected.
+
 ## Evidence classification matrix
 
 The axes are independent. The machine-readable matrix is
