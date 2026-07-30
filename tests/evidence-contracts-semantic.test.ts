@@ -157,12 +157,20 @@ describe("CCA-240 semantic validation and deterministic assessment", () => {
     const executionResultBytes = await loadBytes(
       "../fixtures/valid/cca-240/execution-pass-v1.json",
     );
-    const evidenceProvenanceBytes = await loadBytes(
-      "../fixtures/invalid/cca-240/provenance-bound-fixture-promotion-attempt.json",
+    const markedProvenance = await loadStrict<EvidenceProvenance>(
+      "../fixtures/valid/cca-240/provenance-public-synthetic-test-only-v1.json",
     );
-    const provenance = await loadStrict<EvidenceProvenance>(
-      "../fixtures/invalid/cca-240/provenance-bound-fixture-promotion-attempt.json",
-    );
+    const {
+      fixtureClassification: provenanceFixtureClassification,
+      ...unmarkedProvenance
+    } = markedProvenance;
+    expect(provenanceFixtureClassification).toBe("synthetic-test-only");
+    const provenance: EvidenceProvenance = {
+      ...unmarkedProvenance,
+      evidenceOrigin: "real",
+      useRestriction: "policy-evaluable",
+    };
+    const evidenceProvenanceBytes = serializeEvidenceContract(provenance);
     expect(validateEvidenceProvenance(evidenceProvenanceBytes)).toEqual({
       valid: true,
       diagnostics: [],
