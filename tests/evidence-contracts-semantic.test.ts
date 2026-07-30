@@ -146,6 +146,7 @@ describe("CCA-240 semantic validation and deterministic assessment", () => {
     ["provenance-input-mismatch.json", "INPUT_BINDING_MISMATCH"],
     ["provenance-producer-mismatch.json", "PRODUCER_MISMATCH"],
     ["provenance-tool-mismatch.json", "TOOL_MISMATCH"],
+    ["provenance-environment-mismatch.json", "ENVIRONMENT_MISMATCH"],
     ["provenance-scope-mismatch.json", "SCOPE_MISMATCH"],
     ["provenance-contract-mismatch.json", "CONTRACT_SCHEMA_INVALID"],
   ] as const)("rejects cross-contract mismatch %s", async (file, expected) => {
@@ -329,6 +330,19 @@ describe("CCA-240 semantic validation and deterministic assessment", () => {
     expect(JSON.stringify(value)).not.toMatch(
       /aggregateStatus|claimSatisfaction|evidenceSufficiency|winner|precedence|humanApproval|certification|releaseStatus/,
     );
+  });
+
+  it("preserves opaque-human, not-applicable-tool, and not-recorded-environment forms without approval", async () => {
+    const value = await loadStrict<EvidenceProvenance>(
+      "../fixtures/valid/cca-240/provenance-human-no-tool-no-environment-v1.json",
+    );
+    expect(value.producer).toEqual({
+      kind: "human",
+      operatorId: "operator.SyntheticOpaque001",
+    });
+    expect(value.tool.kind).toBe("not-applicable");
+    expect(value.environment.kind).toBe("not-recorded");
+    expect(JSON.stringify(value)).not.toMatch(/approval|approved|certification|releaseStatus/);
   });
 
   it("keeps private opaque records free of plaintext digest and private metadata", async () => {
