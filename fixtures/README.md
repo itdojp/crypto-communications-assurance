@@ -45,10 +45,10 @@ allowed origin/use pairs without committing promotable real/policy-evaluable rec
 CCA-110 manifest that content-binds representative CCA-240 records, and one
 manifest-subject result.
 
-`invalid/cca-240/` contains 50 artifacts covering missing/cross-status fields,
+`invalid/cca-240/` contains 51 artifacts covering missing/cross-status fields,
 forbidden roles, short/mutable Git identity, every named promotion field,
 diagnostic overflow, forbidden synthetic+policy-evaluable classification,
-origin/use promotion attempts, every prohibited private opaque metadata field, recorded-environment hostname/credential/customer/path leakage,
+origin/use and cross-contract fixture-classification promotion attempts, every prohibited private opaque metadata field, recorded-environment hostname/credential/customer/path leakage,
 subject/input/producer/tool/environment/contract/scope mismatch, dependency mismatch,
 freshness decision-order/false-fresh/untrusted-clock errors, missing freshness,
 exact digest mismatch, and aggregate-status rejection.

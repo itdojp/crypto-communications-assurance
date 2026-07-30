@@ -485,6 +485,7 @@ export const evidenceDiagnosticCodes = [
   "TOOL_MISMATCH",
   "ENVIRONMENT_MISMATCH",
   "SCOPE_MISMATCH",
+  "FIXTURE_CLASSIFICATION_MISMATCH",
   "ARTIFACT_REFERENCE_MISMATCH",
   "FRESHNESS_CONTEXT_INCONSISTENT",
   "FRESHNESS_REQUIREMENT_REQUIRED",
@@ -520,6 +521,8 @@ const evidenceDiagnosticDescriptions: Readonly<
   TOOL_MISMATCH: "Cross-contract tool identities differ.",
   ENVIRONMENT_MISMATCH: "Cross-contract environment identities differ.",
   SCOPE_MISMATCH: "Cross-contract operator-selected scopes differ.",
+  FIXTURE_CLASSIFICATION_MISMATCH:
+    "Cross-contract fixture classifications differ; a synthetic/test-only fixture marker must propagate through the complete binding chain.",
   ARTIFACT_REFERENCE_MISMATCH:
     "Execution and provenance artifact identifiers or roles differ.",
   FRESHNESS_CONTEXT_INCONSISTENT:
@@ -1185,6 +1188,9 @@ export function validateEvidenceBindingSet(
     [execution.value.scope, provenance.value.scope, "SCOPE_MISMATCH", "/evidenceProvenance/scope"],
     [execution.value.scope, freshness.value.scope, "SCOPE_MISMATCH", "/freshnessAssessment/scope"],
     [execution.value.scope, bindingSet.value.scope, "SCOPE_MISMATCH", "/bindingSet/scope"],
+    [execution.value.fixtureClassification, provenance.value.fixtureClassification, "FIXTURE_CLASSIFICATION_MISMATCH", "/evidenceProvenance/fixtureClassification"],
+    [execution.value.fixtureClassification, freshness.value.fixtureClassification, "FIXTURE_CLASSIFICATION_MISMATCH", "/freshnessAssessment/fixtureClassification"],
+    [execution.value.fixtureClassification, bindingSet.value.fixtureClassification, "FIXTURE_CLASSIFICATION_MISMATCH", "/bindingSet/fixtureClassification"],
     [artifactIdentities(execution.value.artifacts), artifactIdentities(provenance.value.artifacts), "ARTIFACT_REFERENCE_MISMATCH", "/evidenceProvenance/artifacts"],
   ] as const) {
     if (!valuesEqual(left, right)) {

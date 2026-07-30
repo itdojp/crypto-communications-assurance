@@ -120,7 +120,11 @@ record ID, byte length, and original-byte SHA-256 of exactly one execution
 result, provenance record, and freshness assessment. Freshness is never absent;
 use an explicit `not-assessed` record. Semantic validation verifies the entire
 chain, repeated subject/input/producer/tool/environment/scope identity, artifact
-IDs/roles, and freshness state consistency.
+IDs/roles, fixture classification, and freshness state consistency. If any
+committed fixture record carries `fixtureClassification: synthetic-test-only`,
+that marker must be present on every record in the binding chain; provenance is
+therefore constrained to `synthetic` plus `test-only` and cannot be replaced by
+an unmarked `real` plus `policy-evaluable` record.
 
 The binding set contains no aggregate status, winner, precedence, evidence
 sufficiency, claim satisfaction, human approval, certification, risk acceptance,

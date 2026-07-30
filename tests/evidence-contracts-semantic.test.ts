@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 
 import { describe, expect, it, vi } from "vitest";
@@ -30,6 +31,19 @@ const loadStrict = async <T extends object>(relativePath: string): Promise<T> =>
 const codes = (result: {
   readonly diagnostics: readonly { readonly code: EvidenceDiagnosticCode }[];
 }): readonly EvidenceDiagnosticCode[] => result.diagnostics.map(({ code }) => code);
+const exactRecordBinding = (
+  contractId: string,
+  recordId: string,
+  bytes: Uint8Array,
+) => ({
+  contractId,
+  recordId,
+  digest: {
+    algorithm: "sha256" as const,
+    value: createHash("sha256").update(bytes).digest("hex"),
+  },
+  byteLength: bytes.byteLength,
+});
 
 const baseBindingInput = async () => ({
   executionResultBytes: await loadBytes("../fixtures/valid/cca-240/execution-pass-v1.json"),
@@ -137,6 +151,119 @@ describe("CCA-240 semantic validation and deterministic assessment", () => {
 
   it("validates the complete exact-byte composition root", async () => {
     expect(validateEvidenceBindingSet(await baseBindingInput())).toEqual({ valid: true, diagnostics: [] });
+  });
+
+  it("propagates synthetic/test-only fixture classification through the exact binding chain", async () => {
+    const executionResultBytes = await loadBytes(
+      "../fixtures/valid/cca-240/execution-pass-v1.json",
+    );
+    const evidenceProvenanceBytes = await loadBytes(
+      "../fixtures/invalid/cca-240/provenance-bound-fixture-promotion-attempt.json",
+    );
+    const provenance = await loadStrict<EvidenceProvenance>(
+      "../fixtures/invalid/cca-240/provenance-bound-fixture-promotion-attempt.json",
+    );
+    expect(validateEvidenceProvenance(evidenceProvenanceBytes)).toEqual({
+      valid: true,
+      diagnostics: [],
+    });
+
+    const freshness = await loadStrict<FreshnessAssessment>(
+      "../fixtures/valid/cca-240/freshness-fresh-v1.json",
+    );
+    const freshnessAssessmentBytes = serializeEvidenceContract({
+      ...freshness,
+      provenance: exactRecordBinding(
+        provenance.schemaVersion,
+        provenance.provenanceId,
+        evidenceProvenanceBytes,
+      ),
+    });
+    const bindingSet = await loadStrict<EvidenceBindingSet>(
+      "../fixtures/valid/cca-240/evidence-binding-set-complete-v1.json",
+    );
+    const bindingSetBytes = serializeEvidenceContract({
+      ...bindingSet,
+      bindings: {
+        executionResult: exactRecordBinding(
+          "cryptocomm-execution-result/v1",
+          "result.synthetic.pass",
+          executionResultBytes,
+        ),
+        evidenceProvenance: exactRecordBinding(
+          provenance.schemaVersion,
+          provenance.provenanceId,
+          evidenceProvenanceBytes,
+        ),
+        freshnessAssessment: exactRecordBinding(
+          freshness.schemaVersion,
+          freshness.assessmentId,
+          freshnessAssessmentBytes,
+        ),
+      },
+    });
+
+    const result = validateEvidenceBindingSet({
+      executionResultBytes,
+      evidenceProvenanceBytes,
+      freshnessAssessmentBytes,
+      bindingSetBytes,
+    });
+    expect(result.valid).toBe(false);
+    expect(result.diagnostics).toEqual([
+      expect.objectContaining({
+        code: "FIXTURE_CLASSIFICATION_MISMATCH",
+        path: "/evidenceProvenance/fixtureClassification",
+      }),
+    ]);
+
+    const validInput = await baseBindingInput();
+    const {
+      fixtureClassification: _freshnessFixtureClassification,
+      ...unmarkedFreshness
+    } = freshness;
+    expect(_freshnessFixtureClassification).toBe("synthetic-test-only");
+    const unmarkedFreshnessBytes = serializeEvidenceContract(unmarkedFreshness);
+    const bindingForUnmarkedFreshness = serializeEvidenceContract({
+      ...bindingSet,
+      bindings: {
+        ...bindingSet.bindings,
+        freshnessAssessment: exactRecordBinding(
+          freshness.schemaVersion,
+          freshness.assessmentId,
+          unmarkedFreshnessBytes,
+        ),
+      },
+    });
+    expect(
+      validateEvidenceBindingSet({
+        ...validInput,
+        freshnessAssessmentBytes: unmarkedFreshnessBytes,
+        bindingSetBytes: bindingForUnmarkedFreshness,
+      }).diagnostics,
+    ).toEqual([
+      expect.objectContaining({
+        code: "FIXTURE_CLASSIFICATION_MISMATCH",
+        path: "/freshnessAssessment/fixtureClassification",
+      }),
+    ]);
+
+    const {
+      fixtureClassification: _bindingFixtureClassification,
+      ...unmarkedBindingSet
+    } = bindingSet;
+    expect(_bindingFixtureClassification).toBe("synthetic-test-only");
+    expect(
+      validateEvidenceBindingSet({
+        ...validInput,
+        bindingSetBytes: serializeEvidenceContract(unmarkedBindingSet),
+      }).diagnostics,
+    ).toEqual([
+      expect.objectContaining({
+        code: "FIXTURE_CLASSIFICATION_MISMATCH",
+        path: "/bindingSet/fixtureClassification",
+      }),
+    ]);
   });
 
   it.each([
