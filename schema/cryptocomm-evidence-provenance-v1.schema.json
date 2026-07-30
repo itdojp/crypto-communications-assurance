@@ -794,5 +794,29 @@
       "evidenceOrigin",
       "useRestriction"
     ]
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "fixtureClassification": {
+            "const": "synthetic-test-only"
+          }
+        },
+        "required": [
+          "fixtureClassification"
+        ]
+      },
+      "then": {
+        "properties": {
+          "evidenceOrigin": {
+            "const": "synthetic"
+          },
+          "useRestriction": {
+            "const": "test-only"
+          }
+        }
+      }
+    }
+  ]
 }

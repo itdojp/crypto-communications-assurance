@@ -54,7 +54,7 @@
     },
     "kind": "software"
   },
-  "provenanceId": "provenance.real.policy-evaluable",
+  "provenanceId": "provenance.synthetic.public",
   "safety": {
     "executable": false,
     "networkRequired": false,

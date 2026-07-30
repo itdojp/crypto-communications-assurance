@@ -51,11 +51,10 @@ The axes are independent. The machine-readable matrix is
 No validator silently promotes `synthetic` to `real` or `test-only` to
 `policy-evaluable`.
 
-Committed examples use `fixtureClassification: synthetic-test-only` to label the
-fixture container. That marker never rewrites `evidenceOrigin` or
-`useRestriction`; examples of the `real` and `policy-evaluable` lexical forms are
-fictional shape tests and are not assertions that real evidence was collected or
-authorized for policy use.
+Committed examples use `fixtureClassification: synthetic-test-only`, which
+requires `evidenceOrigin: synthetic` and `useRestriction: test-only`. Tests cover
+the unmarked `real` and `policy-evaluable` lexical forms with in-memory candidates
+only, so no committed fixture can be admitted to later policy evaluation.
 
 ## Subject and provenance identity
 

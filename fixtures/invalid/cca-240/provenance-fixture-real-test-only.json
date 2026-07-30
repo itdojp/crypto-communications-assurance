@@ -1,7 +1,7 @@
 {
   "artifacts": [
     {
-      "artifactId": "artifact.synthetic.failure",
+      "artifactId": "artifact.synthetic.placeholder",
       "byteLength": 65,
       "digest": {
         "algorithm": "sha256",
@@ -22,13 +22,13 @@
   },
   "evidenceOrigin": "real",
   "executionResult": {
-    "byteLength": 2717,
+    "byteLength": 2721,
     "contractId": "cryptocomm-execution-result/v1",
     "digest": {
       "algorithm": "sha256",
-      "value": "8e9412945f21bb9daa49d4c2fa0f5fb848166c8d6813d87bd8822f9ce36bdfcf"
+      "value": "213a8a3d7b92f014f19b6944e2dbcadb992827f40eb14578bec3e946c0fdd0f2"
     },
-    "recordId": "result.synthetic.fail"
+    "recordId": "result.synthetic.pass"
   },
   "fixtureClassification": "synthetic-test-only",
   "inputBindings": [
@@ -54,7 +54,7 @@
     },
     "kind": "software"
   },
-  "provenanceId": "provenance.real.test-only",
+  "provenanceId": "provenance.synthetic.public",
   "safety": {
     "executable": false,
     "networkRequired": false,

@@ -126,8 +126,6 @@ describe("CCA-240 semantic validation and deterministic assessment", () => {
     for (const file of [
       "provenance-public-synthetic-test-only-v1.json",
       "provenance-private-synthetic-test-only-v1.json",
-      "provenance-public-real-test-only-v1.json",
-      "provenance-public-real-policy-evaluable-v1.json",
       "provenance-human-no-tool-no-environment-v1.json",
     ]) {
       expect(validateEvidenceProvenance(await loadBytes(`../fixtures/valid/cca-240/${file}`)), file).toEqual({ valid: true, diagnostics: [] });

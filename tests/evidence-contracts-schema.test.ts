@@ -75,7 +75,7 @@ describe("CCA-240 closed evidence contracts", () => {
 
   it("strict-decodes and schema-validates every positive CCA-240 fixture", async () => {
     const names = (await readdir(new URL("../fixtures/valid/cca-240/", import.meta.url))).sort();
-    expect(names).toHaveLength(23);
+    expect(names).toHaveLength(21);
     for (const name of names) {
       const bytes = await loadBytes(`../fixtures/valid/cca-240/${name}`);
       const decoded = decodeStrictJsonObject<{ schemaVersion: string }>(bytes);
@@ -275,31 +275,37 @@ describe("CCA-240 closed evidence contracts", () => {
   });
 
   it("allows only the three approved origin/use combinations literally", async () => {
-    const files = [
-      "provenance-public-synthetic-test-only-v1.json",
-      "provenance-public-real-test-only-v1.json",
-      "provenance-public-real-policy-evaluable-v1.json",
-    ] as const;
-    const combinations = await Promise.all(
-      files.map(async (file) => {
-        const value = await loadJson<{ evidenceOrigin: string; useRestriction: string }>(
-          `../fixtures/valid/cca-240/${file}`,
-        );
-        return `${value.evidenceOrigin}+${value.useRestriction}`;
-      }),
+    const fixture = await loadJson<Record<string, unknown>>(
+      "../fixtures/valid/cca-240/provenance-public-synthetic-test-only-v1.json",
+    );
+    const unmarked = structuredClone(fixture);
+    delete unmarked.fixtureClassification;
+    const candidates = [
+      fixture,
+      { ...unmarked, evidenceOrigin: "real", useRestriction: "test-only" },
+      { ...unmarked, evidenceOrigin: "real", useRestriction: "policy-evaluable" },
+    ];
+    const combinations = candidates.map(
+      (candidate) => `${String(candidate.evidenceOrigin)}+${String(candidate.useRestriction)}`,
     );
     expect(combinations).toEqual([
       "synthetic+test-only",
       "real+test-only",
       "real+policy-evaluable",
     ]);
-    expect(
-      provenance(
-        await loadBytes(
-          "../fixtures/invalid/cca-240/provenance-synthetic-policy-evaluable.json",
-        ),
-      ).valid,
-    ).toBe(false);
+    for (const candidate of candidates) {
+      expect(provenance(serializeEvidenceContract(candidate)).valid).toBe(true);
+    }
+    for (const file of [
+      "provenance-synthetic-policy-evaluable.json",
+      "provenance-fixture-real-test-only.json",
+      "provenance-fixture-real-policy-evaluable.json",
+    ]) {
+      expect(
+        provenance(await loadBytes(`../fixtures/invalid/cca-240/${file}`)).valid,
+        file,
+      ).toBe(false);
+    }
   });
 
   it("closes the private-opaque surface against every prohibited public metadata field", async () => {

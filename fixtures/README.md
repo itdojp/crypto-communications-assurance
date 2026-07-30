@@ -38,14 +38,14 @@ Unknown, unsupported, and unresolvable results in these fixtures are literal res
 
 ## CCA-240 evidence fixtures
 
-`valid/cca-240/` contains 23 explicitly synthetic/test-only public-safe JSON
+`valid/cca-240/` contains 21 explicitly synthetic/test-only public-safe JSON
 artifacts: nine result forms covering every status and all three `tool-error`
-phases, four provenance records covering public/private forms and all three
-allowed origin/use pairs, five freshness records, two records covering opaque-human/no-tool/not-recorded-environment identity, one complete binding set, one
+phases, three provenance records covering public/private and opaque-human forms; schema tests exercise all three
+allowed origin/use pairs without committing promotable real/policy-evaluable records, five freshness records, two records covering opaque-human/no-tool/not-recorded-environment identity, one complete binding set, one
 CCA-110 manifest that content-binds representative CCA-240 records, and one
 manifest-subject result.
 
-`invalid/cca-240/` contains 48 artifacts covering missing/cross-status fields,
+`invalid/cca-240/` contains 50 artifacts covering missing/cross-status fields,
 forbidden roles, short/mutable Git identity, every named promotion field,
 diagnostic overflow, forbidden synthetic+policy-evaluable classification,
 origin/use promotion attempts, every prohibited private opaque metadata field, recorded-environment hostname/credential/customer/path leakage,
@@ -60,6 +60,6 @@ or release evidence is present. Fixture acceptance establishes no satisfaction,
 approval, certification, product security, compatibility, or release authority.
 
 The `fixtureClassification: synthetic-test-only` marker labels the committed
-fixture container and never changes embedded origin/use values. The fictional
-records exercising `real` and `policy-evaluable` are lexical/validation examples,
-not collected real evidence or an authorization to use evidence in a policy.
+fixture and requires `evidenceOrigin: synthetic` plus `useRestriction: test-only`.
+Tests exercise unmarked `real` and `policy-evaluable` lexical forms in memory only;
+they do not commit a promotable record or authorize policy use.
