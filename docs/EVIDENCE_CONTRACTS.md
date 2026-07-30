@@ -86,11 +86,12 @@ byte length, media type, logical artifact ID, and role. `private-opaque`
 references contain only a bounded operator-controlled opaque ID, the literal
 `private` classification, logical artifact ID, and role.
 
-A public `private-opaque` record has no plaintext digest, byte length, media type,
-storage location, customer identity, local path, or private storage metadata.
-It binds the opaque reference rather than private bytes and does not prove that a
-sidecar exists. Private storage, sidecar contracts, HMAC, encryption, credentials,
-access control, and key lifecycle are deferred.
+A `private-opaque` artifact reference inside a public-safe provenance record has
+no plaintext digest, byte length, media type, storage location, customer identity,
+local path, or private storage metadata. It binds the opaque reference rather than
+private bytes and does not prove that a sidecar exists. Private storage, sidecar
+contracts, HMAC, encryption, credentials, access control, and key lifecycle are
+deferred.
 
 ## Pure freshness decision order
 

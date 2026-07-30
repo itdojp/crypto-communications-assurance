@@ -216,6 +216,15 @@ for (const state of ["`fresh`", "`stale`", "`mismatched`", "`unknown`", "`not-as
     failures.push(`EVIDENCE_CONTRACTS.md does not define freshness state ${state}`);
   }
 }
+if (
+  !evidenceContracts.includes(
+    "A `private-opaque` artifact reference inside a public-safe provenance record",
+  )
+) {
+  failures.push(
+    "EVIDENCE_CONTRACTS.md does not distinguish a private-opaque artifact reference from its public-safe provenance record",
+  );
+}
 
 const catalogCoverage = await readFile("docs/CATALOG_COVERAGE.md", "utf8");
 for (const boundary of [
