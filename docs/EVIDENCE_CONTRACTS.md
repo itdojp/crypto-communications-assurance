@@ -38,7 +38,8 @@ or release gate.
 All timestamps are caller-supplied UTC values with one to nine optional
 fractional-second digits. Their closed schema validates calendar day/month and
 Gregorian leap-year combinations; a lexically shaped but impossible date is not
-an instant and is rejected.
+an instant and is rejected. A completed execution additionally requires
+`completedAt` to be equal to or later than `startedAt`.
 
 ## Evidence classification matrix
 
@@ -163,5 +164,6 @@ reasons, scope, authorities, media types, and lists are bounded.
 
 Repository-generated JSON is UTF-8 with two-space indentation, LF, one final
 newline, lexicographically sorted object keys, and sorted set-like arrays.
+Diagnostic arrays are sorted explicitly by `code`, then `path`, then `message`.
 Timestamps are caller facts. Deterministic serialization applies only to generated
 records; exact external input bytes are never canonicalized before hashing.

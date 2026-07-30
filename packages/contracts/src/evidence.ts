@@ -475,6 +475,7 @@ export const evidenceDiagnosticCodes = [
   "CONTRACT_SCHEMA_INVALID",
   "INPUT_ID_DUPLICATE",
   "ARTIFACT_ID_DUPLICATE",
+  "EXECUTION_TIME_ORDER_INVALID",
   "BINDING_CONTRACT_MISMATCH",
   "BINDING_RECORD_ID_MISMATCH",
   "BINDING_DIGEST_MISMATCH",
@@ -506,6 +507,8 @@ const evidenceDiagnosticDescriptions: Readonly<
     "A strict-decoded input does not conform to its closed Draft 2020-12 contract.",
   INPUT_ID_DUPLICATE: "An exact input identifier is repeated.",
   ARTIFACT_ID_DUPLICATE: "An artifact identifier is repeated.",
+  EXECUTION_TIME_ORDER_INVALID:
+    "A completed execution timestamp precedes its start timestamp.",
   BINDING_CONTRACT_MISMATCH:
     "An exact-byte binding names a contract other than the supplied artifact contract.",
   BINDING_RECORD_ID_MISMATCH:
@@ -679,9 +682,18 @@ function decodeArtifact<T extends object>(
 
 function canonicalValue(value: unknown): unknown {
   if (Array.isArray(value)) {
-    return value
-      .map((entry) => canonicalValue(entry))
-      .sort((left, right) => compare(JSON.stringify(left), JSON.stringify(right)));
+    const entries = value.map((entry) => canonicalValue(entry));
+    if (entries.every(isDiagnosticLike)) {
+      return entries.sort(
+        (left, right) =>
+          compare(left.code, right.code) ||
+          compare(left.path, right.path) ||
+          compare(left.message, right.message),
+      );
+    }
+    return entries.sort((left, right) =>
+      compare(JSON.stringify(left), JSON.stringify(right)),
+    );
   }
   if (value !== null && typeof value === "object") {
     return Object.fromEntries(
@@ -691,6 +703,18 @@ function canonicalValue(value: unknown): unknown {
     );
   }
   return value;
+}
+
+function isDiagnosticLike(
+  value: unknown,
+): value is { readonly code: string; readonly path: string; readonly message: string } {
+  if (value === null || typeof value !== "object") return false;
+  const candidate = value as Record<string, unknown>;
+  return (
+    typeof candidate.code === "string" &&
+    typeof candidate.path === "string" &&
+    typeof candidate.message === "string"
+  );
 }
 
 function valuesEqual(left: unknown, right: unknown): boolean {
@@ -730,7 +754,7 @@ function executionSemantics(
   value: ExecutionResult,
   prefix: string,
 ): readonly EvidenceValidationDiagnostic[] {
-  return [
+  const diagnostics = [
     ...duplicateIdDiagnostics(
       value.inputBindings.map((entry, index) => ({
         id: entry.inputId,
@@ -746,6 +770,22 @@ function executionSemantics(
       "ARTIFACT_ID_DUPLICATE",
     ),
   ];
+  if (
+    (value.status === "pass" || value.status === "fail") &&
+    utcTimestampKey(value.execution.completedAt) <
+      utcTimestampKey(value.execution.startedAt)
+  ) {
+    diagnostics.push(
+      diagnostic("EXECUTION_TIME_ORDER_INVALID", `${prefix}/execution/completedAt`),
+    );
+  }
+  return diagnostics;
+}
+
+function utcTimestampKey(value: string): string {
+  const wholeSeconds = value.slice(0, 19);
+  const fractionalSeconds = value.length === 20 ? "" : value.slice(20, -1);
+  return `${wholeSeconds}.${fractionalSeconds.padEnd(9, "0")}Z`;
 }
 
 function provenanceSemantics(

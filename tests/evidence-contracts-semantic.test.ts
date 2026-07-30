@@ -432,6 +432,79 @@ describe("CCA-240 semantic validation and deterministic assessment", () => {
     );
   });
 
+  it("serializes diagnostics by code, path, and message", async () => {
+    const value = await loadStrict<ExecutionResult>(
+      "../fixtures/valid/cca-240/execution-pass-v1.json",
+    );
+    const diagnostics = [
+      { code: "B_CODE", path: "/a", message: "a" },
+      { code: "A_CODE", path: "/z", message: "a" },
+      { code: "A_CODE", path: "/a", message: "z" },
+      { code: "A_CODE", path: "/a", message: "a" },
+    ];
+    const expected = [
+      { code: "A_CODE", path: "/a", message: "a" },
+      { code: "A_CODE", path: "/a", message: "z" },
+      { code: "A_CODE", path: "/z", message: "a" },
+      { code: "B_CODE", path: "/a", message: "a" },
+    ];
+    const bytes = serializeEvidenceContract({ ...value, diagnostics });
+    const decoded = decodeStrictJsonObject<ExecutionResult>(bytes);
+    expect(decoded.valid).toBe(true);
+    if (!decoded.valid) return;
+    expect(decoded.value.diagnostics).toEqual(expected);
+    expect(Buffer.from(bytes)).toEqual(
+      Buffer.from(
+        serializeEvidenceContract({ ...value, diagnostics: [...diagnostics].reverse() }),
+      ),
+    );
+    expect(validateExecutionResult(bytes)).toEqual({ valid: true, diagnostics: [] });
+  });
+
+  it("rejects a completed execution that precedes its start", async () => {
+    const value = await loadStrict<ExecutionResult>(
+      "../fixtures/valid/cca-240/execution-pass-v1.json",
+    );
+    if (value.status !== "pass") throw new Error("expected pass fixture");
+
+    const reversed = serializeEvidenceContract({
+      ...value,
+      execution: {
+        ...value.execution,
+        startedAt: "2026-07-30T12:00:00Z",
+        completedAt: "2026-07-30T11:59:59.999999999Z",
+      },
+    });
+    expect(codes(validateExecutionResult(reversed))).toContain(
+      "EXECUTION_TIME_ORDER_INVALID",
+    );
+
+    const fractionalCompletion = serializeEvidenceContract({
+      ...value,
+      execution: {
+        ...value.execution,
+        startedAt: "2026-07-30T12:00:00Z",
+        completedAt: "2026-07-30T12:00:00.1Z",
+      },
+    });
+    expect(validateExecutionResult(fractionalCompletion)).toEqual({
+      valid: true,
+      diagnostics: [],
+    });
+
+    const reversedFraction = serializeEvidenceContract({
+      ...value,
+      execution: {
+        ...value.execution,
+        startedAt: "2026-07-30T12:00:00.1Z",
+        completedAt: "2026-07-30T12:00:00.09Z",
+      },
+    });
+    expect(codes(validateExecutionResult(reversedFraction))).toContain(
+      "EXECUTION_TIME_ORDER_INVALID",
+    );
+  });
+
   it("digests exact external bytes without canonicalizing them", async () => {
     const input = await baseBindingInput();
     const parsed = await loadStrict<ExecutionResult>(
