@@ -1,0 +1,98 @@
+{
+  "asOf": "2026-07-30T00:05:00Z",
+  "assessmentId": "assessment.synthetic.not-assessed",
+  "diagnostics": [],
+  "dimensions": {
+    "contract": {
+      "outcome": "not-selected",
+      "selected": false
+    },
+    "dependency": {
+      "outcome": "not-selected",
+      "selected": false
+    },
+    "environment": {
+      "outcome": "not-selected",
+      "selected": false
+    },
+    "input": {
+      "outcome": "not-selected",
+      "selected": false
+    },
+    "producer": {
+      "outcome": "not-selected",
+      "selected": false
+    },
+    "scope": {
+      "outcome": "not-selected",
+      "selected": false
+    },
+    "subject": {
+      "outcome": "not-selected",
+      "selected": false
+    },
+    "tool": {
+      "outcome": "not-selected",
+      "selected": false
+    }
+  },
+  "fixtureClassification": "synthetic-test-only",
+  "intent": {
+    "requested": false
+  },
+  "provenance": {
+    "byteLength": 2828,
+    "contractId": "cryptocomm-evidence-provenance/v1",
+    "digest": {
+      "algorithm": "sha256",
+      "value": "9c27dcea66fdaa01be53006f448a71f4c6f9326ac54f33fef6555dd93080bfbe"
+    },
+    "recordId": "provenance.synthetic.public"
+  },
+  "safety": {
+    "executable": false,
+    "networkRequired": false,
+    "secretsAllowed": false
+  },
+  "schemaVersion": "cryptocomm-freshness-assessment/v1",
+  "scope": {
+    "description": "Synthetic repository-local CCA-240 contract fixture scope.",
+    "exclusions": [
+      "live systems",
+      "private evidence"
+    ],
+    "scopeId": "scope.synthetic.repository"
+  },
+  "state": "not-assessed",
+  "subject": {
+    "commit": {
+      "algorithm": "git-sha1",
+      "value": "1111111111111111111111111111111111111111"
+    },
+    "kind": "git-revision",
+    "repositoryId": "example.test:synthetic/crypto-communications-assurance",
+    "tree": {
+      "algorithm": "git-sha1",
+      "value": "2222222222222222222222222222222222222222"
+    }
+  },
+  "validity": {
+    "invalidation": {
+      "outcome": "not-selected",
+      "selected": false
+    },
+    "revocation": {
+      "outcome": "not-selected",
+      "selected": false
+    },
+    "supersession": {
+      "outcome": "not-selected",
+      "selected": false
+    },
+    "time": {
+      "clockTrust": "not-required",
+      "outcome": "not-selected",
+      "selected": false
+    }
+  }
+}

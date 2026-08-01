@@ -1,0 +1,60 @@
+{
+  "bindingSetId": "binding-set.synthetic.complete",
+  "bindings": {
+    "evidenceProvenance": {
+      "byteLength": 2828,
+      "contractId": "cryptocomm-evidence-provenance/v1",
+      "digest": {
+        "algorithm": "sha256",
+        "value": "9c27dcea66fdaa01be53006f448a71f4c6f9326ac54f33fef6555dd93080bfbe"
+      },
+      "recordId": "provenance.synthetic.public"
+    },
+    "executionResult": {
+      "byteLength": 2721,
+      "contractId": "cryptocomm-execution-result/v1",
+      "digest": {
+        "algorithm": "sha256",
+        "value": "213a8a3d7b92f014f19b6944e2dbcadb992827f40eb14578bec3e946c0fdd0f2"
+      },
+      "recordId": "result.synthetic.pass"
+    },
+    "freshnessAssessment": {
+      "byteLength": 6903,
+      "contractId": "cryptocomm-freshness-assessment/v1",
+      "digest": {
+        "algorithm": "sha256",
+        "value": "c63061d1ee66e55ddcc528823b893e3b75eaca3340603de0e13f6844c89a0227"
+      },
+      "recordId": "assessment.synthetic.fresh"
+    }
+  },
+  "diagnostics": [],
+  "fixtureClassification": "synthetic-test-only",
+  "safety": {
+    "executable": false,
+    "networkRequired": false,
+    "secretsAllowed": false
+  },
+  "schemaVersion": "cryptocomm-evidence-binding-set/v1",
+  "scope": {
+    "description": "Synthetic repository-local CCA-240 contract fixture scope.",
+    "exclusions": [
+      "live systems",
+      "private evidence"
+    ],
+    "scopeId": "scope.synthetic.repository"
+  },
+  "subject": {
+    "commit": {
+      "algorithm": "git-sha1",
+      "value": "1111111111111111111111111111111111111111"
+    },
+    "kind": "git-revision",
+    "repositoryId": "example.test:synthetic/crypto-communications-assurance",
+    "tree": {
+      "algorithm": "git-sha1",
+      "value": "2222222222222222222222222222222222222222"
+    }
+  }
+}

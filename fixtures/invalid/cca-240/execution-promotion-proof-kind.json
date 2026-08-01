@@ -1,0 +1,100 @@
+{
+  "artifacts": [
+    {
+      "artifactId": "artifact.synthetic.placeholder",
+      "role": "substantive-result"
+    }
+  ],
+  "check": {
+    "checkId": "check.synthetic.contract",
+    "criteriaId": "criteria.synthetic.contract",
+    "criteriaVersion": "1.0.0"
+  },
+  "diagnostics": [],
+  "environment": {
+    "architecture": "x86_64",
+    "environmentId": "environment.synthetic.linux",
+    "kind": "recorded",
+    "operatingSystem": "linux",
+    "runtimeVersion": "22.22.2"
+  },
+  "execution": {
+    "attempted": true,
+    "completed": true,
+    "completedAt": "2026-07-30T00:00:01Z",
+    "occurred": true,
+    "startedAt": "2026-07-30T00:00:00Z"
+  },
+  "fixtureClassification": "synthetic-test-only",
+  "inputBindings": [
+    {
+      "byteLength": 65,
+      "digest": {
+        "algorithm": "sha256",
+        "value": "2098c99aa0eaa5f61bca935a56d5c0498c8afc96b920e0316d77b1c334a601d8"
+      },
+      "inputId": "input.synthetic.placeholder",
+      "mediaType": "application/json"
+    }
+  ],
+  "producer": {
+    "implementation": {
+      "implementationId": "producer.synthetic.cca240",
+      "sourceRepositoryId": "example.test:synthetic/crypto-communications-assurance",
+      "sourceRevision": {
+        "algorithm": "git-sha1",
+        "value": "1111111111111111111111111111111111111111"
+      },
+      "version": "1.0.0"
+    },
+    "kind": "software"
+  },
+  "proofKind": "machine-checked-proof",
+  "resultId": "result.synthetic.pass",
+  "retryAdvisory": {
+    "advisoryOnly": true,
+    "meaningful": false,
+    "reason": "Advisory fixture fact; it never changes the literal status."
+  },
+  "safety": {
+    "executable": false,
+    "networkRequired": false,
+    "secretsAllowed": false
+  },
+  "schemaVersion": "cryptocomm-execution-result/v1",
+  "scope": {
+    "description": "Synthetic repository-local CCA-240 contract fixture scope.",
+    "exclusions": [
+      "live systems",
+      "private evidence"
+    ],
+    "scopeId": "scope.synthetic.repository"
+  },
+  "status": "pass",
+  "subject": {
+    "commit": {
+      "algorithm": "git-sha1",
+      "value": "1111111111111111111111111111111111111111"
+    },
+    "kind": "git-revision",
+    "repositoryId": "example.test:synthetic/crypto-communications-assurance",
+    "tree": {
+      "algorithm": "git-sha1",
+      "value": "2222222222222222222222222222222222222222"
+    }
+  },
+  "tool": {
+    "implementation": {
+      "implementationId": "tool.synthetic.runner",
+      "sourceRepositoryId": "example.test:synthetic/crypto-communications-assurance",
+      "sourceRevision": {
+        "algorithm": "git-sha1",
+        "value": "1111111111111111111111111111111111111111"
+      },
+      "version": "1.0.0"
+    },
+    "kind": "identified",
+    "toolId": "tool.synthetic.runner",
+    "version": "1.0.0"
+  }
+}

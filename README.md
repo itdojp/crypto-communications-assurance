@@ -2,7 +2,7 @@
 
 Reusable, machine-readable assurance contracts, profiles, audit targets, and evidence bridges for cryptographic communication products.
 
-The project is intended to integrate with:
+Future, separately authorized bridge work may integrate with:
 
 - [ae-framework](https://github.com/itdojp/ae-framework) for specifications, assurance evidence, policy gates, and release judgments.
 - [GenAI Repo Auditor](https://github.com/itdojp/genai-repo-auditor) for defensive repository security auditing.
@@ -15,8 +15,8 @@ Planned capabilities include:
 
 - cryptographic-communications security property, threat, and attacker catalogs;
 - evidence requirements and reusable capability modules;
-- ae-framework-compatible assurance profiles and security artifacts;
-- GenAI Repo Auditor-compatible audit packs and target templates;
+- tool-neutral assurance profiles and security artifacts that later bridges may map;
+- repository-audit packs and target templates whose upstream mappings remain future work;
 - content-bound evidence bridges between development assurance and repository auditing;
 - deterministic synthetic fixtures and compatibility tests.
 
@@ -58,6 +58,20 @@ The resolver validates exact bytes and bindings, expands module/property depende
 
 The CCA-130 boundaries are explicit: `module != attacker capability`, `module != product capability`, `profile request != approval`, `resolved profile != product claim`, `resolution outcome != evidence status`, and `complete resolution != product security`.
 
+CCA-240 adds four closed contracts and a pure, deterministic repository-local
+freshness assessor:
+
+- [`cryptocomm-execution-result/v1`](schema/cryptocomm-execution-result-v1.schema.json) preserves `pass`, `fail`, `skip`, `unsupported`, `timeout`, `tool-error`, and `not-run` with status-specific occurrence and artifact-role rules;
+- [`cryptocomm-evidence-provenance/v1`](schema/cryptocomm-evidence-provenance-v1.schema.json) binds explicit subject forms, exact input bytes, producer/tool/environment/scope facts, evidence origin/use restriction, and public-content or private-opaque artifacts;
+- [`cryptocomm-freshness-assessment/v1`](schema/cryptocomm-freshness-assessment-v1.schema.json) preserves `fresh`, `stale`, `mismatched`, `unknown`, and `not-assessed` from explicit caller facts only;
+- [`cryptocomm-evidence-binding-set/v1`](schema/cryptocomm-evidence-binding-set-v1.schema.json) binds exact bytes of one result, provenance record, and always-present freshness assessment.
+
+The binding set is a minimal composition root, not evidence storage or an
+aggregate decision. See [CCA-240 contract semantics](docs/EVIDENCE_CONTRACTS.md)
+and [ADR 0005](docs/decisions/0005-execution-provenance-freshness-and-binding.md).
+CCA-240 makes no ae-framework or GenAI Repo Auditor compatibility claim and adds
+no upstream adapter.
+
 ## Non-goals
 
 This project does not:
@@ -75,6 +89,8 @@ This project does not:
 Tool, model, scanner, test, and formal-verification outputs are evidence producers. They are not human approval or release authority.
 
 Synthetic and test-only evidence must not be promoted to real evidence. An unexecuted, skipped, unsupported, timed-out, or failed check must not be represented as a pass.
+
+Execution, provenance, freshness, and policy authority remain separate: `pass != evidence requirement satisfied`, `real != fresh`, `policy-evaluable != policy satisfied`, `fresh != sufficient`, and `evidence result != human approval`.
 
 The normative boundaries are documented in:
 

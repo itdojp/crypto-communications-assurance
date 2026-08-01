@@ -30,6 +30,8 @@ const requiredFiles = [
   "docs/decisions/0002-pack-manifest-lock-and-compatibility.md",
   "docs/decisions/0003-security-catalog-separation-and-relationships.md",
   "docs/decisions/0004-capability-modules-and-deterministic-profile-resolution.md",
+  "docs/decisions/0005-execution-provenance-freshness-and-binding.md",
+  "docs/EVIDENCE_CONTRACTS.md",
   "schema/cryptocomm-pack-v1.schema.json",
   "schema/README.md",
   "schema/cryptocomm-pack-manifest-v1.schema.json",
@@ -41,7 +43,14 @@ const requiredFiles = [
   "schema/cryptocomm-capability-module-catalog-v1.schema.json",
   "schema/cryptocomm-profile-request-v1.schema.json",
   "schema/cryptocomm-resolved-profile-v1.schema.json",
+  "schema/cryptocomm-execution-result-v1.schema.json",
+  "schema/cryptocomm-evidence-provenance-v1.schema.json",
+  "schema/cryptocomm-freshness-assessment-v1.schema.json",
+  "schema/cryptocomm-evidence-binding-set-v1.schema.json",
   "pack/modules/v1/capability-module-catalog.json",
+  "pack/evidence/v1/execution-status-matrix.json",
+  "pack/evidence/v1/evidence-classification-matrix.json",
+  "packages/contracts/src/evidence.ts",
 ];
 
 const requiredDirectories = [
@@ -124,6 +133,16 @@ for (const distinction of [
   "`resolved profile != product claim`",
   "`resolution outcome != evidence status`",
   "`complete resolution != product security`",
+  "`pass != evidence requirement satisfied`",
+  "`real != fresh`",
+  "`policy-evaluable != policy satisfied`",
+  "`fresh != sufficient`",
+  "`evidence result != human approval`",
+  "`scanner finding != confirmed vulnerability`",
+  "`no findings != satisfied claim`",
+  "`local proof != machine-checked proof`",
+  "`runtime mitigation != absence of a bug`",
+  "`binding set != evidence storage`",
 ]) {
   if (!architecture.includes(distinction)) {
     failures.push(`ARCHITECTURE.md does not document ${distinction}`);
@@ -165,10 +184,46 @@ for (const contractId of [
   "`cryptocomm-capability-module-catalog/v1`",
   "`cryptocomm-profile-request/v1`",
   "`cryptocomm-resolved-profile/v1`",
+  "`cryptocomm-execution-result/v1`",
+  "`cryptocomm-evidence-provenance/v1`",
+  "`cryptocomm-freshness-assessment/v1`",
+  "`cryptocomm-evidence-binding-set/v1`",
 ]) {
   if (!schemaReadme.includes(contractId)) {
     failures.push(`schema/README.md does not document ${contractId}`);
   }
+}
+
+const evidenceContracts = await readFile("docs/EVIDENCE_CONTRACTS.md", "utf8");
+for (const boundary of [
+  "`pass != evidence requirement satisfied`",
+  "`real != fresh`",
+  "`policy-evaluable != policy satisfied`",
+  "`fresh != sufficient`",
+  "`evidence result != human approval`",
+  "`scanner finding != confirmed vulnerability`",
+  "`no findings != satisfied claim`",
+  "`local proof != machine-checked proof`",
+  "`runtime mitigation != absence of a bug`",
+  "`binding set != evidence storage`",
+]) {
+  if (!evidenceContracts.includes(boundary)) {
+    failures.push(`EVIDENCE_CONTRACTS.md does not document ${boundary}`);
+  }
+}
+for (const state of ["`fresh`", "`stale`", "`mismatched`", "`unknown`", "`not-assessed`"]) {
+  if (!evidenceContracts.includes(state)) {
+    failures.push(`EVIDENCE_CONTRACTS.md does not define freshness state ${state}`);
+  }
+}
+if (
+  !evidenceContracts.includes(
+    "A `private-opaque` artifact reference inside a public-safe provenance record",
+  )
+) {
+  failures.push(
+    "EVIDENCE_CONTRACTS.md does not distinguish a private-opaque artifact reference from its public-safe provenance record",
+  );
 }
 
 const catalogCoverage = await readFile("docs/CATALOG_COVERAGE.md", "utf8");

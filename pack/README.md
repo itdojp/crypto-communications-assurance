@@ -14,3 +14,15 @@ The catalog data implements no cryptographic primitive or protocol, selects no a
 `pack/modules/v1/capability-module-catalog.json` is the CCA-130 authoritative public module catalog. It contains 14 available protocol-neutral modules and one explicit unsupported boundary module. Together they cover confidentiality/integrity, authentication, identity/session/transcript binding, replay/ordering, nonce/randomness, key derivation/separation, key lifecycle, downgrade/agility, forward-secrecy assumptions, post-compromise-recovery assumptions, metadata privacy, fail-closed/state recovery, evidence-publication boundaries, and a bounded active-network attacker scope.
 
 The module catalog content-binds the exact three CCA-120 catalog byte sequences. It contains no source or producer identity because CCA-110 remains that authority. It defines no default, recommended, strongest, certified, universal, product-specific, or deployment profile. An available module is an assurance-scope selection, not an attacker capability or product capability; the unsupported private-provenance entry records the CCA-240 boundary rather than adding evidence semantics.
+
+`pack/evidence/v1/execution-status-matrix.json` and
+`pack/evidence/v1/evidence-classification-matrix.json` are machine-readable
+CCA-240 review surfaces. They are not contracts, evidence, policy decisions, or
+compatibility claims. The status matrix preserves occurrence/completion and
+status-specific artifact roles. The classification matrix permits only
+synthetic+test-only, real+test-only, and real+policy-evaluable.
+
+The matrices contain no execution instance, evidence bytes, private reference,
+subject/producer identity, aggregate status, satisfaction, approval,
+certification, risk acceptance, or release authority. A CCA-240 binding set is an
+exact-byte composition root and not evidence storage.

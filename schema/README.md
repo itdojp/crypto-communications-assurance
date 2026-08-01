@@ -14,6 +14,10 @@ JSON files in this directory are the authoritative machine contracts. Every sche
 | `cryptocomm-capability-module-catalog/v1` | Reusable available/unsupported assurance-scope modules, dependencies, conflicts, and exact CCA-120 catalog bindings. |
 | `cryptocomm-profile-request/v1` | Explicit operator module selection bound to exact module-catalog bytes. |
 | `cryptocomm-resolved-profile/v1` | Deterministic module/catalog closure with literal resolution outcomes and source traceability. |
+| `cryptocomm-execution-result/v1` | One literal status-discriminated execution or non-execution result with advisory-only retry data. |
+| `cryptocomm-evidence-provenance/v1` | Exact subject/input/producer/tool/environment/scope identity and public-content or private-opaque artifact provenance. |
+| `cryptocomm-freshness-assessment/v1` | Pure assessment of explicit caller-supplied identity, validity, authority, and clock facts. |
+| `cryptocomm-evidence-binding-set/v1` | Minimal exact-byte root for one execution result, one provenance record, and one explicit freshness assessment. |
 
 The bootstrap contract is not renamed, replaced, or reinterpreted by the three CCA-110 contracts.
 
@@ -29,4 +33,13 @@ CCA-130 uses `module.<domain>.<name>` and `profile.<domain>.<name>`. A module ca
 
 Module-catalog bindings repeat each CCA-120 contract ID, catalog ID, catalog version, and exact-byte SHA-256. Requests similarly bind exact module-catalog bytes; resolved profiles repeat every exact binding used. Resolved outputs use `resolved`, `unknown`, `unsupported`, or `unresolvable` per module and `complete` or `incomplete` overall. These are not CCA-240 execution/evidence statuses. Deterministic encoding uses UTF-8, two spaces, LF, one final newline, fixed field order, sorted maps, and sorted set-like arrays.
 
-See [Contract versioning and migration](../docs/CONTRACT_VERSIONING.md), [ADR 0002](../docs/decisions/0002-pack-manifest-lock-and-compatibility.md), [ADR 0003](../docs/decisions/0003-security-catalog-separation-and-relationships.md), and [ADR 0004](../docs/decisions/0004-capability-modules-and-deterministic-profile-resolution.md).
+CCA-240 preserves seven execution states and five freshness states literally.
+Its evidence classification permits only `synthetic+test-only`,
+`real+test-only`, and `real+policy-evaluable`. A non-completed execution cannot
+bind a substantive result. Private opaque references expose no plaintext digest,
+byte length, media type, storage location, customer identity, local path, or
+private storage metadata. The four contracts add no aggregate status, evidence
+sufficiency, claim satisfaction, human approval, certification, risk acceptance,
+release status, private sidecar/storage, or upstream compatibility authority.
+
+See [Contract versioning and migration](../docs/CONTRACT_VERSIONING.md), [CCA-240 semantics](../docs/EVIDENCE_CONTRACTS.md), [ADR 0002](../docs/decisions/0002-pack-manifest-lock-and-compatibility.md), [ADR 0003](../docs/decisions/0003-security-catalog-separation-and-relationships.md), [ADR 0004](../docs/decisions/0004-capability-modules-and-deterministic-profile-resolution.md), and [ADR 0005](../docs/decisions/0005-execution-provenance-freshness-and-binding.md).

@@ -1,0 +1,66 @@
+{
+  "artifacts": [],
+  "diagnostics": [],
+  "environment": {
+    "kind": "not-recorded",
+    "reason": "No environment was recorded for this synthetic non-execution."
+  },
+  "evidenceOrigin": "synthetic",
+  "executionResult": {
+    "byteLength": 2008,
+    "contractId": "cryptocomm-execution-result/v1",
+    "digest": {
+      "algorithm": "sha256",
+      "value": "681a66792c53b155c54350adce0cca7aa31dd77db91a345660b2e2d306f2155b"
+    },
+    "recordId": "result.synthetic.human-not-run"
+  },
+  "fixtureClassification": "synthetic-test-only",
+  "inputBindings": [
+    {
+      "byteLength": 65,
+      "digest": {
+        "algorithm": "sha256",
+        "value": "2098c99aa0eaa5f61bca935a56d5c0498c8afc96b920e0316d77b1c334a601d8"
+      },
+      "inputId": "input.synthetic.placeholder",
+      "mediaType": "application/json"
+    }
+  ],
+  "producer": {
+    "kind": "human",
+    "operatorId": "operator.SyntheticOpaque001"
+  },
+  "provenanceId": "provenance.synthetic.human",
+  "safety": {
+    "executable": false,
+    "networkRequired": false,
+    "secretsAllowed": false
+  },
+  "schemaVersion": "cryptocomm-evidence-provenance/v1",
+  "scope": {
+    "description": "Synthetic repository-local CCA-240 contract fixture scope.",
+    "exclusions": [
+      "live systems",
+      "private evidence"
+    ],
+    "scopeId": "scope.synthetic.repository"
+  },
+  "subject": {
+    "artifact": {
+      "byteLength": 10062,
+      "contractId": "cryptocomm-property-catalog/v1",
+      "digest": {
+        "algorithm": "sha256",
+        "value": "7de7b59f08f379686ad4bc3e466448c44b6a9b96423a9590bc0323ba033825da"
+      },
+      "recordId": "synthetic-cryptocomm-properties"
+    },
+    "kind": "contract-artifact"
+  },
+  "tool": {
+    "kind": "not-applicable",
+    "reason": "This synthetic human-produced record uses no tool."
+  },
+  "useRestriction": "test-only"
+}

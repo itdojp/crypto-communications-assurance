@@ -1,0 +1,248 @@
+{
+  "asOf": "2026-07-30T00:05:00Z",
+  "assessmentId": "assessment.synthetic.mismatched",
+  "diagnostics": [],
+  "dimensions": {
+    "contract": {
+      "availability": "available",
+      "expected": {
+        "bindingId": "binding.synthetic.a",
+        "byteLength": 64,
+        "digest": {
+          "algorithm": "sha256",
+          "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      },
+      "observed": {
+        "bindingId": "binding.synthetic.a",
+        "byteLength": 64,
+        "digest": {
+          "algorithm": "sha256",
+          "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      },
+      "outcome": "match",
+      "selected": true
+    },
+    "dependency": {
+      "availability": "available",
+      "expected": {
+        "bindingId": "binding.synthetic.a",
+        "byteLength": 64,
+        "digest": {
+          "algorithm": "sha256",
+          "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      },
+      "observed": {
+        "bindingId": "binding.synthetic.a",
+        "byteLength": 64,
+        "digest": {
+          "algorithm": "sha256",
+          "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      },
+      "outcome": "match",
+      "selected": true
+    },
+    "environment": {
+      "availability": "available",
+      "expected": {
+        "bindingId": "binding.synthetic.a",
+        "byteLength": 64,
+        "digest": {
+          "algorithm": "sha256",
+          "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      },
+      "observed": {
+        "bindingId": "binding.synthetic.a",
+        "byteLength": 64,
+        "digest": {
+          "algorithm": "sha256",
+          "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      },
+      "outcome": "match",
+      "selected": true
+    },
+    "input": {
+      "availability": "available",
+      "expected": {
+        "bindingId": "binding.synthetic.a",
+        "byteLength": 64,
+        "digest": {
+          "algorithm": "sha256",
+          "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      },
+      "observed": {
+        "bindingId": "binding.synthetic.a",
+        "byteLength": 64,
+        "digest": {
+          "algorithm": "sha256",
+          "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      },
+      "outcome": "match",
+      "selected": true
+    },
+    "producer": {
+      "availability": "available",
+      "expected": {
+        "bindingId": "binding.synthetic.a",
+        "byteLength": 64,
+        "digest": {
+          "algorithm": "sha256",
+          "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      },
+      "observed": {
+        "bindingId": "binding.synthetic.a",
+        "byteLength": 64,
+        "digest": {
+          "algorithm": "sha256",
+          "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      },
+      "outcome": "match",
+      "selected": true
+    },
+    "scope": {
+      "availability": "available",
+      "expected": {
+        "bindingId": "binding.synthetic.a",
+        "byteLength": 64,
+        "digest": {
+          "algorithm": "sha256",
+          "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      },
+      "observed": {
+        "bindingId": "binding.synthetic.a",
+        "byteLength": 64,
+        "digest": {
+          "algorithm": "sha256",
+          "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      },
+      "outcome": "match",
+      "selected": true
+    },
+    "subject": {
+      "availability": "available",
+      "expected": {
+        "bindingId": "binding.synthetic.a",
+        "byteLength": 64,
+        "digest": {
+          "algorithm": "sha256",
+          "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      },
+      "observed": {
+        "bindingId": "binding.synthetic.b",
+        "byteLength": 64,
+        "digest": {
+          "algorithm": "sha256",
+          "value": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      },
+      "outcome": "mismatch",
+      "selected": true
+    },
+    "tool": {
+      "availability": "available",
+      "expected": {
+        "bindingId": "binding.synthetic.a",
+        "byteLength": 64,
+        "digest": {
+          "algorithm": "sha256",
+          "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      },
+      "observed": {
+        "bindingId": "binding.synthetic.a",
+        "byteLength": 64,
+        "digest": {
+          "algorithm": "sha256",
+          "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      },
+      "outcome": "match",
+      "selected": true
+    }
+  },
+  "fixtureClassification": "synthetic-test-only",
+  "intent": {
+    "context": {
+      "contextId": "context.synthetic.freshness",
+      "contextVersion": "1.0.0"
+    },
+    "requested": true
+  },
+  "provenance": {
+    "byteLength": 2828,
+    "contractId": "cryptocomm-evidence-provenance/v1",
+    "digest": {
+      "algorithm": "sha256",
+      "value": "9c27dcea66fdaa01be53006f448a71f4c6f9326ac54f33fef6555dd93080bfbe"
+    },
+    "recordId": "provenance.synthetic.public"
+  },
+  "safety": {
+    "executable": false,
+    "networkRequired": false,
+    "secretsAllowed": false
+  },
+  "schemaVersion": "cryptocomm-freshness-assessment/v1",
+  "scope": {
+    "description": "Synthetic repository-local CCA-240 contract fixture scope.",
+    "exclusions": [
+      "live systems",
+      "private evidence"
+    ],
+    "scopeId": "scope.synthetic.repository"
+  },
+  "state": "stale",
+  "subject": {
+    "commit": {
+      "algorithm": "git-sha1",
+      "value": "1111111111111111111111111111111111111111"
+    },
+    "kind": "git-revision",
+    "repositoryId": "example.test:synthetic/crypto-communications-assurance",
+    "tree": {
+      "algorithm": "git-sha1",
+      "value": "2222222222222222222222222222222222222222"
+    }
+  },
+  "validity": {
+    "invalidation": {
+      "applies": false,
+      "authorityId": "authority.synthetic.lifecycle",
+      "availability": "available",
+      "outcome": "clear",
+      "selected": true
+    },
+    "revocation": {
+      "applies": true,
+      "authorityId": "authority.synthetic.lifecycle",
+      "availability": "available",
+      "outcome": "applies",
+      "selected": true
+    },
+    "supersession": {
+      "applies": false,
+      "authorityId": "authority.synthetic.lifecycle",
+      "availability": "available",
+      "outcome": "clear",
+      "selected": true
+    },
+    "time": {
+      "clockTrust": "trusted",
+      "outcome": "valid",
+      "selected": true,
+      "validity": "valid"
+    }
+  }
+}

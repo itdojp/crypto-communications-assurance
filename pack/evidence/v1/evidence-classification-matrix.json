@@ -1,0 +1,33 @@
+{
+  "documentId": "cca-240-evidence-classification-matrix-v1",
+  "evidenceOrigin": [
+    "real",
+    "synthetic"
+  ],
+  "rules": [
+    {
+      "allowed": true,
+      "evidenceOrigin": "real",
+      "useRestriction": "policy-evaluable"
+    },
+    {
+      "allowed": true,
+      "evidenceOrigin": "real",
+      "useRestriction": "test-only"
+    },
+    {
+      "allowed": false,
+      "evidenceOrigin": "synthetic",
+      "useRestriction": "policy-evaluable"
+    },
+    {
+      "allowed": true,
+      "evidenceOrigin": "synthetic",
+      "useRestriction": "test-only"
+    }
+  ],
+  "useRestriction": [
+    "policy-evaluable",
+    "test-only"
+  ]
+}

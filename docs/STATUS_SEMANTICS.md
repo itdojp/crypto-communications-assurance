@@ -30,7 +30,7 @@ readiness, or absence of vulnerabilities.
 
 ## Catalog evidence needs are not results
 
-CCA-120 property `requiredEvidenceKinds` values identify abstract evidence lanes such as `specification`, `behavioral-test`, `formal-model`, or `human-review`. They contain no status from this document. Naming an evidence need does not mean work executed, evidence exists, a result passed, or a human approved it. Result, provenance, and freshness contracts remain deferred to CCA-240.
+CCA-120 property `requiredEvidenceKinds` values identify abstract evidence lanes such as `specification`, `behavioral-test`, `formal-model`, or `human-review`. They contain no status from this document. Naming an evidence need does not mean work executed, evidence exists, a result passed, or a human approved it. CCA-240 records results and provenance without deciding that these evidence needs are satisfied.
 
 ## Profile resolution outcomes are not results
 
@@ -38,9 +38,9 @@ CCA-130 module outcomes `resolved`, `unknown`, `unsupported`, and `unresolvable`
 
 Resolution performs no assurance check and emits no evidence result. `resolved` does not mean `pass`; `unresolvable` does not mean `fail` or `tool-error`; `complete` does not mean product satisfaction, product security, approval, certification, production readiness, or release readiness. CCA-240 retains execution/evidence status, provenance, and freshness semantics.
 
-## Minimum result record
+## CCA-240 status-dependent record
 
-A durable result should record:
+A durable `cryptocomm-execution-result/v1` record contains:
 
 - check identifier and tool version;
 - exact source revision and input identity;
@@ -48,7 +48,16 @@ A durable result should record:
 - one status from the vocabulary above;
 - concise reason, including the skip or unsupported condition when applicable;
 - content-bound output reference where an approved evidence system exists;
-- limitations and the accountable human decision, if one is later made.
+- bounded diagnostics and advisory-only retry information.
 
-The bootstrap pack schema does not yet encode this result record. This document
-constrains later contract design and current PR/Issue reporting.
+`pass` and `fail` are completed forms and may reference all four artifact roles.
+`timeout` and execution/post-processing `tool-error` may reference `partial`,
+`diagnostic`, or `log`; preflight `tool-error`, `skip`, `unsupported`, and
+`not-run` may reference `diagnostic` or `log` only. A non-completed execution
+cannot bind `substantive-result`.
+
+The machine-readable matrix is
+[`pack/evidence/v1/execution-status-matrix.json`](../pack/evidence/v1/execution-status-matrix.json).
+No result status is claim satisfaction, evidence sufficiency, accountable-human
+approval, certification, risk acceptance, or release authority. A retry creates a
+new record and never rewrites the original literal state.

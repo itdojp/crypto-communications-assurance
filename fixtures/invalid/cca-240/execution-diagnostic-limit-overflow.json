@@ -1,0 +1,1385 @@
+{
+  "artifacts": [
+    {
+      "artifactId": "artifact.synthetic.placeholder",
+      "role": "substantive-result"
+    }
+  ],
+  "check": {
+    "checkId": "check.synthetic.contract",
+    "criteriaId": "criteria.synthetic.contract",
+    "criteriaVersion": "1.0.0"
+  },
+  "diagnostics": [
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 000.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 001.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 002.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 003.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 004.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 005.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 006.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 007.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 008.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 009.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 010.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 011.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 012.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 013.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 014.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 015.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 016.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 017.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 018.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 019.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 020.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 021.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 022.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 023.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 024.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 025.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 026.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 027.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 028.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 029.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 030.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 031.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 032.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 033.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 034.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 035.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 036.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 037.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 038.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 039.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 040.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 041.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 042.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 043.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 044.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 045.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 046.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 047.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 048.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 049.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 050.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 051.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 052.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 053.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 054.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 055.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 056.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 057.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 058.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 059.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 060.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 061.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 062.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 063.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 064.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 065.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 066.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 067.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 068.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 069.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 070.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 071.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 072.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 073.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 074.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 075.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 076.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 077.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 078.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 079.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 080.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 081.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 082.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 083.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 084.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 085.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 086.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 087.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 088.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 089.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 090.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 091.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 092.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 093.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 094.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 095.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 096.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 097.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 098.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 099.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 100.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 101.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 102.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 103.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 104.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 105.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 106.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 107.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 108.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 109.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 110.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 111.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 112.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 113.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 114.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 115.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 116.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 117.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 118.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 119.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 120.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 121.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 122.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 123.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 124.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 125.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 126.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 127.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 128.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 129.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 130.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 131.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 132.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 133.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 134.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 135.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 136.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 137.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 138.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 139.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 140.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 141.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 142.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 143.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 144.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 145.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 146.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 147.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 148.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 149.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 150.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 151.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 152.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 153.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 154.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 155.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 156.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 157.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 158.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 159.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 160.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 161.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 162.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 163.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 164.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 165.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 166.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 167.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 168.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 169.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 170.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 171.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 172.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 173.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 174.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 175.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 176.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 177.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 178.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 179.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 180.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 181.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 182.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 183.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 184.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 185.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 186.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 187.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 188.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 189.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 190.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 191.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 192.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 193.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 194.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 195.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 196.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 197.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 198.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 199.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 200.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 201.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 202.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 203.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 204.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 205.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 206.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 207.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 208.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 209.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 210.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 211.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 212.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 213.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 214.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 215.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 216.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 217.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 218.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 219.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 220.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 221.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 222.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 223.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 224.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 225.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 226.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 227.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 228.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 229.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 230.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 231.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 232.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 233.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 234.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 235.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 236.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 237.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 238.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 239.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 240.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 241.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 242.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 243.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 244.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 245.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 246.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 247.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 248.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 249.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 250.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 251.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 252.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 253.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 254.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 255.",
+      "path": ""
+    },
+    {
+      "code": "SYNTHETIC_DIAGNOSTIC",
+      "message": "Synthetic diagnostic 256.",
+      "path": ""
+    }
+  ],
+  "environment": {
+    "architecture": "x86_64",
+    "environmentId": "environment.synthetic.linux",
+    "kind": "recorded",
+    "operatingSystem": "linux",
+    "runtimeVersion": "22.22.2"
+  },
+  "execution": {
+    "attempted": true,
+    "completed": true,
+    "completedAt": "2026-07-30T00:00:01Z",
+    "occurred": true,
+    "startedAt": "2026-07-30T00:00:00Z"
+  },
+  "fixtureClassification": "synthetic-test-only",
+  "inputBindings": [
+    {
+      "byteLength": 65,
+      "digest": {
+        "algorithm": "sha256",
+        "value": "2098c99aa0eaa5f61bca935a56d5c0498c8afc96b920e0316d77b1c334a601d8"
+      },
+      "inputId": "input.synthetic.placeholder",
+      "mediaType": "application/json"
+    }
+  ],
+  "producer": {
+    "implementation": {
+      "implementationId": "producer.synthetic.cca240",
+      "sourceRepositoryId": "example.test:synthetic/crypto-communications-assurance",
+      "sourceRevision": {
+        "algorithm": "git-sha1",
+        "value": "1111111111111111111111111111111111111111"
+      },
+      "version": "1.0.0"
+    },
+    "kind": "software"
+  },
+  "resultId": "result.synthetic.pass",
+  "retryAdvisory": {
+    "advisoryOnly": true,
+    "meaningful": false,
+    "reason": "Advisory fixture fact; it never changes the literal status."
+  },
+  "safety": {
+    "executable": false,
+    "networkRequired": false,
+    "secretsAllowed": false
+  },
+  "schemaVersion": "cryptocomm-execution-result/v1",
+  "scope": {
+    "description": "Synthetic repository-local CCA-240 contract fixture scope.",
+    "exclusions": [
+      "live systems",
+      "private evidence"
+    ],
+    "scopeId": "scope.synthetic.repository"
+  },
+  "status": "pass",
+  "subject": {
+    "commit": {
+      "algorithm": "git-sha1",
+      "value": "1111111111111111111111111111111111111111"
+    },
+    "kind": "git-revision",
+    "repositoryId": "example.test:synthetic/crypto-communications-assurance",
+    "tree": {
+      "algorithm": "git-sha1",
+      "value": "2222222222222222222222222222222222222222"
+    }
+  },
+  "tool": {
+    "implementation": {
+      "implementationId": "tool.synthetic.runner",
+      "sourceRepositoryId": "example.test:synthetic/crypto-communications-assurance",
+      "sourceRevision": {
+        "algorithm": "git-sha1",
+        "value": "1111111111111111111111111111111111111111"
+      },
+      "version": "1.0.0"
+    },
+    "kind": "identified",
+    "toolId": "tool.synthetic.runner",
+    "version": "1.0.0"
+  }
+}
