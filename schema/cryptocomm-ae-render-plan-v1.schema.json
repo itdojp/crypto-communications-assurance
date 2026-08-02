@@ -1,0 +1,1549 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://itdo.jp/cryptocomm/schema/cryptocomm-ae-render-plan-v1.schema.json",
+  "title": "CCA ae-framework native render plan v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "planId",
+    "ccaRevision",
+    "ccaInputs",
+    "target",
+    "contextPacks",
+    "upstream",
+    "renderer",
+    "outputs",
+    "claimMappings",
+    "threatMappings",
+    "scopeMapping",
+    "safety"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "cryptocomm-ae-render-plan/v1"
+    },
+    "planId": {
+      "$ref": "#/$defs/stableId"
+    },
+    "ccaRevision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository",
+        "commit",
+        "tree"
+      ],
+      "properties": {
+        "repository": {
+          "const": "itdojp/crypto-communications-assurance"
+        },
+        "commit": {
+          "$ref": "#/$defs/fullGitSha"
+        },
+        "tree": {
+          "$ref": "#/$defs/fullGitSha"
+        }
+      }
+    },
+    "ccaInputs": {
+      "$ref": "#/$defs/ccaInputs"
+    },
+    "target": {
+      "$ref": "#/$defs/target"
+    },
+    "contextPacks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/contextPackBinding"
+      },
+      "minItems": 0,
+      "maxItems": 8
+    },
+    "upstream": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository",
+        "commit",
+        "tree",
+        "schemas"
+      ],
+      "properties": {
+        "repository": {
+          "const": "itdojp/ae-framework"
+        },
+        "commit": {
+          "const": "c5da6115638fdbfeebbc458b39fa6916db66afb0"
+        },
+        "tree": {
+          "const": "0d69865b37a4476a20f0f1f1f42031967d3ec3a7"
+        },
+        "schemas": {
+          "$ref": "#/$defs/upstreamSchemas"
+        }
+      }
+    },
+    "renderer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "implementationId",
+        "packageName",
+        "packageVersion",
+        "sourcePath",
+        "sourceSha256"
+      ],
+      "properties": {
+        "implementationId": {
+          "const": "cca-ae-renderer/v1"
+        },
+        "packageName": {
+          "const": "@itdojp/cryptocomm-contracts"
+        },
+        "packageVersion": {
+          "$ref": "#/$defs/boundedString"
+        },
+        "sourcePath": {
+          "const": "packages/contracts/src/ae-renderer.ts"
+        },
+        "sourceSha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "outputs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/outputSelection"
+      },
+      "minItems": 4,
+      "maxItems": 4
+    },
+    "claimMappings": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/claimMapping"
+      },
+      "minItems": 1,
+      "maxItems": 64
+    },
+    "threatMappings": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/threatMapping"
+      },
+      "minItems": 0,
+      "maxItems": 64
+    },
+    "scopeMapping": {
+      "$ref": "#/$defs/scopeMapping"
+    },
+    "safety": {
+      "$ref": "#/$defs/safety"
+    },
+    "fixtureClassification": {
+      "const": "synthetic-test-only"
+    }
+  },
+  "$defs": {
+    "boundedString": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024
+    },
+    "stableId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}$"
+    },
+    "fullGitSha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "repositoryRelativePath": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*(?:^|/)\\.(?:/|$))(?!.*//)(?!.*\\\\)[A-Za-z0-9._-]+(?:/[A-Za-z0-9._-]+)*$"
+    },
+    "stringSet": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/boundedString"
+      },
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true
+    },
+    "ccaInputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "propertyCatalog",
+        "attackerCatalog",
+        "threatCatalog",
+        "capabilityModuleCatalog",
+        "resolvedProfile"
+      ],
+      "properties": {
+        "propertyCatalog": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "contractId",
+            "path",
+            "sha256",
+            "byteLength"
+          ],
+          "properties": {
+            "contractId": {
+              "const": "cryptocomm-property-catalog/v1"
+            },
+            "path": {
+              "$ref": "#/$defs/repositoryRelativePath"
+            },
+            "sha256": {
+              "$ref": "#/$defs/sha256"
+            },
+            "byteLength": {
+              "type": "integer",
+              "minimum": 2,
+              "maximum": 1048576
+            }
+          }
+        },
+        "attackerCatalog": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "contractId",
+            "path",
+            "sha256",
+            "byteLength"
+          ],
+          "properties": {
+            "contractId": {
+              "const": "cryptocomm-attacker-catalog/v1"
+            },
+            "path": {
+              "$ref": "#/$defs/repositoryRelativePath"
+            },
+            "sha256": {
+              "$ref": "#/$defs/sha256"
+            },
+            "byteLength": {
+              "type": "integer",
+              "minimum": 2,
+              "maximum": 1048576
+            }
+          }
+        },
+        "threatCatalog": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "contractId",
+            "path",
+            "sha256",
+            "byteLength"
+          ],
+          "properties": {
+            "contractId": {
+              "const": "cryptocomm-threat-catalog/v1"
+            },
+            "path": {
+              "$ref": "#/$defs/repositoryRelativePath"
+            },
+            "sha256": {
+              "$ref": "#/$defs/sha256"
+            },
+            "byteLength": {
+              "type": "integer",
+              "minimum": 2,
+              "maximum": 1048576
+            }
+          }
+        },
+        "capabilityModuleCatalog": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "contractId",
+            "path",
+            "sha256",
+            "byteLength"
+          ],
+          "properties": {
+            "contractId": {
+              "const": "cryptocomm-capability-module-catalog/v1"
+            },
+            "path": {
+              "$ref": "#/$defs/repositoryRelativePath"
+            },
+            "sha256": {
+              "$ref": "#/$defs/sha256"
+            },
+            "byteLength": {
+              "type": "integer",
+              "minimum": 2,
+              "maximum": 1048576
+            }
+          }
+        },
+        "resolvedProfile": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "contractId",
+            "path",
+            "sha256",
+            "byteLength"
+          ],
+          "properties": {
+            "contractId": {
+              "const": "cryptocomm-resolved-profile/v1"
+            },
+            "path": {
+              "$ref": "#/$defs/repositoryRelativePath"
+            },
+            "sha256": {
+              "$ref": "#/$defs/sha256"
+            },
+            "byteLength": {
+              "type": "integer",
+              "minimum": 2,
+              "maximum": 1048576
+            }
+          }
+        }
+      }
+    },
+    "upstreamSchemas": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "assuranceProfile",
+        "securityClaim",
+        "securityThreatModel",
+        "securityAuditScope",
+        "contextPack"
+      ],
+      "properties": {
+        "assuranceProfile": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "path",
+            "blobSha",
+            "sha256",
+            "byteLength"
+          ],
+          "properties": {
+            "path": {
+              "const": "schema/assurance-profile.schema.json"
+            },
+            "blobSha": {
+              "const": "7bff5e356339c3bb33594e48cab91d4560aae1ce"
+            },
+            "sha256": {
+              "const": "abc016c948b8affd0b000c83269fedc9aa57688cead2650dd0348ddb01d343fe"
+            },
+            "byteLength": {
+              "const": 7600
+            }
+          }
+        },
+        "securityClaim": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "path",
+            "blobSha",
+            "sha256",
+            "byteLength"
+          ],
+          "properties": {
+            "path": {
+              "const": "schema/security-claim-v1.schema.json"
+            },
+            "blobSha": {
+              "const": "b34005cc2d48cef252387dd0b570056295ed78ba"
+            },
+            "sha256": {
+              "const": "3e7ccc9c2d7ba6b1154fce45d3120f0178a30883b7d773a8d5ab9e10b3cf5f26"
+            },
+            "byteLength": {
+              "const": 7062
+            }
+          }
+        },
+        "securityThreatModel": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "path",
+            "blobSha",
+            "sha256",
+            "byteLength"
+          ],
+          "properties": {
+            "path": {
+              "const": "schema/security-threat-model-v1.schema.json"
+            },
+            "blobSha": {
+              "const": "61f359c92f488a58f3543ce97d5a0dfd1fb496d3"
+            },
+            "sha256": {
+              "const": "cf11bd9085bb075735d8c2541b82673388a91c44e6b5ab94a072e8d9f362085e"
+            },
+            "byteLength": {
+              "const": 2613
+            }
+          }
+        },
+        "securityAuditScope": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "path",
+            "blobSha",
+            "sha256",
+            "byteLength"
+          ],
+          "properties": {
+            "path": {
+              "const": "schema/security-audit-scope-v1.schema.json"
+            },
+            "blobSha": {
+              "const": "229be6448b9671baac40bf0b21c94488220667d9"
+            },
+            "sha256": {
+              "const": "0b2ea34a53565c6ccc955125805eb2631373fab940b05297c639b791a6e7eb02"
+            },
+            "byteLength": {
+              "const": 2847
+            }
+          }
+        },
+        "contextPack": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "path",
+            "blobSha",
+            "sha256",
+            "byteLength"
+          ],
+          "properties": {
+            "path": {
+              "const": "schema/context-pack-v1.schema.json"
+            },
+            "blobSha": {
+              "const": "509a7f75d1e14b146d97df46f17c4831a6bd1e59"
+            },
+            "sha256": {
+              "const": "c0070a81e39c533be7540e14e8748f38e5ef47309c7269efe28aa793f8c1572f"
+            },
+            "byteLength": {
+              "const": 7644
+            }
+          }
+        }
+      }
+    },
+    "contextPackBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "path",
+        "contractId",
+        "sha256",
+        "byteLength",
+        "validateWithPinnedSchema"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "path": {
+          "$ref": "#/$defs/repositoryRelativePath"
+        },
+        "contractId": {
+          "const": "context-pack/v1"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "byteLength": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 1048576
+        },
+        "validateWithPinnedSchema": {
+          "type": "boolean"
+        }
+      }
+    },
+    "outputSelection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifactKind",
+        "disposition"
+      ],
+      "properties": {
+        "artifactKind": {
+          "type": "string",
+          "enum": [
+            "assurance-profile/v1",
+            "security-claim/v1",
+            "security-threat-model/v1",
+            "security-audit-scope/v1"
+          ]
+        },
+        "disposition": {
+          "type": "string",
+          "enum": [
+            "render",
+            "unsupported",
+            "excluded-by-operator"
+          ]
+        },
+        "outputPath": {
+          "$ref": "#/$defs/repositoryRelativePath"
+        },
+        "reason": {
+          "$ref": "#/$defs/boundedString"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "disposition": {
+                "const": "render"
+              }
+            },
+            "required": [
+              "disposition"
+            ]
+          },
+          "then": {
+            "required": [
+              "outputPath"
+            ],
+            "not": {
+              "required": [
+                "reason"
+              ],
+              "properties": {
+                "reason": {}
+              }
+            },
+            "properties": {
+              "outputPath": {}
+            }
+          },
+          "else": {
+            "required": [
+              "reason"
+            ],
+            "not": {
+              "required": [
+                "outputPath"
+              ],
+              "properties": {
+                "outputPath": {}
+              }
+            },
+            "properties": {
+              "reason": {}
+            }
+          }
+        }
+      ]
+    },
+    "sourceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "uri",
+        "section"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "spec",
+            "design",
+            "bug-bounty-scope",
+            "issue",
+            "security-policy",
+            "other"
+          ]
+        },
+        "uri": {
+          "$ref": "#/$defs/repositoryRelativePath"
+        },
+        "section": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 256,
+          "pattern": "^#(?:/(?:[^~/]|~[01])*)*$"
+        },
+        "description": {
+          "$ref": "#/$defs/boundedString"
+        }
+      }
+    },
+    "scopeRefs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [],
+      "properties": {
+        "objectIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/stableId"
+          },
+          "minItems": 1,
+          "maxItems": 32,
+          "uniqueItems": true
+        },
+        "morphismIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/stableId"
+          },
+          "minItems": 1,
+          "maxItems": 32,
+          "uniqueItems": true
+        },
+        "diagramIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/stableId"
+          },
+          "minItems": 1,
+          "maxItems": 32,
+          "uniqueItems": true
+        },
+        "acceptanceTestIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/stableId"
+          },
+          "minItems": 1,
+          "maxItems": 32,
+          "uniqueItems": true
+        }
+      }
+    },
+    "threatTags": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stride",
+        "cwe"
+      ],
+      "properties": {
+        "stride": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "Spoofing",
+              "Tampering",
+              "Repudiation",
+              "Information Disclosure",
+              "Denial of Service",
+              "Elevation of Privilege"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 6,
+          "uniqueItems": true
+        },
+        "cwe": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^CWE-[0-9]+$"
+          },
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true
+        }
+      }
+    },
+    "claimTrustBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "boundaryIds",
+        "entryPoints",
+        "attackerControlled"
+      ],
+      "properties": {
+        "boundaryIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/stableId"
+          },
+          "minItems": 1,
+          "maxItems": 1,
+          "uniqueItems": true
+        },
+        "entryPoints": {
+          "$ref": "#/$defs/stringSet"
+        },
+        "attackerControlled": {
+          "type": "boolean"
+        },
+        "dataClasses": {
+          "$ref": "#/$defs/stringSet"
+        },
+        "notes": {
+          "$ref": "#/$defs/stringSet"
+        }
+      }
+    },
+    "nativeProvenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "origin",
+        "generator",
+        "source",
+        "version"
+      ],
+      "properties": {
+        "origin": {
+          "const": "generated"
+        },
+        "generator": {
+          "$ref": "#/$defs/boundedString"
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "version": {
+          "$ref": "#/$defs/boundedString"
+        }
+      }
+    },
+    "renderedEvidenceMapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "projection",
+        "requiredLanes",
+        "requiredEvidenceKinds"
+      ],
+      "properties": {
+        "projection": {
+          "type": "string",
+          "enum": [
+            "direct",
+            "lossy"
+          ]
+        },
+        "requiredLanes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "spec",
+              "behavior",
+              "adversarial",
+              "model",
+              "proof",
+              "runtime"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 6,
+          "uniqueItems": true
+        },
+        "requiredEvidenceKinds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "schema",
+              "unit",
+              "integration",
+              "property",
+              "conformance",
+              "mutation",
+              "fuzz",
+              "differential",
+              "counterexample-closed",
+              "product-coproduct",
+              "natural-transformation",
+              "boundary-map",
+              "model-check",
+              "proof",
+              "runtime-control",
+              "runtime-monitor",
+              "runtime-alert",
+              "runtime-rollout-guard",
+              "waiver"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 20,
+          "uniqueItems": true
+        },
+        "lossExplanation": {
+          "$ref": "#/$defs/boundedString"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "projection": {
+                "const": "lossy"
+              }
+            },
+            "required": [
+              "projection"
+            ]
+          },
+          "then": {
+            "required": [
+              "lossExplanation"
+            ],
+            "properties": {
+              "lossExplanation": {}
+            }
+          },
+          "else": {
+            "not": {
+              "required": [
+                "lossExplanation"
+              ],
+              "properties": {
+                "lossExplanation": {}
+              }
+            }
+          }
+        }
+      ]
+    },
+    "evidenceMapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "decisionId",
+        "sourceEvidenceKind",
+        "disposition"
+      ],
+      "properties": {
+        "decisionId": {
+          "$ref": "#/$defs/stableId"
+        },
+        "sourceEvidenceKind": {
+          "type": "string",
+          "enum": [
+            "specification",
+            "behavioral-test",
+            "adversarial-test",
+            "formal-model",
+            "machine-checked-proof",
+            "runtime-control",
+            "operational-procedure",
+            "human-review"
+          ]
+        },
+        "disposition": {
+          "type": "string",
+          "enum": [
+            "render",
+            "unsupported",
+            "excluded-by-operator"
+          ]
+        },
+        "rendered": {
+          "$ref": "#/$defs/renderedEvidenceMapping"
+        },
+        "reason": {
+          "$ref": "#/$defs/boundedString"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "disposition": {
+                "const": "render"
+              }
+            },
+            "required": [
+              "disposition"
+            ]
+          },
+          "then": {
+            "required": [
+              "rendered"
+            ],
+            "not": {
+              "required": [
+                "reason"
+              ],
+              "properties": {
+                "reason": {}
+              }
+            },
+            "properties": {
+              "rendered": {}
+            }
+          },
+          "else": {
+            "required": [
+              "reason"
+            ],
+            "not": {
+              "required": [
+                "rendered"
+              ],
+              "properties": {
+                "rendered": {}
+              }
+            },
+            "properties": {
+              "reason": {}
+            }
+          }
+        }
+      ]
+    },
+    "renderedClaim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "claimId",
+        "statement",
+        "type",
+        "kind",
+        "criticality",
+        "targetLevel",
+        "requiredLanes",
+        "requiredEvidenceKinds",
+        "evidenceMappings",
+        "sourceRefs",
+        "threatTags",
+        "trustBoundary",
+        "provenance"
+      ],
+      "properties": {
+        "claimId": {
+          "$ref": "#/$defs/stableId"
+        },
+        "statement": {
+          "$ref": "#/$defs/boundedString"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "invariant",
+            "precondition",
+            "postcondition",
+            "assumption"
+          ]
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "safety",
+            "liveness",
+            "security",
+            "compliance",
+            "performance",
+            "operability",
+            "data-integrity",
+            "availability",
+            "custom"
+          ]
+        },
+        "criticality": {
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "high",
+            "critical"
+          ]
+        },
+        "targetLevel": {
+          "type": "string",
+          "enum": [
+            "A0",
+            "A1",
+            "A2",
+            "A3",
+            "A4"
+          ]
+        },
+        "minIndependentSources": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16
+        },
+        "requiredLanes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "spec",
+              "behavior",
+              "adversarial",
+              "model",
+              "proof",
+              "runtime"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 6,
+          "uniqueItems": true
+        },
+        "requiredEvidenceKinds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "schema",
+              "unit",
+              "integration",
+              "property",
+              "conformance",
+              "mutation",
+              "fuzz",
+              "differential",
+              "counterexample-closed",
+              "product-coproduct",
+              "natural-transformation",
+              "boundary-map",
+              "model-check",
+              "proof",
+              "runtime-control",
+              "runtime-monitor",
+              "runtime-alert",
+              "runtime-rollout-guard",
+              "waiver"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 20,
+          "uniqueItems": true
+        },
+        "evidenceMappings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/evidenceMapping"
+          },
+          "minItems": 1,
+          "maxItems": 8
+        },
+        "sourceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sourceRef"
+          },
+          "minItems": 1,
+          "maxItems": 16
+        },
+        "threatTags": {
+          "$ref": "#/$defs/threatTags"
+        },
+        "trustBoundary": {
+          "$ref": "#/$defs/claimTrustBoundary"
+        },
+        "scopeRefs": {
+          "$ref": "#/$defs/scopeRefs"
+        },
+        "provenance": {
+          "$ref": "#/$defs/nativeProvenance"
+        },
+        "notes": {
+          "$ref": "#/$defs/stringSet"
+        }
+      }
+    },
+    "claimMapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "propertyId",
+        "disposition"
+      ],
+      "properties": {
+        "propertyId": {
+          "type": "string",
+          "pattern": "^property\\.[a-z0-9-]+\\.[a-z0-9-]+$"
+        },
+        "disposition": {
+          "type": "string",
+          "enum": [
+            "render",
+            "unsupported",
+            "excluded-by-operator"
+          ]
+        },
+        "claim": {
+          "$ref": "#/$defs/renderedClaim"
+        },
+        "reason": {
+          "$ref": "#/$defs/boundedString"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "disposition": {
+                "const": "render"
+              }
+            },
+            "required": [
+              "disposition"
+            ]
+          },
+          "then": {
+            "required": [
+              "claim"
+            ],
+            "not": {
+              "required": [
+                "reason"
+              ],
+              "properties": {
+                "reason": {}
+              }
+            },
+            "properties": {
+              "claim": {}
+            }
+          },
+          "else": {
+            "required": [
+              "reason"
+            ],
+            "not": {
+              "required": [
+                "claim"
+              ],
+              "properties": {
+                "claim": {}
+              }
+            },
+            "properties": {
+              "reason": {}
+            }
+          }
+        }
+      ]
+    },
+    "renderedThreat": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "threatId",
+        "description",
+        "stride",
+        "cwe",
+        "relatedClaimIds"
+      ],
+      "properties": {
+        "threatId": {
+          "type": "string",
+          "pattern": "^threat\\.[a-z0-9-]+\\.[a-z0-9-]+$"
+        },
+        "description": {
+          "$ref": "#/$defs/boundedString"
+        },
+        "stride": {
+          "type": "string",
+          "enum": [
+            "Spoofing",
+            "Tampering",
+            "Repudiation",
+            "Information Disclosure",
+            "Denial of Service",
+            "Elevation of Privilege"
+          ]
+        },
+        "cwe": {
+          "type": "string",
+          "pattern": "^CWE-[0-9]+$"
+        },
+        "relatedClaimIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^property\\.[a-z0-9-]+\\.[a-z0-9-]+$"
+          },
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true
+        },
+        "trustBoundaryIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/stableId"
+          },
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true
+        },
+        "notes": {
+          "$ref": "#/$defs/stringSet"
+        }
+      }
+    },
+    "threatMapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "threatId",
+        "disposition"
+      ],
+      "properties": {
+        "threatId": {
+          "type": "string",
+          "pattern": "^threat\\.[a-z0-9-]+\\.[a-z0-9-]+$"
+        },
+        "disposition": {
+          "type": "string",
+          "enum": [
+            "render",
+            "unsupported",
+            "excluded-by-operator"
+          ]
+        },
+        "threat": {
+          "$ref": "#/$defs/renderedThreat"
+        },
+        "reason": {
+          "$ref": "#/$defs/boundedString"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "disposition": {
+                "const": "render"
+              }
+            },
+            "required": [
+              "disposition"
+            ]
+          },
+          "then": {
+            "required": [
+              "threat"
+            ],
+            "not": {
+              "required": [
+                "reason"
+              ],
+              "properties": {
+                "reason": {}
+              }
+            },
+            "properties": {
+              "threat": {}
+            }
+          },
+          "else": {
+            "required": [
+              "reason"
+            ],
+            "not": {
+              "required": [
+                "threat"
+              ],
+              "properties": {
+                "threat": {}
+              }
+            },
+            "properties": {
+              "reason": {}
+            }
+          }
+        }
+      ]
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository",
+        "commit",
+        "tree"
+      ],
+      "properties": {
+        "repository": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$",
+          "maxLength": 128
+        },
+        "commit": {
+          "$ref": "#/$defs/fullGitSha"
+        },
+        "tree": {
+          "$ref": "#/$defs/fullGitSha"
+        }
+      }
+    },
+    "trustBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "entryPoints",
+        "attackerControlled"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "name": {
+          "$ref": "#/$defs/boundedString"
+        },
+        "entryPoints": {
+          "$ref": "#/$defs/stringSet"
+        },
+        "attackerControlled": {
+          "type": "boolean"
+        },
+        "description": {
+          "$ref": "#/$defs/boundedString"
+        },
+        "dataClasses": {
+          "$ref": "#/$defs/stringSet"
+        },
+        "scopeRefs": {
+          "$ref": "#/$defs/stringSet"
+        }
+      }
+    },
+    "treeProjection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "disposition",
+        "sourceField",
+        "nativeArtifact",
+        "omittedField",
+        "reason"
+      ],
+      "properties": {
+        "disposition": {
+          "const": "lossy"
+        },
+        "sourceField": {
+          "const": "target.tree"
+        },
+        "nativeArtifact": {
+          "const": "security-audit-scope/v1"
+        },
+        "omittedField": {
+          "const": "target.tree"
+        },
+        "reason": {
+          "$ref": "#/$defs/boundedString"
+        }
+      }
+    },
+    "renderedScope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profileId",
+        "contextPackIds",
+        "componentGlobs",
+        "target",
+        "inScope",
+        "outOfScope",
+        "trustBoundaries",
+        "treeProjection"
+      ],
+      "properties": {
+        "profileId": {
+          "$ref": "#/$defs/stableId"
+        },
+        "contextPackIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/stableId"
+          },
+          "minItems": 1,
+          "maxItems": 8,
+          "uniqueItems": true
+        },
+        "componentGlobs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/boundedString"
+          },
+          "minItems": 1,
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "target": {
+          "$ref": "#/$defs/target"
+        },
+        "inScope": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/boundedString"
+          },
+          "minItems": 1,
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "outOfScope": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/boundedString"
+          },
+          "minItems": 0,
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "trustBoundaries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/trustBoundary"
+          },
+          "minItems": 1,
+          "maxItems": 32
+        },
+        "treeProjection": {
+          "$ref": "#/$defs/treeProjection"
+        }
+      }
+    },
+    "scopeMapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "disposition"
+      ],
+      "properties": {
+        "disposition": {
+          "type": "string",
+          "enum": [
+            "render",
+            "unsupported",
+            "excluded-by-operator"
+          ]
+        },
+        "scope": {
+          "$ref": "#/$defs/renderedScope"
+        },
+        "reason": {
+          "$ref": "#/$defs/boundedString"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "disposition": {
+                "const": "render"
+              }
+            },
+            "required": [
+              "disposition"
+            ]
+          },
+          "then": {
+            "required": [
+              "scope"
+            ],
+            "not": {
+              "required": [
+                "reason"
+              ],
+              "properties": {
+                "reason": {}
+              }
+            },
+            "properties": {
+              "scope": {}
+            }
+          },
+          "else": {
+            "required": [
+              "reason"
+            ],
+            "not": {
+              "required": [
+                "scope"
+              ],
+              "properties": {
+                "scope": {}
+              }
+            },
+            "properties": {
+              "reason": {}
+            }
+          }
+        }
+      ]
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "executable",
+        "networkRequired",
+        "secretsAllowed",
+        "privateEvidenceAllowed",
+        "targetContentMayOverrideMappings",
+        "upstreamExecutionRequired",
+        "repositoryRelativePathsOnly",
+        "rejectSymlinks"
+      ],
+      "properties": {
+        "executable": {
+          "const": false
+        },
+        "networkRequired": {
+          "const": false
+        },
+        "secretsAllowed": {
+          "const": false
+        },
+        "privateEvidenceAllowed": {
+          "const": false
+        },
+        "targetContentMayOverrideMappings": {
+          "const": false
+        },
+        "upstreamExecutionRequired": {
+          "const": false
+        },
+        "repositoryRelativePathsOnly": {
+          "const": true
+        },
+        "rejectSymlinks": {
+          "const": true
+        }
+      }
+    }
+  }
+}

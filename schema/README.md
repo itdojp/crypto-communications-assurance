@@ -18,8 +18,16 @@ JSON files in this directory are the authoritative machine contracts. Every sche
 | `cryptocomm-evidence-provenance/v1` | Exact subject/input/producer/tool/environment/scope identity and public-content or private-opaque artifact provenance. |
 | `cryptocomm-freshness-assessment/v1` | Pure assessment of explicit caller-supplied identity, validity, authority, and clock facts. |
 | `cryptocomm-evidence-binding-set/v1` | Minimal exact-byte root for one execution result, one provenance record, and one explicit freshness assessment. |
+| `cryptocomm-ae-render-plan/v1` | Operator-reviewed semantic mapping authority for deterministic projections into four exact-pin ae-framework native input shapes. |
 
 The bootstrap contract is not renamed, replaced, or reinterpreted by the three CCA-110 contracts.
+
+CCA-210 adds one render-plan contract and no render-result contract. Exact
+renderer execution, provenance, freshness, and generated-byte composition reuse
+the four CCA-240 contracts. The plan requires explicit claim, threat, evidence,
+scope, trust-boundary, Context Pack reference, output-disposition, and tree-loss
+decisions. Its native projections neither satisfy claims nor establish
+ae-framework compatibility.
 
 SHA-256 covers exact referenced bytes; version 1 performs no implicit JSON canonicalization. Strict contract decoding is limited to 1,048,576 bytes and 128 nested object/array containers per artifact and rejects invalid UTF-8, duplicate decoded member names at every nesting level, comments, trailing commas, and trailing data before schema or semantic validation. A manifest has no self-digest. The lock stores the SHA-256 of separately supplied manifest bytes.
 

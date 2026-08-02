@@ -47,6 +47,8 @@ const requiredFiles = [
   "schema/cryptocomm-evidence-provenance-v1.schema.json",
   "schema/cryptocomm-freshness-assessment-v1.schema.json",
   "schema/cryptocomm-evidence-binding-set-v1.schema.json",
+  "schema/cryptocomm-ae-render-plan-v1.schema.json",
+  "integrations/ae-framework/pins/c5da6115638fdbfeebbc458b39fa6916db66afb0/UPSTREAM.json",
   "pack/modules/v1/capability-module-catalog.json",
   "pack/evidence/v1/execution-status-matrix.json",
   "pack/evidence/v1/evidence-classification-matrix.json",
@@ -188,6 +190,7 @@ for (const contractId of [
   "`cryptocomm-evidence-provenance/v1`",
   "`cryptocomm-freshness-assessment/v1`",
   "`cryptocomm-evidence-binding-set/v1`",
+  "`cryptocomm-ae-render-plan/v1`",
 ]) {
   if (!schemaReadme.includes(contractId)) {
     failures.push(`schema/README.md does not document ${contractId}`);
