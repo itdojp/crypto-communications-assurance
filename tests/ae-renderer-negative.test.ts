@@ -419,6 +419,15 @@ describe("CCA-210 fail-closed negative boundaries", () => {
     expect(codes(result)).toContain("RENDERER_IDENTITY_MISMATCH");
   });
 
+  it("rejects missing renderer source bytes without throwing", async () => {
+    const input = await loadCca210ValidationInput();
+    const result = validateAeRenderPlan({
+      ...input,
+      rendererSourceBytes: undefined as unknown as Uint8Array,
+    });
+    expect(codes(result)).toContain("RENDERER_SOURCE_MISSING");
+  });
+
   it("rejects direct rendering without a validated token", () => {
     const rendered = renderAeNativeArtifacts({ planId: "forged" });
     expect(rendered.valid).toBe(false);

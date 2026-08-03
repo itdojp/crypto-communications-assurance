@@ -1387,7 +1387,15 @@ export function validateAeRenderPlan(
   const plan = planResult.value as unknown as AeRenderPlan;
   const diagnostics: AeRenderDiagnostic[] = [];
   diagnostics.push(...outputDiagnostics(plan));
-  if (plan.renderer.sourceSha256 !== sha256(input.rendererSourceBytes)) {
+  if (!isBytes(input.rendererSourceBytes)) {
+    diagnostics.push(
+      diagnostic(
+        "RENDERER_SOURCE_MISSING",
+        "/renderer/sourceSha256",
+        "No exact renderer implementation bytes were supplied.",
+      ),
+    );
+  } else if (plan.renderer.sourceSha256 !== sha256(input.rendererSourceBytes)) {
     diagnostics.push(diagnostic("RENDERER_IDENTITY_MISMATCH", "/renderer/sourceSha256", "The renderer source digest does not bind the supplied exact implementation bytes."));
   }
   const cca = decodedCcaInputDiagnostics(input, plan);
