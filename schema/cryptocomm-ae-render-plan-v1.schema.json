@@ -108,7 +108,7 @@
           "const": "packages/contracts/src/ae-renderer.ts"
         },
         "sourceSha256": {
-          "const": "32040ed9286658caf89b73c04a01c05f318c2bebf14feb56910e1b5b1899d599"
+          "const": "4f475d07b60a5c85fb2d3cd79d2b94e7b3ef95ebe03aa117d35a919cb376a25a"
         }
       }
     },

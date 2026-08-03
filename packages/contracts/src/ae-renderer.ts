@@ -464,10 +464,27 @@ function isBytes(value: unknown): value is Uint8Array {
   return value instanceof Uint8Array;
 }
 
+const mapSizeGetter = Object.getOwnPropertyDescriptor(Map.prototype, "size")?.get;
+
 function isStandardMap(
   value: unknown,
 ): value is ReadonlyMap<unknown, unknown> {
-  return value instanceof Map && Object.getPrototypeOf(value) === Map.prototype;
+  try {
+    if (
+      mapSizeGetter === undefined ||
+      !(value instanceof Map) ||
+      Object.getPrototypeOf(value) !== Map.prototype ||
+      Object.hasOwn(value, "size") ||
+      Object.hasOwn(value, "entries")
+    ) {
+      return false;
+    }
+    mapSizeGetter.call(value);
+    Map.prototype.entries.call(value);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 function isPlainRecord(value: unknown): value is Readonly<Record<string, unknown>> {

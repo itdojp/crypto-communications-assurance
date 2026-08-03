@@ -153,6 +153,44 @@ describe("CCA-210 fail-closed negative boundaries", () => {
     expect(codes(result)).toContain("CONTEXT_PACK_CONTAINER_INVALID");
   });
 
+  it.each(["size", "entries"] as const)(
+    "rejects an own Context Pack Map %s override without invoking it",
+    async (property) => {
+      const input = await loadCca210ValidationInput();
+      const contextPackBytes = new Map(input.contextPackBytes);
+      Object.defineProperty(
+        contextPackBytes,
+        property,
+        property === "size"
+          ? {
+              get: () => {
+                throw new Error("own size override should not be invoked");
+              },
+            }
+          : {
+              value: () => {
+                throw new Error("own entries override should not be invoked");
+              },
+            },
+      );
+      const result = validateAeRenderPlan({
+        ...input,
+        contextPackBytes,
+      });
+      expect(codes(result)).toContain("CONTEXT_PACK_CONTAINER_INVALID");
+    },
+  );
+
+  it("rejects a Proxy-wrapped Context Pack Map without throwing", async () => {
+    const input = await loadCca210ValidationInput();
+    const contextPackBytes = new Proxy(new Map(input.contextPackBytes), {});
+    const result = validateAeRenderPlan({
+      ...input,
+      contextPackBytes,
+    });
+    expect(codes(result)).toContain("CONTEXT_PACK_CONTAINER_INVALID");
+  });
+
   it("rejects a non-string Context Pack key", async () => {
     const input = await loadCca210ValidationInput();
     const result = validateAeRenderPlan({
