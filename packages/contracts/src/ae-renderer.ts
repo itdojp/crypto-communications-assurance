@@ -482,13 +482,13 @@ function isBytes(value: unknown): value is Uint8Array {
   if (
     utilTypes.isProxy(value) ||
     !ArrayBuffer.isView(value) ||
-    !(value instanceof Uint8Array) ||
     typedArrayByteLengthGetter === undefined ||
     typedArrayBufferGetter === undefined
   ) {
     return false;
   }
   try {
+    if (!(value instanceof Uint8Array)) return false;
     let current: object | null = value;
     while (current !== typedArrayPrototype) {
       if (Object.hasOwn(current, "byteLength")) return false;

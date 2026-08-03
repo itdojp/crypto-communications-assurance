@@ -337,6 +337,21 @@ describe("CCA-210 fail-closed negative boundaries", () => {
     }
   });
 
+  it("rejects exact bytes with a throwing prototype chain without throwing", async () => {
+    const input = await loadCca210ValidationInput();
+    const planBytes = new Uint8Array(input.planBytes);
+    const hostilePrototype = new Proxy(Uint8Array.prototype, {
+      getPrototypeOf: () => {
+        throw new Error("prototype trap should be contained");
+      },
+    });
+    Object.setPrototypeOf(planBytes, hostilePrototype);
+
+    expect(codes(validateAeRenderPlan({ ...input, planBytes }))).toContain(
+      "RENDER_PLAN_BYTES_INVALID",
+    );
+  });
+
   it.each(["own", "subclass"] as const)(
     "rejects a Uint8Array with a throwing %s byteLength override",
     async (kind) => {
