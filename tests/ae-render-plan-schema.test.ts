@@ -190,6 +190,53 @@ describe("CCA-210 render-plan contract and exact upstream pin", () => {
     expect(source).not.toContain("compileContractBytes(ccaSchemaByRole[role])");
   });
 
+  it("binds the renderer identity and package version to the exact current source snapshot", async () => {
+    const [schemaBytes, planBytes, packageBytes, sourceBytes] = await Promise.all([
+      loadBytes("../schema/cryptocomm-ae-render-plan-v1.schema.json"),
+      loadBytes("../fixtures/valid/cca-210/ae-render-plan-v1.json"),
+      loadBytes("../packages/contracts/package.json"),
+      loadBytes("../packages/contracts/src/ae-renderer.ts"),
+    ]);
+    const schema = decodeStrictJsonObject<{
+      properties: {
+        renderer: {
+          properties: Record<string, { const: string }>;
+        };
+      };
+    }>(schemaBytes);
+    const plan = decodeStrictJsonObject<{
+      renderer: Record<string, string>;
+    }>(planBytes);
+    const packageManifest = decodeStrictJsonObject<{
+      name: string;
+      version: string;
+    }>(packageBytes);
+    expect(schema.valid).toBe(true);
+    expect(plan.valid).toBe(true);
+    expect(packageManifest.valid).toBe(true);
+    if (!schema.valid || !plan.valid || !packageManifest.valid) return;
+
+    const exactIdentity = {
+      implementationId: "cca-ae-renderer/v1",
+      packageName: packageManifest.value.name,
+      packageVersion: packageManifest.value.version,
+      sourcePath: "packages/contracts/src/ae-renderer.ts",
+      sourceSha256: createHash("sha256").update(sourceBytes).digest("hex"),
+    };
+    expect(packageManifest.value).toMatchObject({
+      name: "@itdojp/cryptocomm-contracts",
+      version: "0.0.0",
+    });
+    expect(plan.value.renderer).toEqual(exactIdentity);
+    expect(
+      Object.fromEntries(
+        Object.entries(schema.value.properties.renderer.properties).map(
+          ([key, value]) => [key, value.const],
+        ),
+      ),
+    ).toEqual(exactIdentity);
+  });
+
   it.each([
     "../package.json",
     "/etc/passwd",

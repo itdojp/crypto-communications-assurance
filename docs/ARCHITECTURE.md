@@ -104,7 +104,9 @@ Threat applicability to attacker models is derived through capability compositio
    threat IDs. Statements, types, kinds, criticality, A0–A4 levels, lanes,
    evidence kinds, STRIDE/CWE, source references, scope, and boundaries are read
    only from the validated plan. Catalog descriptions and categories never fill
-   them.
+   them. The current threat model emits only `STRIDE` in its framework collection
+   and preserves explicit per-threat CWE IDs; no unpinned Top 25 membership is
+   inferred.
 5. Existing Context Pack bytes are supplied by ID rather than opened by the
    pure validator. Repository-relative/traversal rules and the no-symlink
    assumption are contract facts; an embedding caller must open a reviewed file
@@ -112,7 +114,8 @@ Threat applicability to attacker models is derived through capability compositio
    the supplied bytes.
 6. Successful validation yields an opaque token. Only that token can enter the
    separate renderer. Unsupported/excluded mappings remain in the plan and are
-   not native entries.
+   not native entries. Malformed JavaScript/runtime input shapes fail closed at
+   the exported boundary before exact-byte or semantic operations.
 7. Each selected output is serialized with fixed field order, code-point-sorted
    set-like content, two-space indentation, LF, and one final newline, then
    strict-decoded and validated against the exact supplied pinned schema bytes.

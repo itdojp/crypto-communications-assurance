@@ -464,6 +464,191 @@ function isBytes(value: unknown): value is Uint8Array {
   return value instanceof Uint8Array;
 }
 
+function isPlainRecord(value: unknown): value is Readonly<Record<string, unknown>> {
+  if (value === null || typeof value !== "object" || Array.isArray(value)) {
+    return false;
+  }
+  const prototype = Object.getPrototypeOf(value);
+  return prototype === Object.prototype || prototype === null;
+}
+
+function ownDataProperty(
+  record: Readonly<Record<string, unknown>>,
+  key: string,
+): { readonly present: boolean; readonly value?: unknown } {
+  const descriptor = Object.getOwnPropertyDescriptor(record, key);
+  if (descriptor === undefined) return { present: false };
+  return "value" in descriptor
+    ? { present: true, value: descriptor.value }
+    : { present: true };
+}
+
+function exactByteRecordDiagnostics(
+  value: unknown,
+  roles: readonly string[],
+  path: string,
+  containerCode: string,
+  missingCode: string,
+  invalidBytesCode: string,
+  unknownRoleCode: string,
+): readonly AeRenderDiagnostic[] {
+  if (!isPlainRecord(value)) {
+    return [
+      diagnostic(
+        containerCode,
+        path,
+        "Exact-byte inputs must be supplied as a plain role-keyed record.",
+      ),
+    ];
+  }
+
+  const diagnostics: AeRenderDiagnostic[] = [];
+  const allowed = new Set(roles);
+  const ownKeys = Reflect.ownKeys(value);
+  if (ownKeys.some((key) => typeof key === "symbol")) {
+    diagnostics.push(
+      diagnostic(
+        unknownRoleCode,
+        path,
+        "Supplied exact bytes include a non-string role outside the closed v1 input set.",
+      ),
+    );
+  }
+  for (const role of ownKeys
+    .filter((key): key is string => typeof key === "string")
+    .sort(compare)) {
+    if (!allowed.has(role)) {
+      diagnostics.push(
+        diagnostic(
+          unknownRoleCode,
+          `${path}/${pointerSegment(role)}`,
+          "Supplied exact bytes use a role outside the closed v1 input set.",
+        ),
+      );
+    }
+  }
+  for (const role of roles) {
+    const property = ownDataProperty(value, role);
+    const rolePath = `${path}/${role}`;
+    if (!property.present) {
+      diagnostics.push(
+        diagnostic(missingCode, rolePath, `No exact bytes were supplied for ${role}.`),
+      );
+    } else if (!isBytes(property.value)) {
+      diagnostics.push(
+        diagnostic(
+          invalidBytesCode,
+          rolePath,
+          `Exact bytes for ${role} must be a Uint8Array.`,
+        ),
+      );
+    }
+  }
+  return diagnostics;
+}
+
+function validationBoundaryDiagnostics(input: unknown): readonly AeRenderDiagnostic[] {
+  if (!isPlainRecord(input)) {
+    return [
+      diagnostic(
+        "VALIDATION_INPUT_INVALID",
+        "",
+        "Render-plan validation input must be a plain object.",
+      ),
+    ];
+  }
+
+  const diagnostics: AeRenderDiagnostic[] = [];
+  const planBytes = ownDataProperty(input, "planBytes");
+  if (!planBytes.present || !isBytes(planBytes.value)) {
+    diagnostics.push(
+      diagnostic(
+        "RENDER_PLAN_BYTES_INVALID",
+        "/plan",
+        "planBytes must be supplied as a Uint8Array.",
+      ),
+    );
+  }
+
+  const ccaInputBytes = ownDataProperty(input, "ccaInputBytes");
+  diagnostics.push(
+    ...exactByteRecordDiagnostics(
+      ccaInputBytes.value,
+      aeCcaInputRoles,
+      "/ccaInputs",
+      "CCA_INPUT_CONTAINER_INVALID",
+      "CCA_INPUT_MISSING",
+      "CCA_INPUT_BYTES_INVALID",
+      "CCA_INPUT_ROLE_UNKNOWN",
+    ),
+  );
+
+  const upstreamSchemaBytes = ownDataProperty(input, "upstreamSchemaBytes");
+  diagnostics.push(
+    ...exactByteRecordDiagnostics(
+      upstreamSchemaBytes.value,
+      aeUpstreamSchemaRoles,
+      "/upstream/schemas",
+      "UPSTREAM_SCHEMA_CONTAINER_INVALID",
+      "UPSTREAM_SCHEMA_MISSING",
+      "UPSTREAM_SCHEMA_BYTES_INVALID",
+      "UPSTREAM_SCHEMA_ROLE_UNKNOWN",
+    ),
+  );
+
+  const contextPackBytes = ownDataProperty(input, "contextPackBytes");
+  if (!(contextPackBytes.value instanceof Map)) {
+    diagnostics.push(
+      diagnostic(
+        "CONTEXT_PACK_CONTAINER_INVALID",
+        "/contextPacks",
+        "contextPackBytes must be supplied as a Map of Context Pack IDs to Uint8Array values.",
+      ),
+    );
+  } else if (contextPackBytes.value.size > 8) {
+    diagnostics.push(
+      diagnostic(
+        "CONTEXT_PACK_INPUT_LIMIT_EXCEEDED",
+        "/contextPacks",
+        "At most eight supplied Context Pack byte sequences are accepted by v1.",
+      ),
+    );
+  } else {
+    for (const [id, bytes] of contextPackBytes.value.entries()) {
+      if (typeof id !== "string") {
+        diagnostics.push(
+          diagnostic(
+            "CONTEXT_PACK_KEY_INVALID",
+            "/contextPacks",
+            "Every supplied Context Pack key must be a string ID.",
+          ),
+        );
+      } else if (!isBytes(bytes)) {
+        diagnostics.push(
+          diagnostic(
+            "CONTEXT_PACK_BYTES_INVALID",
+            `/contextPacks/${pointerSegment(id)}`,
+            `Exact bytes for Context Pack ${id} must be a Uint8Array.`,
+          ),
+        );
+      }
+    }
+  }
+
+  const rendererSourceBytes = ownDataProperty(input, "rendererSourceBytes");
+  if (!rendererSourceBytes.present || !isBytes(rendererSourceBytes.value)) {
+    diagnostics.push(
+      diagnostic(
+        "RENDERER_SOURCE_MISSING",
+        "/renderer/sourceSha256",
+        "Exact renderer implementation bytes must be supplied as a Uint8Array.",
+      ),
+    );
+  }
+
+  return normalizeAeRenderDiagnostics(diagnostics);
+}
+
 function recordAt(value: unknown, keys: readonly string[]): unknown {
   let current = value;
   for (const key of keys) {
@@ -511,17 +696,6 @@ function decodedCcaInputDiagnostics(
 } {
   const diagnostics: AeRenderDiagnostic[] = [];
   const decoded: Record<string, object> = {};
-  for (const role of Object.keys(input.ccaInputBytes).sort(compare)) {
-    if (!(aeCcaInputRoles as readonly string[]).includes(role)) {
-      diagnostics.push(
-        diagnostic(
-          "CCA_INPUT_ROLE_UNKNOWN",
-          `/ccaInputs/${role}`,
-          "Supplied CCA input bytes use a role outside the closed v1 input set.",
-        ),
-      );
-    }
-  }
   for (const role of aeCcaInputRoles) {
     const bytes: unknown = input.ccaInputBytes[role];
     const path = `/ccaInputs/${role}`;
@@ -625,17 +799,6 @@ function upstreamDiagnostics(
   const diagnostics: AeRenderDiagnostic[] = [];
   const schemas: Partial<Record<AeUpstreamSchemaRole, object>> = {};
   const validators: Partial<Record<AeNativeArtifactKind, NativeValidator>> = {};
-  for (const role of Object.keys(input.upstreamSchemaBytes).sort(compare)) {
-    if (!(aeUpstreamSchemaRoles as readonly string[]).includes(role)) {
-      diagnostics.push(
-        diagnostic(
-          "UPSTREAM_SCHEMA_ROLE_UNKNOWN",
-          `/upstream/schemas/${role}`,
-          "Supplied upstream schema bytes use a role outside the closed exact pin.",
-        ),
-      );
-    }
-  }
   for (const role of aeUpstreamSchemaRoles) {
     const bytes: unknown = input.upstreamSchemaBytes[role];
     const path = `/upstream/schemas/${role}`;
@@ -1393,6 +1556,16 @@ function projectionDiagnostics(plan: AeRenderPlan): readonly AeRenderDiagnostic[
       );
     }
   }
+  if (requestedOutput(plan, "security-threat-model/v1")?.disposition === "render") {
+    diagnostics.push(
+      diagnostic(
+        "CWE_FRAMEWORK_PROJECTION_LOSSY",
+        "/threatMappings",
+        "The current native threat-model projection emits STRIDE only; the pinned framework collection does not represent a dated general-CWE or CWE Top 25 classification, while explicit per-threat CWE identifiers remain unchanged.",
+        "information",
+      ),
+    );
+  }
   for (const [index, mapping] of plan.claimMappings.entries()) {
     if (mapping.disposition !== "render") {
       diagnostics.push(
@@ -1480,6 +1653,10 @@ function projectionDiagnostics(plan: AeRenderPlan): readonly AeRenderDiagnostic[
 export function validateAeRenderPlan(
   input: AeRenderPlanValidationInput,
 ): AeRenderPlanValidationResult {
+  const boundaryDiagnostics = validationBoundaryDiagnostics(input);
+  if (boundaryDiagnostics.length > 0) {
+    return { valid: false, diagnostics: boundaryDiagnostics };
+  }
   const planResult = planValidator(input.planBytes);
   if (!planResult.valid) {
     return { valid: false, diagnostics: normalizeAeRenderDiagnostics(schemaDiagnostics(planResult, "/plan", "RENDER_PLAN_SCHEMA_INVALID")) };
@@ -1487,15 +1664,7 @@ export function validateAeRenderPlan(
   const plan = planResult.value as unknown as AeRenderPlan;
   const diagnostics: AeRenderDiagnostic[] = [];
   diagnostics.push(...outputDiagnostics(plan));
-  if (!isBytes(input.rendererSourceBytes)) {
-    diagnostics.push(
-      diagnostic(
-        "RENDERER_SOURCE_MISSING",
-        "/renderer/sourceSha256",
-        "No exact renderer implementation bytes were supplied.",
-      ),
-    );
-  } else if (plan.renderer.sourceSha256 !== sha256(input.rendererSourceBytes)) {
+  if (plan.renderer.sourceSha256 !== sha256(input.rendererSourceBytes)) {
     diagnostics.push(diagnostic("RENDERER_IDENTITY_MISMATCH", "/renderer/sourceSha256", "The renderer source digest does not bind the supplied exact implementation bytes."));
   }
   const cca = decodedCcaInputDiagnostics(input, plan);
@@ -1622,7 +1791,7 @@ function renderSecurityClaims(plan: AeRenderPlan): object {
 function renderThreatModel(plan: AeRenderPlan): object {
   return {
     schemaVersion: "security-threat-model/v1",
-    frameworks: ["CWE_TOP_25", "STRIDE"],
+    frameworks: ["STRIDE"],
     threats: plan.threatMappings
       .filter((mapping): mapping is ThreatMapping & { threat: NonNullable<ThreatMapping["threat"]> } => mapping.disposition === "render" && mapping.threat !== undefined)
       .sort((left, right) => compare(left.threatId, right.threatId))

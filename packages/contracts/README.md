@@ -8,6 +8,11 @@ This private package provides separate repository-local validation authorities:
 4. CCA-240 validators preserve strict decode, schema conformance, cross-contract semantics, pure freshness assessment, and deterministic serialization as separate operations. The binding-set validator verifies exact original bytes and repeated identities without canonicalizing external input.
 5. CCA-210 `validateAeRenderPlan` exact-byte/schema/semantically validates the operator plan, all five CCA inputs, existing Context Pack bytes, the exact five-schema upstream pin, and renderer source. `renderAeNativeArtifacts` is separate and accepts only the successful validation token.
 
+The exported CCA-210 boundary treats JavaScript runtime values as untrusted.
+Malformed top-level input, byte fields, role records, Context Pack maps/keys,
+and validated-plan tokens fail closed with bounded machine-readable diagnostics
+before parsing, hashing, iteration by semantic validators, or rendering.
+
 The decoder does not canonicalize or rewrite JSON. SHA-256 binding continues to cover the original byte sequence supplied by the caller, not a re-serialized object. The 1,048,576-byte limit applies independently to each manifest, lock, and compatibility record and is checked before UTF-8 decoding. The 128-container limit is checked with a non-recursive structural preflight before parsing, and duplicate traversal is also non-recursive.
 
 A v1 lock may reference at most one compatibility record for each exact subject/target pair. Multiple supporting results belong in that single record's evidence map. Evidence map keys are bounded bundle-relative identifiers, not repository authorities, URLs, private or absolute paths, or provenance records.
@@ -47,6 +52,13 @@ return `information` diagnostics that keep unsupported/excluded mapping and
 known projection loss literal for CCA-240 recording. Informational overflow is
 represented by one informational summary rather than an error-severity record.
 
+Within the reviewed `cryptocomm-ae-render-plan/v1` boundary,
+`cca-ae-renderer/v1@0.0.0`, the fixed source path, and the schema-fixed SHA-256
+identify one exact current source snapshot. After this v1 meaning is accepted,
+source changes must not update the digest alone while reusing that identity;
+they require a reviewed implementation-ID, package-version, or contract-version
+decision.
+
 Output uses UTF-8, two spaces, LF, one final newline, fixed field order, and
 code-point sorting, including optional source-reference descriptions as the
 final source-reference tie-breaker. It omits native `generatedAt`, summaries, deployment, gate
@@ -56,7 +68,12 @@ recorded by the existing CCA-240 contracts rather than a new render-result
 contract.
 
 Explicit native lane/kind and STRIDE/CWE selections are not automatic
-crosswalks. `operational-procedure` and `human-review` stay unsupported unless a
+crosswalks. The current threat-model framework collection emits only `STRIDE`;
+explicit per-threat CWE IDs remain unchanged, and an informational diagnostic
+records that no dated general-CWE or CWE Top 25 collection is represented.
+Future `CWE_TOP_25` output requires an exact dated edition, membership data,
+membership validation, and separate accountable-human approval.
+`operational-procedure` and `human-review` stay unsupported unless a
 plan records a narrower lossy projection, and `waiver` is never human review.
 Schema-valid output is bounded exact-pin shape evidence only.
 

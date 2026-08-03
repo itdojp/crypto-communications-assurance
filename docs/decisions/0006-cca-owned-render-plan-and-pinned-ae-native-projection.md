@@ -49,6 +49,15 @@ statements and types, claim kinds, criticality, A0–A4 levels, lanes, evidence
 kinds, STRIDE/CWE values, related claims, scope, exclusions, and trust-boundary
 facts are explicit plan values. The renderer does not infer them.
 
+For the current threat-model projection, the native `frameworks` collection
+contains `STRIDE` only. Explicitly selected CWE identifiers remain on their
+individual threats unchanged. The pinned schema validates CWE lexical shape but
+does not bind a dated general-CWE or CWE Top 25 membership set, so the renderer
+adds one informational projection-loss diagnostic rather than asserting
+`CWE_TOP_25`. A future Top 25 output requires an exact dated edition, exact
+membership data, membership validation for every emitted CWE, and a separate
+accountable-human decision.
+
 Existing Context Packs are reference-only. Their original bytes are supplied
 and bound outside the native path-only field; CCA-210 does not create their
 objects, morphisms, diagrams, tests, conventions, or forbidden changes. A
@@ -71,6 +80,13 @@ fixed object-field order, and code-point-sorted set-like arrays and mappings. It
 does not read the current time, filesystem, network, branch/tag, environment, or
 target instructions. Optional native `generatedAt` and summary fields are
 omitted.
+
+The closed plan schema fixes `cca-ae-renderer/v1`, package version `0.0.0`, the
+source path, and the SHA-256 of the exact current renderer source snapshot. Those
+values are one reviewed identity tuple, not a moving alias. Once this v1 meaning
+is accepted, a source change cannot silently rewrite only the fixed digest while
+reusing the historical identity; it requires a reviewed implementation-ID,
+package-version, or contract-version decision.
 
 ## Exact upstream pin and licensing
 

@@ -88,6 +88,11 @@ scope, exclusions, and trust boundaries. The exact CCA property/threat IDs retai
 traceability. Unsupported and excluded values remain literal in the plan and are
 not emitted as native entries.
 
+The current native threat model emits only the `STRIDE` framework label while
+retaining each explicit per-threat CWE ID. The pinned schema contains no dated
+membership authority for a general CWE collection or CWE Top 25 edition, so the
+projection records that limitation and makes no Top 25 assertion.
+
 The native audit scope loses the Git tree and native Context Pack fields lose
 content digests. The CCA plan and CCA-240 records retain those exact bindings.
 The layer creates no full Context Pack, claim-evidence manifest, policy decision,

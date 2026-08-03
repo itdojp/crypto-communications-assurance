@@ -35,10 +35,10 @@
     },
     {
       "artifactId": "artifact.cca210.security-threat-model",
-      "byteLength": 2093,
+      "byteLength": 2075,
       "digest": {
         "algorithm": "sha256",
-        "value": "c2cfbbf9a65f54fea67d8ea7a2c139e463f21cb7f44651b01b892d444d1fe29c"
+        "value": "dd4e9f965ad4f45089cb850139fabc88618b7417d7c97b931ae8c380c407d404"
       },
       "kind": "public-content",
       "mediaType": "application/json",
@@ -55,11 +55,11 @@
   },
   "evidenceOrigin": "synthetic",
   "executionResult": {
-    "byteLength": 8804,
+    "byteLength": 9140,
     "contractId": "cryptocomm-execution-result/v1",
     "digest": {
       "algorithm": "sha256",
-      "value": "3ed171ba3559449ac77c165d0bc52fa787575efcea3828e05267fa18d9247668"
+      "value": "322489454a820889c37e35e2c9db397571a26076396f03e396a2d08738131db9"
     },
     "recordId": "result.synthetic.cca-210-render"
   },
@@ -87,7 +87,7 @@
       "byteLength": 24149,
       "digest": {
         "algorithm": "sha256",
-        "value": "e0adeb90e61a0e486eab069a91472bac85a7b0b1667f8becf0a98169610bf088"
+        "value": "88c9d5ca029166edbcf70bcc66e4d416debc9250e7cd01cb44e198570c1e3ac9"
       },
       "inputId": "input.cca210.render-plan",
       "mediaType": "application/json"
@@ -138,10 +138,10 @@
       "mediaType": "application/json"
     },
     {
-      "byteLength": 64193,
+      "byteLength": 69167,
       "digest": {
         "algorithm": "sha256",
-        "value": "c4de0d4d18a3286a86661871958ac19a5bdd22cddc6866b03a6ce9e5bb43618d"
+        "value": "183373e98a21e6b1978185eae189e7e8eb4ef88cb244065bbc7edf85c908c018"
       },
       "inputId": "input.cca210.renderer-source",
       "mediaType": "text/plain"

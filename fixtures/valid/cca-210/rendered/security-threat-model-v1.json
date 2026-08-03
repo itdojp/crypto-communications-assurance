@@ -1,7 +1,6 @@
 {
   "schemaVersion": "security-threat-model/v1",
   "frameworks": [
-    "CWE_TOP_25",
     "STRIDE"
   ],
   "threats": [

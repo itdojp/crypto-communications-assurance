@@ -34,6 +34,11 @@
       "path": "/contextPacks/0"
     },
     {
+      "code": "CWE_FRAMEWORK_PROJECTION_LOSSY",
+      "message": "The current native threat-model projection emits STRIDE only; the pinned framework collection does not represent a dated general-CWE or CWE Top 25 classification, while explicit per-threat CWE identifiers remain unchanged.",
+      "path": "/threatMappings"
+    },
+    {
       "code": "EVIDENCE_MAPPING_UNSUPPORTED",
       "message": "mapping.evidence.key-material.human-review retains human-review as unsupported: The pinned native evidence-kind vocabulary has no complete human-review representation.",
       "path": "/claimMappings/0/claim/evidenceMappings/2"
@@ -97,7 +102,7 @@
       "byteLength": 24149,
       "digest": {
         "algorithm": "sha256",
-        "value": "e0adeb90e61a0e486eab069a91472bac85a7b0b1667f8becf0a98169610bf088"
+        "value": "88c9d5ca029166edbcf70bcc66e4d416debc9250e7cd01cb44e198570c1e3ac9"
       },
       "inputId": "input.cca210.render-plan",
       "mediaType": "application/json"
@@ -148,10 +153,10 @@
       "mediaType": "application/json"
     },
     {
-      "byteLength": 64193,
+      "byteLength": 69167,
       "digest": {
         "algorithm": "sha256",
-        "value": "c4de0d4d18a3286a86661871958ac19a5bdd22cddc6866b03a6ce9e5bb43618d"
+        "value": "183373e98a21e6b1978185eae189e7e8eb4ef88cb244065bbc7edf85c908c018"
       },
       "inputId": "input.cca210.renderer-source",
       "mediaType": "text/plain"

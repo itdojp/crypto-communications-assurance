@@ -3,6 +3,8 @@ import { createHash } from "node:crypto";
 import { describe, expect, it } from "vitest";
 
 import {
+  aeCcaInputRoles,
+  aeUpstreamSchemaRoles,
   compileContractBytes,
   decodeStrictJsonObject,
   maximumAeRenderDiagnostics,
@@ -48,6 +50,213 @@ const threat = (plan: JsonRecord, index = 0): JsonRecord =>
   threats(plan)[index]?.threat as JsonRecord;
 
 describe("CCA-210 fail-closed negative boundaries", () => {
+  it.each([null, undefined, "invalid", 1, false, [], new Map()])(
+    "rejects a malformed top-level validation input without throwing: %p",
+    (candidate) => {
+      const result = validateAeRenderPlan(
+        candidate as unknown as AeRenderPlanValidationInput,
+      );
+      expect(codes(result)).toEqual(["VALIDATION_INPUT_INVALID"]);
+    },
+  );
+
+  it.each([null, undefined, "invalid", 1, false, {}, new Map()])(
+    "rejects malformed planBytes without throwing: %p",
+    async (planBytes) => {
+      const input = await loadCca210ValidationInput();
+      const result = validateAeRenderPlan({
+        ...input,
+        planBytes: planBytes as unknown as Uint8Array,
+      });
+      expect(codes(result)).toContain("RENDER_PLAN_BYTES_INVALID");
+    },
+  );
+
+  it.each([null, undefined, "invalid", 1, false, [], new Map()])(
+    "rejects a malformed CCA input container without throwing: %p",
+    async (ccaInputBytes) => {
+      const input = await loadCca210ValidationInput();
+      const result = validateAeRenderPlan({
+        ...input,
+        ccaInputBytes: ccaInputBytes as unknown as AeRenderPlanValidationInput["ccaInputBytes"],
+      });
+      expect(codes(result)).toContain("CCA_INPUT_CONTAINER_INVALID");
+    },
+  );
+
+  it.each(aeCcaInputRoles)("rejects a missing CCA input role: %s", async (role) => {
+    const input = await loadCca210ValidationInput();
+    const ccaInputBytes = { ...input.ccaInputBytes } as Record<string, Uint8Array>;
+    delete ccaInputBytes[role];
+    const result = validateAeRenderPlan({
+      ...input,
+      ccaInputBytes: ccaInputBytes as AeRenderPlanValidationInput["ccaInputBytes"],
+    });
+    expect(codes(result)).toContain("CCA_INPUT_MISSING");
+  });
+
+  it.each(aeCcaInputRoles)(
+    "rejects a non-Uint8Array CCA input value: %s",
+    async (role) => {
+      const input = await loadCca210ValidationInput();
+      const ccaInputBytes: Record<string, unknown> = { ...input.ccaInputBytes };
+      ccaInputBytes[role] = null;
+      const result = validateAeRenderPlan({
+        ...input,
+        ccaInputBytes: ccaInputBytes as AeRenderPlanValidationInput["ccaInputBytes"],
+      });
+      expect(codes(result)).toContain("CCA_INPUT_BYTES_INVALID");
+    },
+  );
+
+  it("rejects an extra CCA input role", async () => {
+    const input = await loadCca210ValidationInput();
+    const result = validateAeRenderPlan({
+      ...input,
+      ccaInputBytes: {
+        ...input.ccaInputBytes,
+        unreviewedRole: Buffer.from("{}\n"),
+      } as AeRenderPlanValidationInput["ccaInputBytes"],
+    });
+    expect(codes(result)).toContain("CCA_INPUT_ROLE_UNKNOWN");
+  });
+
+  it.each([null, undefined, "invalid", 1, false, [], {}])(
+    "rejects a malformed Context Pack container without throwing: %p",
+    async (contextPackBytes) => {
+      const input = await loadCca210ValidationInput();
+      const result = validateAeRenderPlan({
+        ...input,
+        contextPackBytes: contextPackBytes as unknown as ReadonlyMap<string, Uint8Array>,
+      });
+      expect(codes(result)).toContain("CONTEXT_PACK_CONTAINER_INVALID");
+    },
+  );
+
+  it("rejects a non-string Context Pack key", async () => {
+    const input = await loadCca210ValidationInput();
+    const result = validateAeRenderPlan({
+      ...input,
+      contextPackBytes: new Map([[1, Buffer.from("{}\n")]]) as unknown as ReadonlyMap<
+        string,
+        Uint8Array
+      >,
+    });
+    expect(codes(result)).toContain("CONTEXT_PACK_KEY_INVALID");
+  });
+
+  it("rejects a non-Uint8Array Context Pack value", async () => {
+    const input = await loadCca210ValidationInput();
+    const result = validateAeRenderPlan({
+      ...input,
+      contextPackBytes: new Map([
+        ["context.synthetic.cca-210", null],
+      ]) as unknown as ReadonlyMap<string, Uint8Array>,
+    });
+    expect(codes(result)).toContain("CONTEXT_PACK_BYTES_INVALID");
+  });
+
+  it("rejects an extra Context Pack ID", async () => {
+    const input = await loadCca210ValidationInput();
+    const result = validateAeRenderPlan({
+      ...input,
+      contextPackBytes: new Map(input.contextPackBytes).set(
+        "context.synthetic.unreviewed",
+        Buffer.from("{}\n"),
+      ),
+    });
+    expect(codes(result)).toContain("CONTEXT_PACK_UNREFERENCED");
+  });
+
+  it.each([null, undefined, "invalid", 1, false, [], new Map()])(
+    "rejects a malformed upstream-schema container without throwing: %p",
+    async (upstreamSchemaBytes) => {
+      const input = await loadCca210ValidationInput();
+      const result = validateAeRenderPlan({
+        ...input,
+        upstreamSchemaBytes: upstreamSchemaBytes as unknown as AeRenderPlanValidationInput["upstreamSchemaBytes"],
+      });
+      expect(codes(result)).toContain("UPSTREAM_SCHEMA_CONTAINER_INVALID");
+    },
+  );
+
+  it.each(aeUpstreamSchemaRoles)(
+    "rejects a missing upstream-schema role: %s",
+    async (role) => {
+      const input = await loadCca210ValidationInput();
+      const upstreamSchemaBytes = {
+        ...input.upstreamSchemaBytes,
+      } as Record<string, Uint8Array>;
+      delete upstreamSchemaBytes[role];
+      const result = validateAeRenderPlan({
+        ...input,
+        upstreamSchemaBytes: upstreamSchemaBytes as AeRenderPlanValidationInput["upstreamSchemaBytes"],
+      });
+      expect(codes(result)).toContain("UPSTREAM_SCHEMA_MISSING");
+    },
+  );
+
+  it.each(aeUpstreamSchemaRoles)(
+    "rejects a non-Uint8Array upstream-schema value: %s",
+    async (role) => {
+      const input = await loadCca210ValidationInput();
+      const upstreamSchemaBytes: Record<string, unknown> = {
+        ...input.upstreamSchemaBytes,
+      };
+      upstreamSchemaBytes[role] = null;
+      const result = validateAeRenderPlan({
+        ...input,
+        upstreamSchemaBytes: upstreamSchemaBytes as AeRenderPlanValidationInput["upstreamSchemaBytes"],
+      });
+      expect(codes(result)).toContain("UPSTREAM_SCHEMA_BYTES_INVALID");
+    },
+  );
+
+  it("rejects an extra upstream-schema role", async () => {
+    const input = await loadCca210ValidationInput();
+    const result = validateAeRenderPlan({
+      ...input,
+      upstreamSchemaBytes: {
+        ...input.upstreamSchemaBytes,
+        unreviewedRole: Buffer.from("{}\n"),
+      } as AeRenderPlanValidationInput["upstreamSchemaBytes"],
+    });
+    expect(codes(result)).toContain("UPSTREAM_SCHEMA_ROLE_UNKNOWN");
+  });
+
+  it("does not mutate caller-owned containers or bytes during runtime-shape rejection", async () => {
+    const input = await loadCca210ValidationInput();
+    const before = {
+      plan: digest(input.planBytes),
+      ccaRoles: Object.keys(input.ccaInputBytes).sort(),
+      ccaDigests: Object.values(input.ccaInputBytes).map(digest),
+      contextEntries: [...input.contextPackBytes.entries()].map(([id, bytes]) => [
+        id,
+        digest(bytes),
+      ]),
+      upstreamRoles: Object.keys(input.upstreamSchemaBytes).sort(),
+      upstreamDigests: Object.values(input.upstreamSchemaBytes).map(digest),
+      renderer: digest(input.rendererSourceBytes),
+    };
+    const result = validateAeRenderPlan({
+      ...input,
+      rendererSourceBytes: null as unknown as Uint8Array,
+    });
+    expect(codes(result)).toContain("RENDERER_SOURCE_MISSING");
+    expect({
+      plan: digest(input.planBytes),
+      ccaRoles: Object.keys(input.ccaInputBytes).sort(),
+      ccaDigests: Object.values(input.ccaInputBytes).map(digest),
+      contextEntries: [...input.contextPackBytes.entries()].map(([id, bytes]) => [
+        id,
+        digest(bytes),
+      ]),
+      upstreamRoles: Object.keys(input.upstreamSchemaBytes).sort(),
+      upstreamDigests: Object.values(input.upstreamSchemaBytes).map(digest),
+      renderer: digest(input.rendererSourceBytes),
+    }).toEqual(before);
+  });
+
   it("rejects a CCA exact-byte digest mismatch", async () => {
     const result = await validateMutation((plan) => {
       ((plan.ccaInputs as JsonRecord).propertyCatalog as JsonRecord).sha256 = "0".repeat(64);
@@ -600,16 +809,19 @@ describe("CCA-210 fail-closed negative boundaries", () => {
     expect(codes(result)).toContain("RENDERER_IDENTITY_MISMATCH");
   });
 
-  it("rejects missing renderer source bytes without throwing", async () => {
-    const input = await loadCca210ValidationInput();
-    const result = validateAeRenderPlan({
-      ...input,
-      rendererSourceBytes: undefined as unknown as Uint8Array,
-    });
-    expect(codes(result)).toContain("RENDERER_SOURCE_MISSING");
-  });
+  it.each([null, undefined, "invalid", 1, false, {}, new Map()])(
+    "rejects malformed renderer source bytes without throwing: %p",
+    async (rendererSourceBytes) => {
+      const input = await loadCca210ValidationInput();
+      const result = validateAeRenderPlan({
+        ...input,
+        rendererSourceBytes: rendererSourceBytes as unknown as Uint8Array,
+      });
+      expect(codes(result)).toContain("RENDERER_SOURCE_MISSING");
+    },
+  );
 
-  it.each([{ planId: "forged" }, null, undefined, "forged", 1])(
+  it.each([{ planId: "forged" }, null, undefined, "forged", 1, false, [], new Map()])(
     "rejects direct rendering without a validated object token: %j",
     (token) => {
       const rendered = renderAeNativeArtifacts(

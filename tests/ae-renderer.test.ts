@@ -27,13 +27,14 @@ describe("CCA-210 pure render-plan validation and rendering", () => {
 
     const rendered = renderAeNativeArtifacts(validation.validatedPlan);
     expect(rendered.valid).toBe(true);
-    expect(rendered.diagnostics).toHaveLength(7);
+    expect(rendered.diagnostics).toHaveLength(8);
     expect(rendered.diagnostics.every(({ severity }) => severity === "information")).toBe(
       true,
     );
     expect(rendered.diagnostics.map(({ code }) => code)).toEqual([
       "AUDIT_TREE_PROJECTION_LOSSY",
       "CONTEXT_PACK_REFERENCE_LOSSY",
+      "CWE_FRAMEWORK_PROJECTION_LOSSY",
       "EVIDENCE_MAPPING_UNSUPPORTED",
       "EVIDENCE_MAPPING_UNSUPPORTED",
       "THREAT_PROJECTION_LOSSY",
@@ -109,13 +110,24 @@ describe("CCA-210 pure render-plan validation and rendering", () => {
       "property.integrity.message",
       "property.integrity.state",
     ]);
-    expect(
-      (values.get("security-threat-model/v1")?.threats as { id: string }[]).map(({ id }) => id),
-    ).toEqual([
+    const threatModel = values.get("security-threat-model/v1");
+    const renderedThreats = threatModel?.threats;
+    expect(threatModel?.frameworks).toEqual(["STRIDE"]);
+    expect(Array.isArray(renderedThreats)).toBe(true);
+    if (!Array.isArray(renderedThreats)) {
+      throw new Error("generated threat array is missing");
+    }
+    expect((renderedThreats as { id: string }[]).map(({ id }) => id)).toEqual([
       "threat.confidentiality.passive-message-disclosure",
       "threat.confidentiality.secret-material-extraction",
       "threat.integrity.in-transit-modification",
     ]);
+    expect((renderedThreats as { cwe: string }[]).map(({ cwe }) => cwe)).toEqual([
+      "CWE-200",
+      "CWE-522",
+      "CWE-345",
+    ]);
+    expect(JSON.stringify(threatModel)).not.toContain("CWE_TOP_25");
     for (const value of values.values()) {
       expect(Object.hasOwn(value, "generatedAt")).toBe(false);
       expect(Object.hasOwn(value, "summary")).toBe(false);

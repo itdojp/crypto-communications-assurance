@@ -181,6 +181,8 @@ for (const migrationBoundary of [
   "The only accepted pair is legacy `planned` to new `unknown`",
   "`LEGACY_STATUS_MIGRATION_FORBIDDEN`",
   "evidence-enriching migration",
+  "exact dated CWE Top 25 edition",
+  "implementation-identity, package-version, or render-plan contract-version",
 ]) {
   if (!versioning.includes(migrationBoundary)) {
     failures.push(`CONTRACT_VERSIONING.md does not document ${migrationBoundary}`);
