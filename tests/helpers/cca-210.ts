@@ -30,9 +30,7 @@ const upstreamPaths: Readonly<Record<AeUpstreamSchemaRole, string>> = {
 export const readRepositoryFile = (path: string): Promise<Buffer> => {
   const segments = path.split("/");
   if (
-    path.length === 0 ||
-    path.startsWith("/") ||
-    path.includes("\\") ||
+    !/^[A-Za-z0-9._-]+(?:\/[A-Za-z0-9._-]+)*$/u.test(path) ||
     segments.some((segment) => segment.length === 0 || segment === "." || segment === "..")
   ) {
     throw new Error(`Repository-relative non-traversing path required: ${path}`);

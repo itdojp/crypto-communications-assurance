@@ -181,7 +181,14 @@ describe("CCA-210 render-plan contract and exact upstream pin", () => {
     }
   });
 
-  it.each(["../package.json", "/etc/passwd", "C:\\secret.json", "fixtures//file.json"])(
+  it.each([
+    "../package.json",
+    "/etc/passwd",
+    "C:\\secret.json",
+    "C:/secret.json",
+    "%2e%2e/secret.json",
+    "fixtures//file.json",
+  ])(
     "rejects an unsafe repository test-helper path: %s",
     (path) => {
       expect(() => readRepositoryFile(path)).toThrow(
