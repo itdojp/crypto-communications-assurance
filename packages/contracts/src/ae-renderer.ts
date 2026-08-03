@@ -1263,6 +1263,7 @@ function scopeDiagnostics(
       ),
     );
   }
+  const inScopeEntries = new Set(scope.inScope);
   diagnostics.push(
     ...duplicateDiagnostics(
       scope.contextPackIds,
@@ -1274,6 +1275,16 @@ function scopeDiagnostics(
       "TRUST_BOUNDARY_ID_DUPLICATE",
       "/scopeMapping/scope/trustBoundaries",
     ),
+    ...scope.outOfScope
+      .filter((entry) => inScopeEntries.has(entry))
+      .sort(compare)
+      .map((entry) =>
+        diagnostic(
+          "SCOPE_ENTRY_CONFLICT",
+          "/scopeMapping/scope",
+          `Value cannot be both in scope and out of scope: ${entry}.`,
+        ),
+      ),
   );
   const declaredContexts = new Set(plan.contextPacks.map(({ id }) => id));
   for (const [index, id] of scope.contextPackIds.entries()) {

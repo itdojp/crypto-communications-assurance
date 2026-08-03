@@ -1002,6 +1002,42 @@ describe("CCA-210 fail-closed negative boundaries", () => {
     expect(codes(result)).toContain("RENDER_PLAN_SCHEMA_INVALID");
   });
 
+  it("rejects entries present in both audit-scope lists deterministically", async () => {
+    const mutate = (plan: JsonRecord) => {
+      const scope = (plan.scopeMapping as JsonRecord).scope as JsonRecord;
+      scope.outOfScope = [...(scope.inScope as string[])].reverse();
+    };
+    const first = await validateMutation(mutate);
+    const second = await validateMutation((plan) => {
+      mutate(plan);
+      const scope = (plan.scopeMapping as JsonRecord).scope as JsonRecord;
+      scope.inScope = [...(scope.inScope as string[])].reverse();
+    });
+
+    expect(first.valid).toBe(false);
+    expect(second.valid).toBe(false);
+    if (first.valid || second.valid) return;
+    const conflicts = (result: typeof first) =>
+      result.diagnostics.filter(({ code }) => code === "SCOPE_ENTRY_CONFLICT");
+    expect(conflicts(first)).toEqual([
+      {
+        code: "SCOPE_ENTRY_CONFLICT",
+        path: "/scopeMapping/scope",
+        message:
+          "Value cannot be both in scope and out of scope: src/synthetic-receiver/**.",
+        severity: "error",
+      },
+      {
+        code: "SCOPE_ENTRY_CONFLICT",
+        path: "/scopeMapping/scope",
+        message:
+          "Value cannot be both in scope and out of scope: src/synthetic-sender/**.",
+        severity: "error",
+      },
+    ]);
+    expect(conflicts(second)).toEqual(conflicts(first));
+  });
+
   it.each(["main", "refs/tags/v1.0.0", "1234567"])(
     "rejects mutable or abbreviated target identity %s",
     async (revision) => {
