@@ -1264,6 +1264,7 @@ function scopeDiagnostics(
     );
   }
   const inScopeEntries = new Set(scope.inScope);
+  const componentGlobEntries = new Set(scope.componentGlobs);
   diagnostics.push(
     ...duplicateDiagnostics(
       scope.contextPackIds,
@@ -1283,6 +1284,16 @@ function scopeDiagnostics(
           "SCOPE_ENTRY_CONFLICT",
           "/scopeMapping/scope",
           `Value cannot be both in scope and out of scope: ${entry}.`,
+        ),
+      ),
+    ...scope.outOfScope
+      .filter((entry) => componentGlobEntries.has(entry))
+      .sort(compare)
+      .map((entry) =>
+        diagnostic(
+          "COMPONENT_GLOB_SCOPE_CONFLICT",
+          "/scopeMapping/scope",
+          `Assurance-profile component glob is excluded by the audit scope: ${entry}.`,
         ),
       ),
   );

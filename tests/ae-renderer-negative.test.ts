@@ -1038,6 +1038,47 @@ describe("CCA-210 fail-closed negative boundaries", () => {
     expect(conflicts(second)).toEqual(conflicts(first));
   });
 
+  it("rejects component globs excluded by the audit scope deterministically", async () => {
+    const excluded = ["src/synthetic-excluded-z/**", "src/synthetic-excluded-a/**"];
+    const mutate = (plan: JsonRecord) => {
+      const scope = (plan.scopeMapping as JsonRecord).scope as JsonRecord;
+      scope.componentGlobs = [...(scope.componentGlobs as string[]), ...excluded];
+      scope.outOfScope = [...excluded].reverse();
+    };
+    const first = await validateMutation(mutate);
+    const second = await validateMutation((plan) => {
+      mutate(plan);
+      const scope = (plan.scopeMapping as JsonRecord).scope as JsonRecord;
+      scope.componentGlobs = [...(scope.componentGlobs as string[])].reverse();
+      scope.outOfScope = [...(scope.outOfScope as string[])].reverse();
+    });
+
+    expect(first.valid).toBe(false);
+    expect(second.valid).toBe(false);
+    if (first.valid || second.valid) return;
+    const conflicts = (result: typeof first) =>
+      result.diagnostics.filter(
+        ({ code }) => code === "COMPONENT_GLOB_SCOPE_CONFLICT",
+      );
+    expect(conflicts(first)).toEqual([
+      {
+        code: "COMPONENT_GLOB_SCOPE_CONFLICT",
+        path: "/scopeMapping/scope",
+        message:
+          "Assurance-profile component glob is excluded by the audit scope: src/synthetic-excluded-a/**.",
+        severity: "error",
+      },
+      {
+        code: "COMPONENT_GLOB_SCOPE_CONFLICT",
+        path: "/scopeMapping/scope",
+        message:
+          "Assurance-profile component glob is excluded by the audit scope: src/synthetic-excluded-z/**.",
+        severity: "error",
+      },
+    ]);
+    expect(conflicts(second)).toEqual(conflicts(first));
+  });
+
   it.each(["main", "refs/tags/v1.0.0", "1234567"])(
     "rejects mutable or abbreviated target identity %s",
     async (revision) => {
