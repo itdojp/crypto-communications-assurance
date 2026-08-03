@@ -31,6 +31,7 @@ const requiredFiles = [
   "docs/decisions/0003-security-catalog-separation-and-relationships.md",
   "docs/decisions/0004-capability-modules-and-deterministic-profile-resolution.md",
   "docs/decisions/0005-execution-provenance-freshness-and-binding.md",
+  "docs/decisions/0006-cca-owned-render-plan-and-pinned-ae-native-projection.md",
   "docs/EVIDENCE_CONTRACTS.md",
   "schema/cryptocomm-pack-v1.schema.json",
   "schema/README.md",
@@ -53,6 +54,9 @@ const requiredFiles = [
   "pack/evidence/v1/execution-status-matrix.json",
   "pack/evidence/v1/evidence-classification-matrix.json",
   "packages/contracts/src/evidence.ts",
+  "packages/contracts/src/ae-renderer.ts",
+  "fixtures/valid/cca-210/ae-render-plan-v1.json",
+  "fixtures/valid/cca-210/records/evidence-binding-set-v1.json",
 ];
 
 const requiredDirectories = [
@@ -145,6 +149,15 @@ for (const distinction of [
   "`local proof != machine-checked proof`",
   "`runtime mitigation != absence of a bug`",
   "`binding set != evidence storage`",
+  "`property != product claim`",
+  "`generated native claim != satisfied claim`",
+  "`shape-valid != semantically compatible`",
+  "`pass render != evidence satisfied`",
+  "`Context Pack reference != Context Pack synthesis`",
+  "`full commit in native audit scope != full CCA target identity`",
+  "`explicit STRIDE/CWE mapping != automated threat classification`",
+  "`renderer != ae-framework execution`",
+  "`pinned schema conformance != product-wide compatibility`",
 ]) {
   if (!architecture.includes(distinction)) {
     failures.push(`ARCHITECTURE.md does not document ${distinction}`);
@@ -227,6 +240,35 @@ if (
   failures.push(
     "EVIDENCE_CONTRACTS.md does not distinguish a private-opaque artifact reference from its public-safe provenance record",
   );
+}
+
+const aeIntegration = await readFile("integrations/ae-framework/README.md", "utf8");
+for (const boundary of [
+  "c5da6115638fdbfeebbc458b39fa6916db66afb0",
+  "0d69865b37a4476a20f0f1f1f42031967d3ec3a7",
+  "do not execute ae-framework",
+  "not product-wide compatibility",
+]) {
+  if (!aeIntegration.includes(boundary)) {
+    failures.push(`ae-framework integration documentation does not include ${boundary}`);
+  }
+}
+
+const renderDecision = await readFile(
+  "docs/decisions/0006-cca-owned-render-plan-and-pinned-ae-native-projection.md",
+  "utf8",
+);
+for (const boundary of [
+  "cryptocomm-ae-render-plan/v1",
+  "There is no CCA-210 render-result or output-index contract",
+  "operational-procedure",
+  "human-review",
+  "treeProjection",
+  "CCA-330",
+]) {
+  if (!renderDecision.includes(boundary)) {
+    failures.push(`ADR 0006 does not document ${boundary}`);
+  }
 }
 
 const catalogCoverage = await readFile("docs/CATALOG_COVERAGE.md", "utf8");

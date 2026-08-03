@@ -169,3 +169,20 @@ newline, lexicographically sorted object keys, and sorted set-like arrays.
 Diagnostic arrays are sorted explicitly by `code`, then `path`, then `message`.
 Timestamps are caller facts. Deterministic serialization applies only to generated
 records; exact external input bytes are never canonicalized before hashing.
+
+## CCA-210 render-record application
+
+Representative CCA-210 fixtures reuse all four CCA-240 contracts. The execution
+and provenance input bindings include the exact render plan, five CCA inputs,
+existing Context Pack, five pinned upstream schema byte sequences, and renderer
+source. The execution artifact identities and public provenance records bind all
+four exact generated native artifact byte sequences. The common subject retains
+the target full commit and full tree even though the native audit-scope artifact
+can carry only the commit.
+
+The fixture execution status is `pass` only because deterministic
+transformation and validation against the supplied exact pinned schemas
+succeeded. Evidence origin remains `synthetic`, use remains `test-only`, and
+freshness remains `not-assessed`. No record carries claim satisfaction,
+compatibility, product security, approval, certification, release, or
+publication authority. A `pass` render is not evidence satisfaction.

@@ -1,0 +1,110 @@
+{
+  "version": 1,
+  "name": "Synthetic CCA-210 Context Pack",
+  "problem_statement": {
+    "goals": [
+      "Exercise deterministic native-artifact rendering with public synthetic data."
+    ],
+    "non_goals": [
+      "Represent a live product, evidence result, approval, or security conclusion."
+    ]
+  },
+  "domain_glossary": {
+    "terms": [
+      {
+        "term": "synthetic channel",
+        "ja": "合成通信路",
+        "note": "Test-only model with no live identity."
+      }
+    ]
+  },
+  "objects": [
+    {
+      "id": "component.synthetic.receiver",
+      "kind": "synthetic-component",
+      "states": [
+        "idle",
+        "received"
+      ],
+      "fields": [
+        "synthetic-message"
+      ]
+    },
+    {
+      "id": "component.synthetic.sender",
+      "kind": "synthetic-component",
+      "states": [
+        "idle",
+        "sent"
+      ],
+      "fields": [
+        "synthetic-message"
+      ]
+    }
+  ],
+  "morphisms": [
+    {
+      "id": "morphism.synthetic.transfer",
+      "input": {
+        "state": "sent"
+      },
+      "output": {
+        "state": "received"
+      },
+      "pre": [
+        "Synthetic input is fixture data."
+      ],
+      "post": [
+        "Synthetic output remains fixture data."
+      ],
+      "failures": [
+        "No live behavior is represented."
+      ]
+    }
+  ],
+  "diagrams": [
+    {
+      "id": "diagram.synthetic.flow",
+      "statement": "Synthetic sender maps to synthetic receiver.",
+      "verification": [
+        "Repository-local deterministic fixture comparison only."
+      ]
+    }
+  ],
+  "constraints": {
+    "classification": "synthetic-test-only",
+    "networkRequired": false
+  },
+  "assurance": {
+    "profile": "profile.synthetic.cca-210",
+    "claim_refs": [
+      "property.confidentiality.key-material",
+      "property.confidentiality.message",
+      "property.integrity.message",
+      "property.integrity.state"
+    ]
+  },
+  "acceptance_tests": [
+    {
+      "id": "acceptance.synthetic.deterministic-render",
+      "scenario": "Render the exact synthetic plan twice.",
+      "expected": [
+        "All selected native output bytes are identical."
+      ]
+    }
+  ],
+  "coding_conventions": {
+    "language": "data-only JSON",
+    "directory": [
+      "fixtures/valid/cca-210"
+    ],
+    "dependencies": {
+      "network": false,
+      "externalTool": false
+    }
+  },
+  "forbidden_changes": [
+    "Do not add live identity, private evidence, approval, or claim satisfaction."
+  ],
+  "fixtureClassification": "synthetic-test-only"
+}

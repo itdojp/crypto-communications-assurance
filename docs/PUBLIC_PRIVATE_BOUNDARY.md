@@ -44,6 +44,21 @@ The CCA-130 public module catalog contains protocol-neutral selections, dependen
 
 CCA-130 requests, resolved profiles, and their CCA-110 manifest fixture are `synthetic-test-only`. Source-module inclusion reasons do not identify a live producer or product. The resolver neither reads private evidence nor defines provenance, freshness, retention, access control, correlation, risk acceptance, or publication authority; CCA-240 adds separate public provenance/freshness facts while private operations remain deferred.
 
+CCA-210 commits only the reviewed public upstream schema bytes, their public
+license/NOTICE attribution, source code, and explicitly synthetic/test-only
+render plan, Context Pack, resolved profile, native outputs, and CCA-240 records.
+The synthetic target revisions and identities are fictional. The plan safety
+boundary forbids secrets and private evidence. No local absolute path, hostname,
+credential, customer ID, raw finding, or private-storage metadata is accepted as
+an integration input or generated output.
+
+An operator-selected Context Pack reference is public only when its exact bytes
+are already approved for this repository. A repository-relative path is not
+permission to read or publish arbitrary target content. The pure validator
+receives bytes from its caller, performs no filesystem lookup, and relies on the
+explicit reject-symlink assumption. Private or unreviewed Context Packs remain
+outside Git and outside the committed fixture set.
+
 ## Referencing private evidence
 
 CCA-110 compatibility records may reference only content-bound synthetic or intentionally public evidence without embedding evidence bytes. Evidence map keys are bounded bundle-relative identifiers only. They are not repository authorities, network locators, private evidence paths, local absolute paths, or provenance records. The evidence value content-binds bytes but does not supply a location or access authority.

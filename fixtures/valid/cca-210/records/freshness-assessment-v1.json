@@ -1,0 +1,100 @@
+{
+  "asOf": "2026-08-03T00:05:00Z",
+  "assessmentId": "assessment.synthetic.cca-210-not-assessed",
+  "diagnostics": [],
+  "dimensions": {
+    "contract": {
+      "outcome": "not-selected",
+      "selected": false
+    },
+    "dependency": {
+      "outcome": "not-selected",
+      "selected": false
+    },
+    "environment": {
+      "outcome": "not-selected",
+      "selected": false
+    },
+    "input": {
+      "outcome": "not-selected",
+      "selected": false
+    },
+    "producer": {
+      "outcome": "not-selected",
+      "selected": false
+    },
+    "scope": {
+      "outcome": "not-selected",
+      "selected": false
+    },
+    "subject": {
+      "outcome": "not-selected",
+      "selected": false
+    },
+    "tool": {
+      "outcome": "not-selected",
+      "selected": false
+    }
+  },
+  "fixtureClassification": "synthetic-test-only",
+  "intent": {
+    "requested": false
+  },
+  "provenance": {
+    "byteLength": 7317,
+    "contractId": "cryptocomm-evidence-provenance/v1",
+    "digest": {
+      "algorithm": "sha256",
+      "value": "c68d3fb78986fcb82b032a82218a515e0a0e3994b71052d6d4a18331e84e9e84"
+    },
+    "recordId": "provenance.synthetic.cca-210-render"
+  },
+  "safety": {
+    "executable": false,
+    "networkRequired": false,
+    "secretsAllowed": false
+  },
+  "schemaVersion": "cryptocomm-freshness-assessment/v1",
+  "scope": {
+    "description": "Synthetic repository-local CCA-210 renderer fixture scope.",
+    "exclusions": [
+      "claim satisfaction",
+      "live systems",
+      "private evidence",
+      "product compatibility"
+    ],
+    "scopeId": "scope.synthetic.cca-210-target"
+  },
+  "state": "not-assessed",
+  "subject": {
+    "commit": {
+      "algorithm": "git-sha1",
+      "value": "1111111111111111111111111111111111111111"
+    },
+    "kind": "git-revision",
+    "repositoryId": "example.test:synthetic/crypto-target",
+    "tree": {
+      "algorithm": "git-sha1",
+      "value": "2222222222222222222222222222222222222222"
+    }
+  },
+  "validity": {
+    "invalidation": {
+      "outcome": "not-selected",
+      "selected": false
+    },
+    "revocation": {
+      "outcome": "not-selected",
+      "selected": false
+    },
+    "supersession": {
+      "outcome": "not-selected",
+      "selected": false
+    },
+    "time": {
+      "clockTrust": "not-required",
+      "outcome": "not-selected",
+      "selected": false
+    }
+  }
+}

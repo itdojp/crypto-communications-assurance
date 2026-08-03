@@ -25,9 +25,9 @@
 | `packages/contracts/` | TypeScript validation helpers for shared contracts. |
 | `packages/cli/` | Reserved for a later local, non-authoritative CLI. |
 | `packages/bridge/` | Reserved for later content-bound bridge logic. |
-| `packages/ae-pack/` | Reserved for later ae-framework-compatible pack material. |
+| `packages/ae-pack/` | Documents the bounded CCA-210 native fixture surface; no published package or compatibility claim. |
 | `packages/gra-pack/` | Reserved for later GenAI Repo Auditor-compatible pack material. |
-| `integrations/` | Integration documentation and, later, boundary-specific inputs. |
+| `integrations/` | Integration documentation and reviewed exact upstream schema pins; no upstream source execution. |
 | `adapters/contracts/` | Reserved for versioned adapter input/output contracts. |
 | `fixtures/` | Explicitly synthetic positive and negative test inputs. |
 | `examples/` | Non-normative, synthetic usage examples. |
@@ -88,6 +88,40 @@ Threat applicability to attacker models is derived through capability compositio
    sorts generated object keys and set-like arrays but never canonicalizes bytes
    before digest verification.
 
+## CCA-owned ae render-plan flow
+
+1. The strict decoder and the closed `cryptocomm-ae-render-plan/v1` schema run
+   before semantic validation. Every CCA input, supplied Context Pack, pinned
+   upstream schema, and renderer source remains an exact byte sequence.
+2. The validator recomputes byte lengths and SHA-256 values, validates the five
+   CCA contracts, revalidates module/catalog semantics, verifies the resolved
+   profile's repeated bindings, and checks the exact upstream commit/tree/path,
+   Git blob, byte digest, and byte length recorded by the plan and pin manifest.
+3. The plan dispositions cover every selected property, threat, source evidence
+   requirement, native output kind, and scope. `render` requires all native
+   values; `unsupported` and `excluded-by-operator` retain bounded reasons.
+4. Explicit property IDs become claim IDs and explicit threat IDs become native
+   threat IDs. Statements, types, kinds, criticality, A0–A4 levels, lanes,
+   evidence kinds, STRIDE/CWE, source references, scope, and boundaries are read
+   only from the validated plan. Catalog descriptions and categories never fill
+   them.
+5. Existing Context Pack bytes are supplied by ID rather than opened by the
+   pure validator. Repository-relative/traversal rules and the no-symlink
+   assumption are contract facts; an embedding caller must open a reviewed file
+   without following a symlink. Context element references are checked against
+   the supplied bytes.
+6. Successful validation yields an opaque token. Only that token can enter the
+   separate renderer. Unsupported/excluded mappings remain in the plan and are
+   not native entries.
+7. Each selected output is serialized with fixed field order, code-point-sorted
+   set-like content, two-space indentation, LF, and one final newline, then
+   strict-decoded and validated against the exact supplied pinned schema bytes.
+   No current time, native summary, deployment/gate policy, or mutable identity
+   is inserted.
+8. CCA-240 execution/provenance/freshness/binding records bind the exact plan,
+   CCA inputs, schemas, renderer source, and native outputs. No CCA-210 result or
+   output-index contract exists.
+
 The authority boundaries are intentionally non-equivalent:
 
 - `bootstrap envelope != manifest`
@@ -118,6 +152,15 @@ The authority boundaries are intentionally non-equivalent:
 - `local proof != machine-checked proof`
 - `runtime mitigation != absence of a bug`
 - `binding set != evidence storage`
+- `property != product claim`
+- `generated native claim != satisfied claim`
+- `shape-valid != semantically compatible`
+- `pass render != evidence satisfied`
+- `Context Pack reference != Context Pack synthesis`
+- `full commit in native audit scope != full CCA target identity`
+- `explicit STRIDE/CWE mapping != automated threat classification`
+- `renderer != ae-framework execution`
+- `pinned schema conformance != product-wide compatibility`
 
 SHA-256 covers the original exact bytes. JSON whitespace, member order, encoding, and line endings therefore affect content identity; strict decoding does not rewrite input and version 1 performs no implicit JSON canonicalization. A manifest has no self-digest.
 
@@ -130,7 +173,8 @@ SHA-256 covers the original exact bytes. JSON whitespace, member order, encoding
 - **Tool boundary:** a tool emits evidence with a literal status; it does not make a
   human decision.
 - **Integration boundary:** ae-framework and GenAI Repo Auditor remain independent
-  systems. No code in this bootstrap calls or modifies them.
+  systems. CCA-210 validates local schema snapshots but calls, executes, and
+  modifies neither upstream.
 
 See [`PUBLIC_PRIVATE_BOUNDARY.md`](PUBLIC_PRIVATE_BOUNDARY.md) and
 [`STATUS_SEMANTICS.md`](STATUS_SEMANTICS.md).

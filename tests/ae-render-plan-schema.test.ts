@@ -20,6 +20,32 @@ const gitBlobSha = (bytes: Uint8Array): string =>
     .digest("hex");
 
 describe("CCA-210 render-plan contract and exact upstream pin", () => {
+  it("strict-decodes the exact 12-file positive synthetic fixture set", async () => {
+    const files = [
+      "ae-render-plan-v1.json",
+      "context-pack-v1.json",
+      "profile-request-v1.json",
+      "resolved-profile-v1.json",
+      "records/evidence-binding-set-v1.json",
+      "records/evidence-provenance-v1.json",
+      "records/execution-result-v1.json",
+      "records/freshness-assessment-v1.json",
+      "rendered/assurance-profile-v1.json",
+      "rendered/security-audit-scope-v1.json",
+      "rendered/security-claim-v1.json",
+      "rendered/security-threat-model-v1.json",
+    ] as const;
+    expect(files).toHaveLength(12);
+    for (const file of files) {
+      expect(
+        decodeStrictJsonObject(
+          await loadBytes(`../fixtures/valid/cca-210/${file}`),
+        ).valid,
+        file,
+      ).toBe(true);
+    }
+  });
+
   it("keeps the sole CCA-210 contract closed and Draft 2020-12", async () => {
     const bytes = await loadBytes(
       "../schema/cryptocomm-ae-render-plan-v1.schema.json",
@@ -90,6 +116,14 @@ describe("CCA-210 render-plan contract and exact upstream pin", () => {
       commit: pin,
       tree: "0d69865b37a4476a20f0f1f1f42031967d3ec3a7",
     });
+    expect(Object.keys(decoded.value).sort()).toEqual([
+      "commit",
+      "notice",
+      "repository",
+      "selectedSchemas",
+      "tree",
+      "upstreamLicense",
+    ]);
     expect(decoded.value.selectedSchemas).toHaveLength(5);
     expect(decoded.value.selectedSchemas.map(({ path }) => path).sort()).toEqual([
       "schema/assurance-profile.schema.json",
@@ -100,6 +134,14 @@ describe("CCA-210 render-plan contract and exact upstream pin", () => {
     ]);
 
     for (const entry of decoded.value.selectedSchemas) {
+      expect(Object.keys(entry).sort()).toEqual([
+        "blobSha",
+        "byteLength",
+        "contentSha256",
+        "path",
+        "pinnedPath",
+        "purpose",
+      ]);
       expect(entry.pinnedPath).toBe(entry.path);
       const bytes = await loadBytes(`${pinRoot}${entry.pinnedPath}`);
       expect(bytes.byteLength, entry.path).toBe(entry.byteLength);
@@ -118,5 +160,23 @@ describe("CCA-210 render-plan contract and exact upstream pin", () => {
     expect(license.toString("utf8")).toContain("Apache License");
     expect(license.toString("utf8")).toContain("Version 2.0");
     expect(notice.toString("utf8")).toContain("ae-framework contributors");
+  });
+
+  it("keeps the renderer free of filesystem, network, clock, and upstream execution APIs", async () => {
+    const source = (
+      await loadBytes("../packages/contracts/src/ae-renderer.ts")
+    ).toString("utf8");
+    for (const prohibited of [
+      'from "node:fs',
+      'from "node:http',
+      'from "node:https',
+      "fetch(",
+      "Date.now(",
+      "new Date(",
+      "process.env",
+      "child_process",
+    ]) {
+      expect(source, prohibited).not.toContain(prohibited);
+    }
   });
 });
