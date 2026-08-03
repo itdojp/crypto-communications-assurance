@@ -162,7 +162,7 @@ describe("CCA-210 pure render-plan validation and rendering", () => {
     expect(renderAeNativeArtifacts(permuted.validatedPlan).outputs.map(({ bytes }) => digest(bytes))).toEqual(baseline);
   });
 
-  it("sorts otherwise-identical source references by optional description", async () => {
+  it("sorts otherwise-identical source references by description code points", async () => {
     const input = await loadCca210ValidationInput();
     const plan = await loadCca210Plan();
     const firstClaim = (plan.claimMappings as {
@@ -171,9 +171,10 @@ describe("CCA-210 pure render-plan validation and rendering", () => {
     if (firstClaim === undefined) throw new Error("fixture claim missing");
     const original = firstClaim.sourceRefs[0];
     if (original === undefined) throw new Error("fixture source reference missing");
+    original.description = "\u{10000} supplementary-plane description.";
     firstClaim.sourceRefs.push({
       ...original,
-      description: "A second deterministic source-reference description.",
+      description: "\uE000 private-use description.",
     });
     const forward = validateAeRenderPlan({ ...input, planBytes: serializePlan(plan) });
     expect(forward.valid).toBe(true);
@@ -191,6 +192,19 @@ describe("CCA-210 pure render-plan validation and rendering", () => {
     )?.bytes;
     expect(forwardBytes).toBeDefined();
     expect(reverseBytes).toBeDefined();
-    expect(Buffer.from(reverseBytes ?? [])).toEqual(Buffer.from(forwardBytes ?? []));
+    if (forwardBytes === undefined || reverseBytes === undefined) {
+      throw new Error("security-claim output missing");
+    }
+    expect(Buffer.from(reverseBytes)).toEqual(Buffer.from(forwardBytes));
+    const decoded = decodeStrictJsonObject<Record<string, unknown>>(forwardBytes);
+    expect(decoded.valid).toBe(true);
+    if (!decoded.valid) return;
+    const renderedClaims = decoded.value.claims as {
+      sourceRefs: { description?: string }[];
+    }[];
+    expect(renderedClaims[0]?.sourceRefs.map(({ description }) => description)).toEqual([
+      "\uE000 private-use description.",
+      "\u{10000} supplementary-plane description.",
+    ]);
   });
 });

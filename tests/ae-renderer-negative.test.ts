@@ -137,6 +137,51 @@ describe("CCA-210 fail-closed negative boundaries", () => {
     expect(codes(result)).toContain("CONTEXT_PACK_BINDING_DIGEST_MISMATCH");
   });
 
+  it("rejects a claim scope reference found only in an unselected Context Pack", async () => {
+    const [plan, input] = await Promise.all([
+      loadCca210Plan(),
+      loadCca210ValidationInput(),
+    ]);
+    const originalBytes = input.contextPackBytes.values().next().value as
+      | Uint8Array
+      | undefined;
+    if (originalBytes === undefined) throw new Error("Context Pack fixture missing");
+    const decoded = decodeStrictJsonObject<JsonRecord>(originalBytes);
+    if (!decoded.valid) throw new Error("Context Pack fixture did not decode");
+    const unselectedObjectId = "component.synthetic.unselected-receiver";
+    const objects = decoded.value.objects as JsonRecord[];
+    if (objects[0] === undefined) throw new Error("Context Pack object missing");
+    objects[0].id = unselectedObjectId;
+    objects[1]!.id = "component.synthetic.unselected-sender";
+    (decoded.value.morphisms as JsonRecord[])[0]!.id =
+      "morphism.synthetic.unselected-transfer";
+    (decoded.value.diagrams as JsonRecord[])[0]!.id =
+      "diagram.synthetic.unselected-flow";
+    (decoded.value.acceptance_tests as JsonRecord[])[0]!.id =
+      "acceptance.synthetic.unselected-render";
+    const unselectedBytes = serializePlan(decoded.value);
+    (plan.contextPacks as JsonRecord[]).push({
+      id: "context.synthetic.cca-210-unselected",
+      path: "fixtures/valid/cca-210/unselected-context-pack-v1.json",
+      contractId: "context-pack/v1",
+      sha256: digest(unselectedBytes),
+      byteLength: unselectedBytes.byteLength,
+      validateWithPinnedSchema: true,
+    });
+    const scopeRefs = claim(plan).scopeRefs as JsonRecord;
+    scopeRefs.objectIds = [unselectedObjectId];
+
+    const result = validateAeRenderPlan({
+      ...input,
+      planBytes: serializePlan(plan),
+      contextPackBytes: new Map(input.contextPackBytes).set(
+        "context.synthetic.cca-210-unselected",
+        unselectedBytes,
+      ),
+    });
+    expect(codes(result)).toContain("CONTEXT_SCOPE_REF_DANGLING");
+  });
+
   it.each(["statement", "type", "kind", "criticality", "targetLevel"])(
     "rejects a rendered claim missing explicit %s",
     async (field) => {

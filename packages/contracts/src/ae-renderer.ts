@@ -315,8 +315,19 @@ const nativeRoleByKind: Readonly<
   "security-audit-scope/v1": "securityAuditScope",
 };
 
-const compare = (left: string, right: string): number =>
-  left < right ? -1 : left > right ? 1 : 0;
+const compare = (left: string, right: string): number => {
+  const leftCodePoints = left[Symbol.iterator]();
+  const rightCodePoints = right[Symbol.iterator]();
+  while (true) {
+    const leftNext = leftCodePoints.next();
+    const rightNext = rightCodePoints.next();
+    if (leftNext.done || rightNext.done) {
+      return leftNext.done === rightNext.done ? 0 : leftNext.done ? -1 : 1;
+    }
+    if (leftNext.value === rightNext.value) continue;
+    return (leftNext.value.codePointAt(0) ?? 0) - (rightNext.value.codePointAt(0) ?? 0);
+  }
+};
 
 function sha256(bytes: Uint8Array): string {
   return createHash("sha256").update(bytes).digest("hex");
@@ -408,7 +419,7 @@ function duplicateDiagnostics(
     seen.add(value);
   }
   return [...duplicates]
-    .sort()
+    .sort(compare)
     .map((value) => diagnostic(code, path, `Duplicate value: ${value}.`));
 }
 
@@ -752,6 +763,12 @@ function contextDiagnostics(
 } {
   const diagnostics: AeRenderDiagnostic[] = [];
   const identifiers = emptyContextIdentifiers();
+  const allIdentifiers = emptyContextIdentifiers();
+  const selectedContextIds = new Set(
+    plan.scopeMapping.disposition === "render" && plan.scopeMapping.scope !== undefined
+      ? plan.scopeMapping.scope.contextPackIds
+      : [],
+  );
   diagnostics.push(
     ...duplicateDiagnostics(
       plan.contextPacks.map(({ id }) => id),
@@ -816,12 +833,16 @@ function contextDiagnostics(
       }
     }
     const groups = [
-      ["objects", identifiers.objectIds],
-      ["morphisms", identifiers.morphismIds],
-      ["diagrams", identifiers.diagramIds],
-      ["acceptance_tests", identifiers.acceptanceTestIds],
+      ["objects", allIdentifiers.objectIds, identifiers.objectIds],
+      ["morphisms", allIdentifiers.morphismIds, identifiers.morphismIds],
+      ["diagrams", allIdentifiers.diagramIds, identifiers.diagramIds],
+      [
+        "acceptance_tests",
+        allIdentifiers.acceptanceTestIds,
+        identifiers.acceptanceTestIds,
+      ],
     ] as const;
-    for (const [key, target] of groups) {
+    for (const [key, allTarget, selectedTarget] of groups) {
       const entries = decoded.value[key];
       if (!Array.isArray(entries)) continue;
       for (const [entryIndex, entry] of entries.entries()) {
@@ -830,7 +851,7 @@ function contextDiagnostics(
             ? (entry as Record<string, unknown>).id
             : undefined;
         if (typeof id !== "string") continue;
-        if (target.has(id)) {
+        if (allTarget.has(id)) {
           diagnostics.push(
             diagnostic(
               "CONTEXT_PACK_ELEMENT_ID_DUPLICATE",
@@ -839,7 +860,8 @@ function contextDiagnostics(
             ),
           );
         }
-        target.add(id);
+        allTarget.add(id);
+        if (selectedContextIds.has(binding.id)) selectedTarget.add(id);
       }
     }
   }
@@ -1032,8 +1054,8 @@ function claimDiagnostics(
       "/claimMappings",
     ),
   );
-  const selected = Object.keys(resolvedProfile?.selections.properties ?? {}).sort();
-  const mapped = [...new Set(plan.claimMappings.map(({ propertyId }) => propertyId))].sort();
+  const selected = Object.keys(resolvedProfile?.selections.properties ?? {}).sort(compare);
+  const mapped = [...new Set(plan.claimMappings.map(({ propertyId }) => propertyId))].sort(compare);
   if (!equalSet(selected, mapped)) {
     diagnostics.push(
       diagnostic(
@@ -1229,8 +1251,8 @@ function threatDiagnostics(
   const diagnostics: AeRenderDiagnostic[] = [];
   let renderedThreatCount = 0;
   diagnostics.push(...duplicateDiagnostics(plan.threatMappings.map(({ threatId }) => threatId), "THREAT_MAPPING_DUPLICATE", "/threatMappings"));
-  const selected = Object.keys(resolvedProfile?.selections.threats ?? {}).sort();
-  const mapped = [...new Set(plan.threatMappings.map(({ threatId }) => threatId))].sort();
+  const selected = Object.keys(resolvedProfile?.selections.threats ?? {}).sort(compare);
+  const mapped = [...new Set(plan.threatMappings.map(({ threatId }) => threatId))].sort(compare);
   if (!equalSet(selected, mapped)) diagnostics.push(diagnostic("THREAT_MAPPING_INCOMPLETE", "/threatMappings", "Threat mappings must disposition every and only exact resolved-profile threat selection."));
   for (const [index, mapping] of plan.threatMappings.entries()) {
     const path = `/threatMappings/${index}`;

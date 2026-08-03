@@ -27,7 +27,8 @@ Semantic checks cover exact digests and lengths; CCA/upstream contract and pin
 identity; resolved-profile/catalog closure; mapping/output completeness;
 duplicate and dangling IDs; exact property/claim and threat identity; explicit
 native enum membership; evidence-mapping unions; literal unsupported/lossy
-decisions; Context Pack element references; full target commit/tree; scope and
+decisions; Context Pack element references restricted to scope-selected packs;
+full target commit/tree; scope and
 trust-boundary consistency; renderer-source identity; and exact re-resolution
 of the resolved profile from its embedded request facts. Diagnostics are
 deduplicated, bounded to 256, and sorted by code, path, and message. Validation
