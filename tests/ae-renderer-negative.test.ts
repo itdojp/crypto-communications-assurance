@@ -489,6 +489,26 @@ describe("CCA-210 fail-closed negative boundaries", () => {
     expect(codes(result)).toContain("CONTEXT_PACK_KEY_INVALID");
   });
 
+  it("rejects an overlong Context Pack key at the aggregate path", async () => {
+    const input = await loadCca210ValidationInput();
+    const overlongId = "x".repeat(129);
+    const result = validateAeRenderPlan({
+      ...input,
+      contextPackBytes: new Map([[overlongId, null]]) as unknown as ReadonlyMap<
+        string,
+        Uint8Array
+      >,
+    });
+    expect(result.valid).toBe(false);
+    if (result.valid) return;
+    const matches = result.diagnostics.filter(
+      ({ code }) => code === "CONTEXT_PACK_KEY_INVALID",
+    );
+    expect(matches).toHaveLength(1);
+    expect(matches[0]?.path).toBe("/contextPacks");
+    expect(matches[0]?.message).not.toContain(overlongId);
+  });
+
   it("rejects a non-Uint8Array Context Pack value", async () => {
     const input = await loadCca210ValidationInput();
     const result = validateAeRenderPlan({

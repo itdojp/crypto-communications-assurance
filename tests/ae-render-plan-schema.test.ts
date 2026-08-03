@@ -198,6 +198,17 @@ describe("CCA-210 render-plan contract and exact upstream pin", () => {
     expect(source).not.toContain("compileContractBytes(ccaSchemaByRole[role])");
   });
 
+  it("precompiles the exact pinned Context Pack validator", async () => {
+    const source = (
+      await loadBytes("../packages/contracts/src/ae-renderer.ts")
+    ).toString("utf8");
+    expect(source).toContain(
+      "const contextPackValidator = compileContractBytes(contextPackSchema)",
+    );
+    expect(source).toContain("contextPackValidator(bytes)");
+    expect(source).not.toContain("compileContractBytes(schema)(bytes)");
+  });
+
   it("binds the renderer identity and package version to the exact current source snapshot", async () => {
     const [schemaBytes, planBytes, packageBytes, sourceBytes] = await Promise.all([
       loadBytes("../schema/cryptocomm-ae-render-plan-v1.schema.json"),

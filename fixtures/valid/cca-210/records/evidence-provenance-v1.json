@@ -59,7 +59,7 @@
     "contractId": "cryptocomm-execution-result/v1",
     "digest": {
       "algorithm": "sha256",
-      "value": "8bb714e2de6764b13fe924ec2ae8b663703063dbca5a5dc985a9f053de87f2a7"
+      "value": "3e4dcf02c1033b8ab3433e2050090f94a7e3bbf48fd69df5ecf16f28e302faab"
     },
     "recordId": "result.synthetic.cca-210-render"
   },
@@ -87,7 +87,7 @@
       "byteLength": 24149,
       "digest": {
         "algorithm": "sha256",
-        "value": "d13f7f6e33361c4b057cab9b239d3fa656d3e50a29345d911a646f0f9eb8e358"
+        "value": "ac667230100c477fef086abd4c3b0c597e838782678002cf647f25abec2cfff2"
       },
       "inputId": "input.cca210.render-plan",
       "mediaType": "application/json"
@@ -138,10 +138,10 @@
       "mediaType": "application/json"
     },
     {
-      "byteLength": 72416,
+      "byteLength": 72800,
       "digest": {
         "algorithm": "sha256",
-        "value": "d8841e099c2b906a820245e67ff4363d0f24affd13d66857d89d1baa58f6505a"
+        "value": "d989152cdaec07bd62b31d9932f2fa77ae8cc4c377011f1c512743db942eead9"
       },
       "inputId": "input.cca210.renderer-source",
       "mediaType": "text/plain"

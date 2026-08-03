@@ -63,6 +63,7 @@ export type AeCcaInputRole = (typeof aeCcaInputRoles)[number];
 
 export const maximumAeRenderDiagnostics = 256;
 const maximumAeInputRoleLength = 64;
+const maximumAeContextPackIdLength = 128;
 
 export interface AeRenderDiagnostic {
   readonly code: string;
@@ -297,6 +298,7 @@ interface ValidatedState {
 
 const validatedStates = new WeakMap<ValidatedAeRenderPlan, ValidatedState>();
 const planValidator = compileContractBytes(renderPlanSchema);
+const contextPackValidator = compileContractBytes(contextPackSchema);
 const ccaSchemaByRole: Readonly<Record<AeCcaInputRole, object>> = {
   propertyCatalog: propertyCatalogSchema,
   attackerCatalog: attackerCatalogSchema,
@@ -709,6 +711,14 @@ function validationBoundaryDiagnostics(input: unknown): readonly AeRenderDiagnos
             "Every supplied Context Pack key must be a string ID.",
           ),
         );
+      } else if (id.length > maximumAeContextPackIdLength) {
+        diagnostics.push(
+          diagnostic(
+            "CONTEXT_PACK_KEY_INVALID",
+            "/contextPacks",
+            "A supplied Context Pack ID exceeds the 128-character v1 limit.",
+          ),
+        );
       } else if (!isBytes(bytes)) {
         diagnostics.push(
           diagnostic(
@@ -1095,7 +1105,7 @@ function contextDiagnostics(
     } else {
       diagnostics.push(
         ...schemaDiagnostics(
-          compileContractBytes(schema)(bytes),
+          contextPackValidator(bytes),
           path,
           "CONTEXT_PACK_SCHEMA_INVALID",
         ),
