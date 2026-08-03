@@ -34,7 +34,10 @@ decisions; Context Pack element references restricted to scope-selected packs;
 full target commit/tree; scope and
 trust-boundary consistency; renderer-source identity; and exact re-resolution
 of the resolved profile from its embedded request facts. The renderer package
-version is fixed to the repository package manifest. Every generated threat
+version is fixed to the repository package manifest, and the renderer source
+digest is fixed independently in the closed plan schema rather than accepted
+from mutually caller-controlled plan and source bytes. Synthetic classification
+on any exact CCA or Context Pack input must be retained by the plan. Every generated threat
 preserves all source affected-property relationships whose claims are generated,
 and a rendered threat-model output requires at least one generated native claim
 surface. Diagnostics are

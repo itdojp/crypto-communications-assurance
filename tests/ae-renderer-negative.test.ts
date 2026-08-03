@@ -121,6 +121,13 @@ describe("CCA-210 fail-closed negative boundaries", () => {
     expect(codes(result)).toContain("RENDER_PLAN_SCHEMA_INVALID");
   });
 
+  it("retains synthetic classification from exact authoritative inputs", async () => {
+    const result = await validateMutation((plan) => {
+      delete plan.fixtureClassification;
+    });
+    expect(codes(result)).toContain("FIXTURE_CLASSIFICATION_MISMATCH");
+  });
+
   it("rejects a missing Context Pack", async () => {
     const result = await validateMutation(
       () => undefined,
@@ -568,10 +575,28 @@ describe("CCA-210 fail-closed negative boundaries", () => {
     expect(codes(result)).toContain("OUTPUT_KIND_DUPLICATE");
   });
 
-  it("rejects renderer source identity drift", async () => {
-    const result = await validateMutation((plan) => {
-      (plan.renderer as JsonRecord).sourceSha256 = "0".repeat(64);
-    });
+  it("rejects caller-consistent arbitrary renderer identity bytes", async () => {
+    const arbitrarySourceBytes = Buffer.from("arbitrary renderer source\n");
+    const result = await validateMutation(
+      (plan) => {
+        (plan.renderer as JsonRecord).sourceSha256 = digest(arbitrarySourceBytes);
+      },
+      (input) => ({ ...input, rendererSourceBytes: arbitrarySourceBytes }),
+    );
+    expect(codes(result)).toContain("RENDER_PLAN_SCHEMA_INVALID");
+  });
+
+  it("rejects supplied renderer source bytes that drift from the fixed identity", async () => {
+    const result = await validateMutation(
+      () => undefined,
+      (input) => ({
+        ...input,
+        rendererSourceBytes: Buffer.concat([
+          Buffer.from(input.rendererSourceBytes),
+          Buffer.from(" "),
+        ]),
+      }),
+    );
     expect(codes(result)).toContain("RENDERER_IDENTITY_MISMATCH");
   });
 

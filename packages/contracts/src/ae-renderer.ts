@@ -769,10 +769,12 @@ function contextDiagnostics(
 ): {
   readonly diagnostics: readonly AeRenderDiagnostic[];
   readonly identifiers: ContextIdentifiers;
+  readonly containsSyntheticFixture: boolean;
 } {
   const diagnostics: AeRenderDiagnostic[] = [];
   const identifiers = emptyContextIdentifiers();
   const allIdentifiers = emptyContextIdentifiers();
+  let containsSyntheticFixture = false;
   const selectedContextIds = new Set(
     plan.scopeMapping.disposition === "render" && plan.scopeMapping.scope !== undefined
       ? plan.scopeMapping.scope.contextPackIds
@@ -821,6 +823,9 @@ function contextDiagnostics(
         ),
       );
       continue;
+    }
+    if (decoded.value.fixtureClassification === "synthetic-test-only") {
+      containsSyntheticFixture = true;
     }
     if (schema === undefined) {
       diagnostics.push(
@@ -885,7 +890,38 @@ function contextDiagnostics(
       }
     }
   }
-  return { diagnostics, identifiers };
+  return { diagnostics, identifiers, containsSyntheticFixture };
+}
+
+function fixtureClassificationDiagnostics(
+  plan: AeRenderPlan,
+  decoded: ReturnType<typeof decodedCcaInputDiagnostics>["decoded"],
+  contextContainsSyntheticFixture: boolean,
+): readonly AeRenderDiagnostic[] {
+  const syntheticInputRoles = [
+    ["propertyCatalog", decoded.propertyCatalog],
+    ["attackerCatalog", decoded.attackerCatalog],
+    ["threatCatalog", decoded.threatCatalog],
+    ["capabilityModuleCatalog", decoded.capabilityModuleCatalog],
+    ["resolvedProfile", decoded.resolvedProfile],
+  ] as const;
+  const classifiedRoles = syntheticInputRoles
+    .filter(([, artifact]) => artifact?.fixtureClassification === "synthetic-test-only")
+    .map(([role]) => role as string);
+  if (contextContainsSyntheticFixture) classifiedRoles.push("contextPacks");
+  if (
+    classifiedRoles.length > 0 &&
+    plan.fixtureClassification !== "synthetic-test-only"
+  ) {
+    return [
+      diagnostic(
+        "FIXTURE_CLASSIFICATION_MISMATCH",
+        "/fixtureClassification",
+        `The render plan must retain synthetic-test-only classification from exact inputs: ${classifiedRoles.join(", ")}.`,
+      ),
+    ];
+  }
+  return [];
 }
 
 function outputDiagnostics(plan: AeRenderPlan): readonly AeRenderDiagnostic[] {
@@ -1468,6 +1504,13 @@ export function validateAeRenderPlan(
   diagnostics.push(...upstream.diagnostics);
   const contexts = contextDiagnostics(input, plan, upstream.schemas.contextPack);
   diagnostics.push(...contexts.diagnostics);
+  diagnostics.push(
+    ...fixtureClassificationDiagnostics(
+      plan,
+      cca.decoded,
+      contexts.containsSyntheticFixture,
+    ),
+  );
   const scope = scopeDiagnostics(
     plan,
     cca.decoded.resolvedProfile,
