@@ -282,6 +282,77 @@ describe("CCA-210 fail-closed negative boundaries", () => {
     },
   );
 
+  it("rejects SharedArrayBuffer-backed exact bytes", async () => {
+    const input = await loadCca210ValidationInput();
+    const shared = new Uint8Array(new SharedArrayBuffer(input.planBytes.byteLength));
+    shared.set(input.planBytes);
+    expect(codes(validateAeRenderPlan({ ...input, planBytes: shared }))).toContain(
+      "RENDER_PLAN_BYTES_INVALID",
+    );
+  });
+
+  it("rejects oversized exact JSON inputs before digest computation", async () => {
+    const input = await loadCca210ValidationInput();
+    const oversized = new Uint8Array(1_048_577);
+    const contextId = input.contextPackBytes.keys().next().value;
+    if (contextId === undefined) throw new Error("Context Pack fixture missing");
+    const cases: readonly [
+      string,
+      AeRenderPlanValidationInput,
+      string,
+      string,
+    ][] = [
+      [
+        "CCA input",
+        {
+          ...input,
+          ccaInputBytes: { ...input.ccaInputBytes, propertyCatalog: oversized },
+        },
+        "CCA_BINDING_LENGTH_MISMATCH",
+        "CCA_BINDING_DIGEST_MISMATCH",
+      ],
+      [
+        "Context Pack",
+        {
+          ...input,
+          contextPackBytes: new Map(input.contextPackBytes).set(
+            contextId,
+            oversized,
+          ),
+        },
+        "CONTEXT_PACK_BINDING_LENGTH_MISMATCH",
+        "CONTEXT_PACK_BINDING_DIGEST_MISMATCH",
+      ],
+      [
+        "upstream schema",
+        {
+          ...input,
+          upstreamSchemaBytes: {
+            ...input.upstreamSchemaBytes,
+            securityClaim: oversized,
+          },
+        },
+        "UPSTREAM_SCHEMA_BINDING_LENGTH_MISMATCH",
+        "UPSTREAM_SCHEMA_BINDING_DIGEST_MISMATCH",
+      ],
+    ];
+    for (const [label, candidate, lengthCode, digestCode] of cases) {
+      const diagnosticCodes = codes(validateAeRenderPlan(candidate));
+      expect(diagnosticCodes, label).toContain(lengthCode);
+      expect(diagnosticCodes, label).toContain("JSON_INPUT_TOO_LARGE");
+      expect(diagnosticCodes, label).not.toContain(digestCode);
+    }
+  });
+
+  it("rejects oversized renderer source bytes before hashing", async () => {
+    const input = await loadCca210ValidationInput();
+    const result = validateAeRenderPlan({
+      ...input,
+      rendererSourceBytes: new Uint8Array(1_048_577),
+    });
+    expect(codes(result)).toContain("RENDERER_SOURCE_INPUT_LIMIT_EXCEEDED");
+  });
+
   it("rejects Proxy-wrapped top-level and role-keyed records without invoking traps", async () => {
     const input = await loadCca210ValidationInput();
     const topLevel = Proxy.revocable(input, {});

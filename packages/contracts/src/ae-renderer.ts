@@ -30,7 +30,10 @@ import {
   compileContractBytes,
   type ContractBytesValidationResult,
 } from "./validation.js";
-import { decodeStrictJsonObject } from "./strict-json.js";
+import {
+  decodeStrictJsonObject,
+  maximumContractJsonBytes,
+} from "./strict-json.js";
 
 export const aeNativeArtifactKinds = [
   "assurance-profile/v1",
@@ -449,6 +452,7 @@ function bindingDiagnostics(
       ),
     );
   }
+  if (bytes.byteLength > maximumContractJsonBytes) return diagnostics;
   if (binding.sha256 !== sha256(bytes)) {
     diagnostics.push(
       diagnostic(
@@ -466,13 +470,18 @@ const typedArrayByteLengthGetter = Object.getOwnPropertyDescriptor(
   typedArrayPrototype,
   "byteLength",
 )?.get;
+const typedArrayBufferGetter = Object.getOwnPropertyDescriptor(
+  typedArrayPrototype,
+  "buffer",
+)?.get;
 
 function isBytes(value: unknown): value is Uint8Array {
   if (
     utilTypes.isProxy(value) ||
     !ArrayBuffer.isView(value) ||
     !(value instanceof Uint8Array) ||
-    typedArrayByteLengthGetter === undefined
+    typedArrayByteLengthGetter === undefined ||
+    typedArrayBufferGetter === undefined
   ) {
     return false;
   }
@@ -484,6 +493,9 @@ function isBytes(value: unknown): value is Uint8Array {
       if (current === null || utilTypes.isProxy(current)) return false;
     }
     typedArrayByteLengthGetter.call(value);
+    if (utilTypes.isSharedArrayBuffer(typedArrayBufferGetter.call(value))) {
+      return false;
+    }
     return true;
   } catch {
     return false;
@@ -698,6 +710,14 @@ function validationBoundaryDiagnostics(input: unknown): readonly AeRenderDiagnos
         "RENDERER_SOURCE_MISSING",
         "/renderer/sourceSha256",
         "Exact renderer implementation bytes must be supplied as a Uint8Array.",
+      ),
+    );
+  } else if (rendererSourceBytes.value.byteLength > maximumContractJsonBytes) {
+    diagnostics.push(
+      diagnostic(
+        "RENDERER_SOURCE_INPUT_LIMIT_EXCEEDED",
+        "/renderer/sourceSha256",
+        "Renderer source input exceeds the 1,048,576-byte public-boundary limit.",
       ),
     );
   }
