@@ -27,7 +27,19 @@ describe("CCA-210 pure render-plan validation and rendering", () => {
 
     const rendered = renderAeNativeArtifacts(validation.validatedPlan);
     expect(rendered.valid).toBe(true);
-    expect(rendered.diagnostics).toEqual([]);
+    expect(rendered.diagnostics).toHaveLength(7);
+    expect(rendered.diagnostics.every(({ severity }) => severity === "information")).toBe(
+      true,
+    );
+    expect(rendered.diagnostics.map(({ code }) => code)).toEqual([
+      "AUDIT_TREE_PROJECTION_LOSSY",
+      "CONTEXT_PACK_REFERENCE_LOSSY",
+      "EVIDENCE_MAPPING_UNSUPPORTED",
+      "EVIDENCE_MAPPING_UNSUPPORTED",
+      "THREAT_PROJECTION_LOSSY",
+      "THREAT_PROJECTION_LOSSY",
+      "THREAT_PROJECTION_LOSSY",
+    ]);
     expect(rendered.outputs.map(({ artifactKind }) => artifactKind)).toEqual(
       aeNativeArtifactKinds,
     );

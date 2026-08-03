@@ -143,6 +143,17 @@ describe("CCA-210 representative CCA-240 render records", () => {
       loadRecord("freshness-assessment-v1.json"),
     ]);
     expect(execution.value.status).toBe("pass");
+    expect(
+      (execution.value.diagnostics as { code: string }[]).map(({ code }) => code),
+    ).toEqual([
+      "AUDIT_TREE_PROJECTION_LOSSY",
+      "CONTEXT_PACK_REFERENCE_LOSSY",
+      "EVIDENCE_MAPPING_UNSUPPORTED",
+      "EVIDENCE_MAPPING_UNSUPPORTED",
+      "THREAT_PROJECTION_LOSSY",
+      "THREAT_PROJECTION_LOSSY",
+      "THREAT_PROJECTION_LOSSY",
+    ]);
     expect(provenance.value).toMatchObject({
       evidenceOrigin: "synthetic",
       useRestriction: "test-only",

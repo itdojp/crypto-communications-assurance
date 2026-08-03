@@ -79,6 +79,9 @@ The native fixtures omit `generatedAt`, summaries, deployment/gate policy, and
 the audit target tree. The exact tree remains in the plan and CCA-240 subject.
 The four CCA-240 records use literal `pass`, `synthetic`, `test-only`, and
 `not-assessed`; pass records transformation/schema validation only.
+The execution record also retains seven stable informational diagnostics for
+the audit-tree loss, Context Pack reference-only projection, two unsupported
+human-review mappings, and three lossy threat projections.
 
 Fifty-seven plan/renderer negative cases and five CCA-240 promotion/binding negative
 cases are generated in memory from the exact positive files. They cover binding

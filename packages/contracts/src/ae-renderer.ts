@@ -61,6 +61,7 @@ export interface AeRenderDiagnostic {
   readonly code: string;
   readonly path: string;
   readonly message: string;
+  readonly severity: "error" | "information";
 }
 
 interface ExactBinding {
@@ -319,8 +320,13 @@ function sha256(bytes: Uint8Array): string {
   return createHash("sha256").update(bytes).digest("hex");
 }
 
-function diagnostic(code: string, path: string, message: string): AeRenderDiagnostic {
-  return { code, path, message: message.slice(0, 512) };
+function diagnostic(
+  code: string,
+  path: string,
+  message: string,
+  severity: "error" | "information" = "error",
+): AeRenderDiagnostic {
+  return { code, path, message: message.slice(0, 512), severity };
 }
 
 function stableDiagnostics(
@@ -1220,6 +1226,106 @@ function outputReadinessDiagnostics(
   return diagnostics;
 }
 
+function projectionDiagnostics(plan: AeRenderPlan): readonly AeRenderDiagnostic[] {
+  const diagnostics: AeRenderDiagnostic[] = [];
+  for (const [index, output] of plan.outputs.entries()) {
+    if (output.disposition !== "render") {
+      diagnostics.push(
+        diagnostic(
+          output.disposition === "unsupported"
+            ? "OUTPUT_MAPPING_UNSUPPORTED"
+            : "OUTPUT_MAPPING_EXCLUDED",
+          `/outputs/${index}`,
+          `${output.artifactKind} remains ${output.disposition}: ${output.reason ?? "No reason supplied."}`,
+          "information",
+        ),
+      );
+    }
+  }
+  for (const [index, mapping] of plan.claimMappings.entries()) {
+    if (mapping.disposition !== "render") {
+      diagnostics.push(
+        diagnostic(
+          mapping.disposition === "unsupported"
+            ? "CLAIM_MAPPING_UNSUPPORTED"
+            : "CLAIM_MAPPING_EXCLUDED",
+          `/claimMappings/${index}`,
+          `${mapping.propertyId} remains ${mapping.disposition}: ${mapping.reason ?? "No reason supplied."}`,
+          "information",
+        ),
+      );
+      continue;
+    }
+    for (const [evidenceIndex, evidence] of (mapping.claim?.evidenceMappings ?? []).entries()) {
+      if (evidence.disposition !== "render") {
+        diagnostics.push(
+          diagnostic(
+            evidence.disposition === "unsupported"
+              ? "EVIDENCE_MAPPING_UNSUPPORTED"
+              : "EVIDENCE_MAPPING_EXCLUDED",
+            `/claimMappings/${index}/claim/evidenceMappings/${evidenceIndex}`,
+            `${evidence.decisionId} retains ${evidence.sourceEvidenceKind} as ${evidence.disposition}: ${evidence.reason ?? "No reason supplied."}`,
+            "information",
+          ),
+        );
+      } else if (evidence.rendered?.projection === "lossy") {
+        diagnostics.push(
+          diagnostic(
+            "EVIDENCE_MAPPING_LOSSY",
+            `/claimMappings/${index}/claim/evidenceMappings/${evidenceIndex}`,
+            `${evidence.decisionId} is an explicit lossy projection of ${evidence.sourceEvidenceKind}: ${evidence.rendered.lossExplanation ?? "Loss remains explicit in the plan."}`,
+            "information",
+          ),
+        );
+      }
+    }
+  }
+  for (const [index, mapping] of plan.threatMappings.entries()) {
+    if (mapping.disposition !== "render") {
+      diagnostics.push(
+        diagnostic(
+          mapping.disposition === "unsupported"
+            ? "THREAT_MAPPING_UNSUPPORTED"
+            : "THREAT_MAPPING_EXCLUDED",
+          `/threatMappings/${index}`,
+          `${mapping.threatId} remains ${mapping.disposition}: ${mapping.reason ?? "No reason supplied."}`,
+          "information",
+        ),
+      );
+    } else {
+      diagnostics.push(
+        diagnostic(
+          "THREAT_PROJECTION_LOSSY",
+          `/threatMappings/${index}`,
+          `${mapping.threatId} projects explicit STRIDE/CWE/claim/boundary fields; structured CCA capabilities, preconditions, assumptions, exclusions, and impact remain in the exact bound source catalog and plan notes.`,
+          "information",
+        ),
+      );
+    }
+  }
+  for (const [index, contextPack] of plan.contextPacks.entries()) {
+    diagnostics.push(
+      diagnostic(
+        "CONTEXT_PACK_REFERENCE_LOSSY",
+        `/contextPacks/${index}`,
+        `${contextPack.id} projects only repository-relative path ${contextPack.path}; exact digest and byte length remain in the CCA plan and CCA-240 records.`,
+        "information",
+      ),
+    );
+  }
+  if (plan.scopeMapping.disposition === "render" && plan.scopeMapping.scope !== undefined) {
+    diagnostics.push(
+      diagnostic(
+        "AUDIT_TREE_PROJECTION_LOSSY",
+        "/scopeMapping/scope/treeProjection",
+        plan.scopeMapping.scope.treeProjection.reason,
+        "information",
+      ),
+    );
+  }
+  return stableDiagnostics(diagnostics);
+}
+
 export function validateAeRenderPlan(
   input: AeRenderPlanValidationInput,
 ): AeRenderPlanValidationResult {
@@ -1400,16 +1506,27 @@ export function renderAeNativeArtifacts(
     "security-audit-scope/v1": () => renderAuditScope(state.plan),
   };
   const outputs: RenderedAeArtifact[] = [];
-  const diagnostics: AeRenderDiagnostic[] = [];
+  const renderErrors: AeRenderDiagnostic[] = [];
   for (const kind of aeNativeArtifactKinds) {
     const selection = requestedOutput(state.plan, kind);
     if (selection?.disposition !== "render" || selection.outputPath === undefined) continue;
     const bytes = serialize(renderers[kind]());
     const validation = state.nativeValidators[kind](bytes);
-    const errors = schemaDiagnostics(validation, `/outputs/${kind}`, "NATIVE_SCHEMA_MISMATCH");
-    if (errors.length > 0) diagnostics.push(...errors);
+    const schemaErrors = schemaDiagnostics(
+      validation,
+      `/outputs/${kind}`,
+      "NATIVE_SCHEMA_MISMATCH",
+    );
+    if (schemaErrors.length > 0) renderErrors.push(...schemaErrors);
     else outputs.push({ artifactKind: kind, path: selection.outputPath, bytes });
   }
-  const stable = stableDiagnostics(diagnostics);
-  return { valid: stable.length === 0, outputs, diagnostics: stable };
+  const stableErrors = stableDiagnostics(renderErrors);
+  return {
+    valid: stableErrors.length === 0,
+    outputs,
+    diagnostics: stableDiagnostics([
+      ...stableErrors,
+      ...projectionDiagnostics(state.plan),
+    ]),
+  };
 }

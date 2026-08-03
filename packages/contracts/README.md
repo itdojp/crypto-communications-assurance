@@ -29,7 +29,10 @@ duplicate and dangling IDs; exact property/claim and threat identity; explicit
 native enum membership; evidence-mapping unions; literal unsupported/lossy
 decisions; Context Pack element references; full target commit/tree; scope and
 trust-boundary consistency; and renderer-source identity. Diagnostics are
-deduplicated, bounded to 256, and sorted by code, path, and message.
+deduplicated, bounded to 256, and sorted by code, path, and message. Validation
+and native-schema failures have `error` severity; a successful render can also
+return `information` diagnostics that keep unsupported/excluded mapping and
+known projection loss literal for CCA-240 recording.
 
 Output uses UTF-8, two spaces, LF, one final newline, fixed field order, and
 code-point sorting. It omits native `generatedAt`, summaries, deployment, gate

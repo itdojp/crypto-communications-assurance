@@ -22,7 +22,43 @@
     "criteriaId": "criteria.cca210.transform-and-pinned-schema",
     "criteriaVersion": "1.0.0"
   },
-  "diagnostics": [],
+  "diagnostics": [
+    {
+      "code": "AUDIT_TREE_PROJECTION_LOSSY",
+      "message": "The pinned native audit-scope schema has a full commit field but no Git tree field; the exact tree remains authoritative in this plan and CCA-240 provenance.",
+      "path": "/scopeMapping/scope/treeProjection"
+    },
+    {
+      "code": "CONTEXT_PACK_REFERENCE_LOSSY",
+      "message": "context.synthetic.cca-210 projects only repository-relative path fixtures/valid/cca-210/context-pack-v1.json; exact digest and byte length remain in the CCA plan and CCA-240 records.",
+      "path": "/contextPacks/0"
+    },
+    {
+      "code": "EVIDENCE_MAPPING_UNSUPPORTED",
+      "message": "mapping.evidence.key-material.human-review retains human-review as unsupported: The pinned native evidence-kind vocabulary has no complete human-review representation.",
+      "path": "/claimMappings/0/claim/evidenceMappings/2"
+    },
+    {
+      "code": "EVIDENCE_MAPPING_UNSUPPORTED",
+      "message": "mapping.evidence.message-confidentiality.human-review retains human-review as unsupported: The pinned native evidence-kind vocabulary has no complete human-review representation.",
+      "path": "/claimMappings/1/claim/evidenceMappings/2"
+    },
+    {
+      "code": "THREAT_PROJECTION_LOSSY",
+      "message": "threat.confidentiality.passive-message-disclosure projects explicit STRIDE/CWE/claim/boundary fields; structured CCA capabilities, preconditions, assumptions, exclusions, and impact remain in the exact bound source catalog and plan notes.",
+      "path": "/threatMappings/0"
+    },
+    {
+      "code": "THREAT_PROJECTION_LOSSY",
+      "message": "threat.confidentiality.secret-material-extraction projects explicit STRIDE/CWE/claim/boundary fields; structured CCA capabilities, preconditions, assumptions, exclusions, and impact remain in the exact bound source catalog and plan notes.",
+      "path": "/threatMappings/1"
+    },
+    {
+      "code": "THREAT_PROJECTION_LOSSY",
+      "message": "threat.integrity.in-transit-modification projects explicit STRIDE/CWE/claim/boundary fields; structured CCA capabilities, preconditions, assumptions, exclusions, and impact remain in the exact bound source catalog and plan notes.",
+      "path": "/threatMappings/2"
+    }
+  ],
   "environment": {
     "architecture": "x86_64",
     "environmentId": "environment.synthetic.cca-210-linux",
@@ -61,7 +97,7 @@
       "byteLength": 24149,
       "digest": {
         "algorithm": "sha256",
-        "value": "e40295389df6dcf0d8ec6c3c852444f837d80490aed21f2dc962261f5b962c99"
+        "value": "0939b86aa90ce01275024eba40f33caa82ffae0dc6b67e197b40ca0d3b05a83d"
       },
       "inputId": "input.cca210.render-plan",
       "mediaType": "application/json"
@@ -112,10 +148,10 @@
       "mediaType": "application/json"
     },
     {
-      "byteLength": 53331,
+      "byteLength": 57428,
       "digest": {
         "algorithm": "sha256",
-        "value": "b39b13e543577cc7413849f8bd206f707938a4a587d8b47ea3a213f91f022b20"
+        "value": "f1094d4ca6825c30811cf8a93aed3c7bae89e624b081276ca47cdfea16d98f62"
       },
       "inputId": "input.cca210.renderer-source",
       "mediaType": "text/plain"
