@@ -274,7 +274,7 @@ describe("CCA-210 fail-closed negative boundaries", () => {
 
   it("rejects current-time/generatedAt insertion into the plan", async () => {
     const result = await validateMutation((plan) => {
-      plan.generatedAt = new Date().toISOString();
+      plan.generatedAt = "2026-01-01T00:00:00Z";
     });
     expect(codes(result)).toContain("RENDER_PLAN_SCHEMA_INVALID");
   });
