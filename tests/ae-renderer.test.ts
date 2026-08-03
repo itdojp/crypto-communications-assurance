@@ -174,6 +174,90 @@ describe("CCA-210 pure render-plan validation and rendering", () => {
     expect(renderAeNativeArtifacts(permuted.validatedPlan).outputs.map(({ bytes }) => digest(bytes))).toEqual(baseline);
   });
 
+  it("reports projection loss only for native surfaces that are emitted", async () => {
+    const input = await loadCca210ValidationInput();
+    const plan = await loadCca210Plan();
+    for (const output of plan.outputs as Record<string, unknown>[]) {
+      if (output.artifactKind === "security-claim/v1") continue;
+      output.disposition = "unsupported";
+      output.reason = "This regression emits only the security-claim surface.";
+      delete output.outputPath;
+    }
+    const validation = validateAeRenderPlan({
+      ...input,
+      planBytes: serializePlan(plan),
+    });
+    expect(validation.valid).toBe(true);
+    if (!validation.valid) return;
+
+    const rendered = renderAeNativeArtifacts(validation.validatedPlan);
+    expect(rendered.valid).toBe(true);
+    expect(rendered.outputs.map(({ artifactKind }) => artifactKind)).toEqual([
+      "security-claim/v1",
+    ]);
+    const diagnosticCodes = rendered.diagnostics.map(({ code }) => code);
+    for (const absent of [
+      "AUDIT_TREE_PROJECTION_LOSSY",
+      "CONTEXT_PACK_REFERENCE_LOSSY",
+      "CWE_FRAMEWORK_PROJECTION_LOSSY",
+      "EVIDENCE_MAPPING_LOSSY",
+      "THREAT_PROJECTION_LOSSY",
+    ]) {
+      expect(diagnosticCodes).not.toContain(absent);
+    }
+    expect(
+      diagnosticCodes.filter((code) => code === "OUTPUT_MAPPING_UNSUPPORTED"),
+    ).toHaveLength(3);
+  });
+
+  it("reports Context Pack path loss only for scope-selected references", async () => {
+    const input = await loadCca210ValidationInput();
+    const plan = await loadCca210Plan();
+    const selectedBytes = input.contextPackBytes.values().next().value;
+    if (selectedBytes === undefined) throw new Error("Context Pack fixture missing");
+    const decoded = decodeStrictJsonObject<Record<string, unknown>>(selectedBytes);
+    if (!decoded.valid) throw new Error("Context Pack fixture did not decode");
+    const unselected = structuredClone(decoded.value);
+    const objects = unselected.objects as Record<string, unknown>[];
+    objects[0]!.id = "component.synthetic.unselected-receiver";
+    objects[1]!.id = "component.synthetic.unselected-sender";
+    (unselected.morphisms as Record<string, unknown>[])[0]!.id =
+      "morphism.synthetic.unselected-transfer";
+    (unselected.diagrams as Record<string, unknown>[])[0]!.id =
+      "diagram.synthetic.unselected-flow";
+    (unselected.acceptance_tests as Record<string, unknown>[])[0]!.id =
+      "acceptance.synthetic.unselected-render";
+    const unselectedBytes = serializePlan(unselected);
+    (plan.contextPacks as Record<string, unknown>[]).push({
+      id: "context.synthetic.unselected",
+      path: "fixtures/valid/cca-210/unselected-context-pack-v1.json",
+      contractId: "context-pack/v1",
+      sha256: digest(unselectedBytes),
+      byteLength: unselectedBytes.byteLength,
+      validateWithPinnedSchema: true,
+    });
+    const validation = validateAeRenderPlan({
+      ...input,
+      planBytes: serializePlan(plan),
+      contextPackBytes: new Map(input.contextPackBytes).set(
+        "context.synthetic.unselected",
+        unselectedBytes,
+      ),
+    });
+    expect(validation.valid).toBe(true);
+    if (!validation.valid) return;
+
+    const rendered = renderAeNativeArtifacts(validation.validatedPlan);
+    const contextDiagnostics = rendered.diagnostics.filter(
+      ({ code }) => code === "CONTEXT_PACK_REFERENCE_LOSSY",
+    );
+    expect(contextDiagnostics).toHaveLength(1);
+    expect(contextDiagnostics[0]?.message).toContain("context.synthetic.cca-210");
+    expect(contextDiagnostics[0]?.message).not.toContain(
+      "context.synthetic.unselected",
+    );
+  });
+
   it("sorts otherwise-identical source references by description code points", async () => {
     const input = await loadCca210ValidationInput();
     const plan = await loadCca210Plan();

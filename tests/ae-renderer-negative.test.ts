@@ -133,6 +133,26 @@ describe("CCA-210 fail-closed negative boundaries", () => {
     },
   );
 
+  it("rejects a Context Pack Map subclass with overridden accessors without throwing", async () => {
+    class ThrowingContextPackMap extends Map<string, Uint8Array> {
+      override get size(): number {
+        throw new Error("size override should not be invoked");
+      }
+
+      override entries(): MapIterator<[string, Uint8Array]> {
+        throw new Error("entries override should not be invoked");
+      }
+    }
+
+    const input = await loadCca210ValidationInput();
+    const contextPackBytes = new ThrowingContextPackMap(input.contextPackBytes);
+    const result = validateAeRenderPlan({
+      ...input,
+      contextPackBytes,
+    });
+    expect(codes(result)).toContain("CONTEXT_PACK_CONTAINER_INVALID");
+  });
+
   it("rejects a non-string Context Pack key", async () => {
     const input = await loadCca210ValidationInput();
     const result = validateAeRenderPlan({

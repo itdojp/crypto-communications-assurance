@@ -464,6 +464,12 @@ function isBytes(value: unknown): value is Uint8Array {
   return value instanceof Uint8Array;
 }
 
+function isStandardMap(
+  value: unknown,
+): value is ReadonlyMap<unknown, unknown> {
+  return value instanceof Map && Object.getPrototypeOf(value) === Map.prototype;
+}
+
 function isPlainRecord(value: unknown): value is Readonly<Record<string, unknown>> {
   if (value === null || typeof value !== "object" || Array.isArray(value)) {
     return false;
@@ -597,12 +603,12 @@ function validationBoundaryDiagnostics(input: unknown): readonly AeRenderDiagnos
   );
 
   const contextPackBytes = ownDataProperty(input, "contextPackBytes");
-  if (!(contextPackBytes.value instanceof Map)) {
+  if (!isStandardMap(contextPackBytes.value)) {
     diagnostics.push(
       diagnostic(
         "CONTEXT_PACK_CONTAINER_INVALID",
         "/contextPacks",
-        "contextPackBytes must be supplied as a Map of Context Pack IDs to Uint8Array values.",
+        "contextPackBytes must be supplied as a plain Map of Context Pack IDs to Uint8Array values.",
       ),
     );
   } else if (contextPackBytes.value.size > 8) {
@@ -1542,6 +1548,12 @@ function outputReadinessDiagnostics(
 
 function projectionDiagnostics(plan: AeRenderPlan): readonly AeRenderDiagnostic[] {
   const diagnostics: AeRenderDiagnostic[] = [];
+  const rendersAssuranceProfile =
+    requestedOutput(plan, "assurance-profile/v1")?.disposition === "render";
+  const rendersThreatModel =
+    requestedOutput(plan, "security-threat-model/v1")?.disposition === "render";
+  const rendersAuditScope =
+    requestedOutput(plan, "security-audit-scope/v1")?.disposition === "render";
   for (const [index, output] of plan.outputs.entries()) {
     if (output.disposition !== "render") {
       diagnostics.push(
@@ -1556,7 +1568,7 @@ function projectionDiagnostics(plan: AeRenderPlan): readonly AeRenderDiagnostic[
       );
     }
   }
-  if (requestedOutput(plan, "security-threat-model/v1")?.disposition === "render") {
+  if (rendersThreatModel) {
     diagnostics.push(
       diagnostic(
         "CWE_FRAMEWORK_PROJECTION_LOSSY",
@@ -1592,7 +1604,10 @@ function projectionDiagnostics(plan: AeRenderPlan): readonly AeRenderDiagnostic[
             "information",
           ),
         );
-      } else if (evidence.rendered?.projection === "lossy") {
+      } else if (
+        rendersAssuranceProfile &&
+        evidence.rendered?.projection === "lossy"
+      ) {
         diagnostics.push(
           diagnostic(
             "EVIDENCE_MAPPING_LOSSY",
@@ -1616,7 +1631,7 @@ function projectionDiagnostics(plan: AeRenderPlan): readonly AeRenderDiagnostic[
           "information",
         ),
       );
-    } else {
+    } else if (rendersThreatModel) {
       diagnostics.push(
         diagnostic(
           "THREAT_PROJECTION_LOSSY",
@@ -1627,17 +1642,25 @@ function projectionDiagnostics(plan: AeRenderPlan): readonly AeRenderDiagnostic[
       );
     }
   }
-  for (const [index, contextPack] of plan.contextPacks.entries()) {
-    diagnostics.push(
-      diagnostic(
-        "CONTEXT_PACK_REFERENCE_LOSSY",
-        `/contextPacks/${index}`,
-        `${contextPack.id} projects only repository-relative path ${contextPack.path}; exact digest and byte length remain in the CCA plan and CCA-240 records.`,
-        "information",
-      ),
-    );
+  if (rendersAssuranceProfile && plan.scopeMapping.scope !== undefined) {
+    const selectedContextIds = new Set(plan.scopeMapping.scope.contextPackIds);
+    for (const [index, contextPack] of plan.contextPacks.entries()) {
+      if (!selectedContextIds.has(contextPack.id)) continue;
+      diagnostics.push(
+        diagnostic(
+          "CONTEXT_PACK_REFERENCE_LOSSY",
+          `/contextPacks/${index}`,
+          `${contextPack.id} projects only repository-relative path ${contextPack.path}; exact digest and byte length remain in the CCA plan and CCA-240 records.`,
+          "information",
+        ),
+      );
+    }
   }
-  if (plan.scopeMapping.disposition === "render" && plan.scopeMapping.scope !== undefined) {
+  if (
+    rendersAuditScope &&
+    plan.scopeMapping.disposition === "render" &&
+    plan.scopeMapping.scope !== undefined
+  ) {
     diagnostics.push(
       diagnostic(
         "AUDIT_TREE_PROJECTION_LOSSY",
