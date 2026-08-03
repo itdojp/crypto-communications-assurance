@@ -1294,6 +1294,18 @@ function threatDiagnostics(
       if (!renderedClaimIds.has(claimId)) diagnostics.push(diagnostic("RELATED_CLAIM_DANGLING", `${path}/threat/relatedClaimIds/${claimIndex}`, `Related claim ${claimId} is not generated.`));
       if (source !== undefined && !source.affectedProperties.includes(claimId)) diagnostics.push(diagnostic("RELATED_CLAIM_SOURCE_MISMATCH", `${path}/threat/relatedClaimIds/${claimIndex}`, `Related claim ${claimId} is not an affected property of the exact source threat.`));
     }
+    const expectedRelatedClaimIds = (source?.affectedProperties ?? []).filter((propertyId) =>
+      renderedClaimIds.has(propertyId),
+    );
+    if (source !== undefined && !equalSet(threat.relatedClaimIds, expectedRelatedClaimIds)) {
+      diagnostics.push(
+        diagnostic(
+          "RELATED_CLAIM_MAPPING_INCOMPLETE",
+          `${path}/threat/relatedClaimIds`,
+          "Related claim IDs must preserve every exact source affected-property relationship for generated claims.",
+        ),
+      );
+    }
     for (const [boundaryIndex, boundaryId] of (threat.trustBoundaryIds ?? []).entries()) {
       if (!boundaries.has(boundaryId)) diagnostics.push(diagnostic("TRUST_BOUNDARY_REFERENCE_DANGLING", `${path}/threat/trustBoundaryIds/${boundaryIndex}`, `No declared trust boundary has ID ${boundaryId}.`));
     }
@@ -1312,10 +1324,13 @@ function outputReadinessDiagnostics(
 ): readonly AeRenderDiagnostic[] {
   const diagnostics: AeRenderDiagnostic[] = [];
   const scopeReady = plan.scopeMapping.disposition === "render" && plan.scopeMapping.scope !== undefined;
+  const claimSurfaceReady = (["assurance-profile/v1", "security-claim/v1"] as const).some(
+    (kind) => requestedOutput(plan, kind)?.disposition === "render",
+  );
   const requirements = [
     ["assurance-profile/v1", scopeReady && plan.contextPacks.length > 0 && renderedClaimCount > 0],
     ["security-claim/v1", scopeReady && renderedClaimCount > 0],
-    ["security-threat-model/v1", scopeReady && renderedThreatCount > 0],
+    ["security-threat-model/v1", scopeReady && renderedThreatCount > 0 && renderedClaimCount > 0 && claimSurfaceReady],
     ["security-audit-scope/v1", scopeReady],
   ] as const;
   for (const [kind, ready] of requirements) {

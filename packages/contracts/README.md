@@ -33,7 +33,11 @@ native enum membership; evidence-mapping unions; literal unsupported/lossy
 decisions; Context Pack element references restricted to scope-selected packs;
 full target commit/tree; scope and
 trust-boundary consistency; renderer-source identity; and exact re-resolution
-of the resolved profile from its embedded request facts. Diagnostics are
+of the resolved profile from its embedded request facts. The renderer package
+version is fixed to the repository package manifest. Every generated threat
+preserves all source affected-property relationships whose claims are generated,
+and a rendered threat-model output requires at least one generated native claim
+surface. Diagnostics are
 deduplicated, bounded to 256, and sorted by code, path, and message. Validation
 and native-schema failures have `error` severity; a successful render can also
 return `information` diagnostics that keep unsupported/excluded mapping and

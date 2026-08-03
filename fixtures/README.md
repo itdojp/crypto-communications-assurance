@@ -83,13 +83,15 @@ The execution record also retains seven stable informational diagnostics for
 the audit-tree loss, Context Pack reference-only projection, two unsupported
 human-review mappings, and three lossy threat projections.
 
-Sixty-seven plan/renderer negative cases and five CCA-240 promotion/binding negative
+Seventy plan/renderer negative cases and five CCA-240 promotion/binding negative
 cases are generated in memory from the exact positive files. They cover binding
 drift, missing/unsafe Context Packs, incomplete claims/evidence/taxonomies/scope,
-dangling and duplicate mappings, mutable/abbreviated Git identities, output
-bounds/order, prohibited artifact and authority fields, native mismatch, and
-synthetic/freshness/satisfaction promotion. In-memory mutation avoids committing
-dozens of redundant full-plan copies while preserving exact fail-closed tests.
+dangling, incomplete, and duplicate threat/claim relationships, renderer version
+drift, claim-surface/output completeness, mutable/abbreviated Git identities,
+output bounds/order, prohibited artifact and authority fields, native mismatch,
+and synthetic/freshness/satisfaction promotion. In-memory mutation avoids
+committing dozens of redundant full-plan copies while preserving exact
+fail-closed tests.
 
 These fixtures state no product claim, evidence satisfaction, compatibility,
 vulnerability absence, approval, certification, production readiness, release,

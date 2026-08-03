@@ -102,7 +102,7 @@
           "const": "@itdojp/cryptocomm-contracts"
         },
         "packageVersion": {
-          "$ref": "#/$defs/boundedString"
+          "const": "0.0.0"
         },
         "sourcePath": {
           "const": "packages/contracts/src/ae-renderer.ts"

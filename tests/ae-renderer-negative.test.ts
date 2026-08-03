@@ -8,12 +8,14 @@ import {
   maximumAeRenderDiagnostics,
   normalizeAeRenderDiagnostics,
   renderAeNativeArtifacts,
+  resolveProfile,
   validateAeRenderPlan,
   type AeRenderPlanValidationInput,
 } from "../packages/contracts/src/index.js";
 import {
   loadCca210Plan,
   loadCca210ValidationInput,
+  readRepositoryFile,
   serializePlan,
 } from "./helpers/cca-210.js";
 
@@ -108,6 +110,13 @@ describe("CCA-210 fail-closed negative boundaries", () => {
   it.each(["commit", "tree"])("rejects a wrong exact upstream %s", async (field) => {
     const result = await validateMutation((plan) => {
       (plan.upstream as JsonRecord)[field] = "f".repeat(40);
+    });
+    expect(codes(result)).toContain("RENDER_PLAN_SCHEMA_INVALID");
+  });
+
+  it("rejects a renderer package version different from the package manifest", async () => {
+    const result = await validateMutation((plan) => {
+      (plan.renderer as JsonRecord).packageVersion = "0.0.1";
     });
     expect(codes(result)).toContain("RENDER_PLAN_SCHEMA_INVALID");
   });
@@ -291,6 +300,67 @@ describe("CCA-210 fail-closed negative boundaries", () => {
     expect(codes(result)).toContain("RELATED_CLAIM_DANGLING");
   });
 
+  it("rejects omission of a rendered affected-property relationship", async () => {
+    const [plan, input, requestBytes] = await Promise.all([
+      loadCca210Plan(),
+      loadCca210ValidationInput(),
+      readRepositoryFile("fixtures/valid/cca-210/profile-request-v1.json"),
+    ]);
+    const threatCatalog = decodeStrictJsonObject<JsonRecord>(
+      input.ccaInputBytes.threatCatalog,
+    );
+    const moduleCatalog = decodeStrictJsonObject<JsonRecord>(
+      input.ccaInputBytes.capabilityModuleCatalog,
+    );
+    const request = decodeStrictJsonObject<JsonRecord>(requestBytes);
+    if (!threatCatalog.valid || !moduleCatalog.valid || !request.valid) {
+      throw new Error("CCA-210 profile inputs did not strict-decode");
+    }
+
+    const sourceThreat = (threatCatalog.value.threats as JsonRecord)[
+      "threat.confidentiality.passive-message-disclosure"
+    ] as JsonRecord;
+    sourceThreat.affectedProperties = [
+      "property.confidentiality.key-material",
+      "property.confidentiality.message",
+    ];
+    const changedThreatBytes = serializePlan(threatCatalog.value);
+    const changedThreatDigest = digest(changedThreatBytes);
+    (((moduleCatalog.value.catalogBindings as JsonRecord).threatCatalog as JsonRecord)
+      .digest as JsonRecord).value = changedThreatDigest;
+    const changedModuleBytes = serializePlan(moduleCatalog.value);
+    const changedModuleDigest = digest(changedModuleBytes);
+    (((request.value.moduleCatalog as JsonRecord).digest as JsonRecord).value) =
+      changedModuleDigest;
+    const changedRequestBytes = serializePlan(request.value);
+    const resolution = resolveProfile({
+      propertyCatalogBytes: input.ccaInputBytes.propertyCatalog,
+      attackerCatalogBytes: input.ccaInputBytes.attackerCatalog,
+      threatCatalogBytes: changedThreatBytes,
+      moduleCatalogBytes: changedModuleBytes,
+      requestBytes: changedRequestBytes,
+    });
+    if (!resolution.valid) throw new Error(JSON.stringify(resolution.diagnostics));
+
+    const changedInputs = {
+      threatCatalog: changedThreatBytes,
+      capabilityModuleCatalog: changedModuleBytes,
+      resolvedProfile: resolution.bytes,
+    } as const;
+    for (const [role, bytes] of Object.entries(changedInputs)) {
+      const binding = (plan.ccaInputs as JsonRecord)[role] as JsonRecord;
+      binding.sha256 = digest(bytes);
+      binding.byteLength = bytes.byteLength;
+    }
+
+    const result = validateAeRenderPlan({
+      ...input,
+      planBytes: serializePlan(plan),
+      ccaInputBytes: { ...input.ccaInputBytes, ...changedInputs },
+    });
+    expect(codes(result)).toContain("RELATED_CLAIM_MAPPING_INCOMPLETE");
+  });
+
   it("rejects a property/claim identity mismatch", async () => {
     const result = await validateMutation((plan) => {
       claim(plan).claimId = "property.integrity.state";
@@ -360,6 +430,22 @@ describe("CCA-210 fail-closed negative boundaries", () => {
       delete scope.treeProjection;
     });
     expect(codes(result)).toContain("RENDER_PLAN_SCHEMA_INVALID");
+  });
+
+  it("rejects a rendered threat model without a generated claim surface", async () => {
+    const result = await validateMutation((plan) => {
+      for (const output of plan.outputs as JsonRecord[]) {
+        if (
+          output.artifactKind === "assurance-profile/v1" ||
+          output.artifactKind === "security-claim/v1"
+        ) {
+          output.disposition = "unsupported";
+          output.reason = "Synthetic fixture intentionally omits claim surfaces.";
+          delete output.outputPath;
+        }
+      }
+    });
+    expect(codes(result)).toContain("OUTPUT_MAPPING_INCOMPLETE");
   });
 
   it("rejects disabling the no-symlink assumption", async () => {
