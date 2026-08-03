@@ -93,8 +93,15 @@ describe("CCA-210 pure render-plan validation and rendering", () => {
         return [artifactKind, decoded.value] as const;
       }),
     );
-    const profileIds = (values.get("assurance-profile/v1")?.claims as { id: string }[]).map(({ id }) => id);
-    const claimIds = (values.get("security-claim/v1")?.claims as { id: string }[]).map(({ id }) => id);
+    const profileClaims = values.get("assurance-profile/v1")?.claims;
+    const securityClaims = values.get("security-claim/v1")?.claims;
+    expect(Array.isArray(profileClaims)).toBe(true);
+    expect(Array.isArray(securityClaims)).toBe(true);
+    if (!Array.isArray(profileClaims) || !Array.isArray(securityClaims)) {
+      throw new Error("generated claim arrays are missing");
+    }
+    const profileIds = (profileClaims as { id: string }[]).map(({ id }) => id);
+    const claimIds = (securityClaims as { id: string }[]).map(({ id }) => id);
     expect(profileIds).toEqual(claimIds);
     expect(profileIds).toEqual([
       "property.confidentiality.key-material",
@@ -113,7 +120,16 @@ describe("CCA-210 pure render-plan validation and rendering", () => {
       expect(Object.hasOwn(value, "generatedAt")).toBe(false);
       expect(Object.hasOwn(value, "summary")).toBe(false);
     }
-    const auditTarget = values.get("security-audit-scope/v1")?.target as Record<string, unknown>;
+    const auditTargetValue = values.get("security-audit-scope/v1")?.target;
+    expect(auditTargetValue).toBeDefined();
+    if (
+      auditTargetValue === undefined ||
+      auditTargetValue === null ||
+      typeof auditTargetValue !== "object"
+    ) {
+      throw new Error("generated audit target is missing");
+    }
+    const auditTarget = auditTargetValue as Record<string, unknown>;
     expect(auditTarget.commit).toBe("1111111111111111111111111111111111111111");
     expect(Object.hasOwn(auditTarget, "tree")).toBe(false);
   });
