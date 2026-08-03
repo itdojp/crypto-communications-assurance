@@ -28,14 +28,17 @@ identity; resolved-profile/catalog closure; mapping/output completeness;
 duplicate and dangling IDs; exact property/claim and threat identity; explicit
 native enum membership; evidence-mapping unions; literal unsupported/lossy
 decisions; Context Pack element references; full target commit/tree; scope and
-trust-boundary consistency; and renderer-source identity. Diagnostics are
+trust-boundary consistency; renderer-source identity; and exact re-resolution
+of the resolved profile from its embedded request facts. Diagnostics are
 deduplicated, bounded to 256, and sorted by code, path, and message. Validation
 and native-schema failures have `error` severity; a successful render can also
 return `information` diagnostics that keep unsupported/excluded mapping and
-known projection loss literal for CCA-240 recording.
+known projection loss literal for CCA-240 recording. Informational overflow is
+represented by one informational summary rather than an error-severity record.
 
 Output uses UTF-8, two spaces, LF, one final newline, fixed field order, and
-code-point sorting. It omits native `generatedAt`, summaries, deployment, gate
+code-point sorting, including optional source-reference descriptions as the
+final source-reference tie-breaker. It omits native `generatedAt`, summaries, deployment, gate
 policy, and every prohibited artifact kind. It generates no Context Pack or
 claim-evidence/result/policy/review/release surface. Exact output bytes are
 recorded by the existing CCA-240 contracts rather than a new render-result

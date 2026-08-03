@@ -161,4 +161,36 @@ describe("CCA-210 pure render-plan validation and rendering", () => {
     if (!permuted.valid) return;
     expect(renderAeNativeArtifacts(permuted.validatedPlan).outputs.map(({ bytes }) => digest(bytes))).toEqual(baseline);
   });
+
+  it("sorts otherwise-identical source references by optional description", async () => {
+    const input = await loadCca210ValidationInput();
+    const plan = await loadCca210Plan();
+    const firstClaim = (plan.claimMappings as {
+      claim?: { sourceRefs: Record<string, unknown>[] };
+    }[])[0]?.claim;
+    if (firstClaim === undefined) throw new Error("fixture claim missing");
+    const original = firstClaim.sourceRefs[0];
+    if (original === undefined) throw new Error("fixture source reference missing");
+    firstClaim.sourceRefs.push({
+      ...original,
+      description: "A second deterministic source-reference description.",
+    });
+    const forward = validateAeRenderPlan({ ...input, planBytes: serializePlan(plan) });
+    expect(forward.valid).toBe(true);
+    if (!forward.valid) return;
+    const forwardBytes = renderAeNativeArtifacts(forward.validatedPlan).outputs.find(
+      ({ artifactKind }) => artifactKind === "security-claim/v1",
+    )?.bytes;
+
+    firstClaim.sourceRefs.reverse();
+    const reverse = validateAeRenderPlan({ ...input, planBytes: serializePlan(plan) });
+    expect(reverse.valid).toBe(true);
+    if (!reverse.valid) return;
+    const reverseBytes = renderAeNativeArtifacts(reverse.validatedPlan).outputs.find(
+      ({ artifactKind }) => artifactKind === "security-claim/v1",
+    )?.bytes;
+    expect(forwardBytes).toBeDefined();
+    expect(reverseBytes).toBeDefined();
+    expect(Buffer.from(reverseBytes ?? [])).toEqual(Buffer.from(forwardBytes ?? []));
+  });
 });

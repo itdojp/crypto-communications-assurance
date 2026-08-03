@@ -14,7 +14,9 @@ import threatCatalogSchema from "../../../schema/cryptocomm-threat-catalog-v1.sc
 
 import {
   validateCapabilityModuleCatalog,
+  validateResolvedProfile,
   type CapabilityModuleCatalog,
+  type ProfileRequest,
   type ResolvedProfile,
 } from "./profiles.js";
 import {
@@ -329,12 +331,20 @@ function diagnostic(
   return { code, path, message: message.slice(0, 512), severity };
 }
 
-function stableDiagnostics(
+export function normalizeAeRenderDiagnostics(
   diagnostics: readonly AeRenderDiagnostic[],
+  overflowSeverity: "error" | "information" = "error",
 ): readonly AeRenderDiagnostic[] {
   const unique = new Map<string, AeRenderDiagnostic>();
   for (const entry of diagnostics) {
-    unique.set(`${entry.code}\0${entry.path}\0${entry.message}`, entry);
+    const key = `${entry.code}\0${entry.path}\0${entry.message}`;
+    const existing = unique.get(key);
+    if (
+      existing === undefined ||
+      (existing.severity === "information" && entry.severity === "error")
+    ) {
+      unique.set(key, entry);
+    }
   }
   const sorted = [...unique.values()].sort(
     (left, right) =>
@@ -347,7 +357,8 @@ function stableDiagnostics(
     diagnostic(
       "DIAGNOSTIC_LIMIT_EXCEEDED",
       "",
-      `Validation produced more than ${maximumAeRenderDiagnostics} diagnostics; details were suppressed.`,
+      `More than ${maximumAeRenderDiagnostics} diagnostics were produced; details were suppressed.`,
+      overflowSeverity,
     ),
   ];
 }
@@ -523,6 +534,46 @@ function decodedCcaInputDiagnostics(
         ...validation.diagnostics.map((entry) =>
           diagnostic(
             "CCA_INPUT_SEMANTIC_INVALID",
+            `/ccaInputs${entry.path}`,
+            `${entry.code}: ${entry.message}`,
+          ),
+        ),
+      );
+    }
+  }
+
+  const profile = decoded.resolvedProfile as ResolvedProfile | undefined;
+  if (
+    profile !== undefined &&
+    isBytes(input.ccaInputBytes.propertyCatalog) &&
+    isBytes(input.ccaInputBytes.attackerCatalog) &&
+    isBytes(input.ccaInputBytes.threatCatalog) &&
+    isBytes(input.ccaInputBytes.capabilityModuleCatalog) &&
+    isBytes(input.ccaInputBytes.resolvedProfile)
+  ) {
+    const embeddedRequest: ProfileRequest = {
+      schemaVersion: "cryptocomm-profile-request/v1",
+      profileId: profile.profileId,
+      moduleCatalog: profile.inputBindings.moduleCatalog,
+      requestedModules: profile.requestedModules,
+      safety: profile.safety,
+      ...(profile.fixtureClassification === undefined
+        ? {}
+        : { fixtureClassification: profile.fixtureClassification }),
+    };
+    const validation = validateResolvedProfile({
+      propertyCatalogBytes: input.ccaInputBytes.propertyCatalog,
+      attackerCatalogBytes: input.ccaInputBytes.attackerCatalog,
+      threatCatalogBytes: input.ccaInputBytes.threatCatalog,
+      moduleCatalogBytes: input.ccaInputBytes.capabilityModuleCatalog,
+      requestBytes: serialize(embeddedRequest),
+      resolvedProfileBytes: input.ccaInputBytes.resolvedProfile,
+    });
+    if (!validation.valid) {
+      diagnostics.push(
+        ...validation.diagnostics.map((entry) =>
+          diagnostic(
+            "CCA_RESOLVED_PROFILE_SEMANTIC_INVALID",
             `/ccaInputs${entry.path}`,
             `${entry.code}: ${entry.message}`,
           ),
@@ -1323,7 +1374,7 @@ function projectionDiagnostics(plan: AeRenderPlan): readonly AeRenderDiagnostic[
       ),
     );
   }
-  return stableDiagnostics(diagnostics);
+  return normalizeAeRenderDiagnostics(diagnostics, "information");
 }
 
 export function validateAeRenderPlan(
@@ -1331,7 +1382,7 @@ export function validateAeRenderPlan(
 ): AeRenderPlanValidationResult {
   const planResult = planValidator(input.planBytes);
   if (!planResult.valid) {
-    return { valid: false, diagnostics: stableDiagnostics(schemaDiagnostics(planResult, "/plan", "RENDER_PLAN_SCHEMA_INVALID")) };
+    return { valid: false, diagnostics: normalizeAeRenderDiagnostics(schemaDiagnostics(planResult, "/plan", "RENDER_PLAN_SCHEMA_INVALID")) };
   }
   const plan = planResult.value as unknown as AeRenderPlan;
   const diagnostics: AeRenderDiagnostic[] = [];
@@ -1352,7 +1403,7 @@ export function validateAeRenderPlan(
   const threats = threatDiagnostics(plan, cca.decoded.threatCatalog, cca.decoded.resolvedProfile, claims.renderedClaimIds, scope.boundaries, nativeEnums(upstream.schemas));
   diagnostics.push(...threats.diagnostics);
   diagnostics.push(...outputReadinessDiagnostics(plan, claims.renderedClaimIds.size, threats.renderedThreatCount));
-  const stable = stableDiagnostics(diagnostics);
+  const stable = normalizeAeRenderDiagnostics(diagnostics);
   if (stable.length > 0) return { valid: false, diagnostics: stable };
 
   const completeValidators = {} as Record<AeNativeArtifactKind, NativeValidator>;
@@ -1419,7 +1470,13 @@ function renderSecurityClaims(plan: AeRenderPlan): object {
         type: claim.type,
         statement: claim.statement,
         sourceRefs: [...claim.sourceRefs]
-          .sort((left, right) => compare(`${left.kind}\0${left.uri}\0${left.section}`, `${right.kind}\0${right.uri}\0${right.section}`))
+          .sort(
+            (left, right) =>
+              compare(left.kind, right.kind) ||
+              compare(left.uri, right.uri) ||
+              compare(left.section, right.section) ||
+              compare(left.description ?? "", right.description ?? ""),
+          )
           .map((source) => ({ kind: source.kind, uri: source.uri, section: source.section, ...(source.description === undefined ? {} : { description: source.description }) })),
         criticality: claim.criticality,
         targetLevel: claim.targetLevel,
@@ -1520,11 +1577,11 @@ export function renderAeNativeArtifacts(
     if (schemaErrors.length > 0) renderErrors.push(...schemaErrors);
     else outputs.push({ artifactKind: kind, path: selection.outputPath, bytes });
   }
-  const stableErrors = stableDiagnostics(renderErrors);
+  const stableErrors = normalizeAeRenderDiagnostics(renderErrors);
   return {
     valid: stableErrors.length === 0,
     outputs,
-    diagnostics: stableDiagnostics([
+    diagnostics: normalizeAeRenderDiagnostics([
       ...stableErrors,
       ...projectionDiagnostics(state.plan),
     ]),

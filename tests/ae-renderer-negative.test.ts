@@ -1,8 +1,12 @@
+import { createHash } from "node:crypto";
+
 import { describe, expect, it } from "vitest";
 
 import {
   compileContractBytes,
   decodeStrictJsonObject,
+  maximumAeRenderDiagnostics,
+  normalizeAeRenderDiagnostics,
   renderAeNativeArtifacts,
   validateAeRenderPlan,
   type AeRenderPlanValidationInput,
@@ -14,6 +18,9 @@ import {
 } from "./helpers/cca-210.js";
 
 type JsonRecord = Record<string, unknown>;
+
+const digest = (bytes: Uint8Array): string =>
+  createHash("sha256").update(bytes).digest("hex");
 
 const codes = (result: ReturnType<typeof validateAeRenderPlan>): readonly string[] =>
   result.valid ? [] : result.diagnostics.map(({ code }) => code);
@@ -51,6 +58,34 @@ describe("CCA-210 fail-closed negative boundaries", () => {
       ((plan.ccaInputs as JsonRecord).attackerCatalog as JsonRecord).byteLength = 2;
     });
     expect(codes(result)).toContain("CCA_BINDING_LENGTH_MISMATCH");
+  });
+
+  it("rejects a schema-valid resolved profile inconsistent with its embedded request facts", async () => {
+    const [plan, input] = await Promise.all([
+      loadCca210Plan(),
+      loadCca210ValidationInput(),
+    ]);
+    const decoded = decodeStrictJsonObject<JsonRecord>(
+      input.ccaInputBytes.resolvedProfile,
+    );
+    if (!decoded.valid) throw new Error("resolved profile fixture did not decode");
+    const selections = decoded.value.selections as JsonRecord;
+    const properties = selections.properties as JsonRecord;
+    delete properties["property.integrity.state"];
+    const profileBytes = serializePlan(decoded.value);
+    const binding = (plan.ccaInputs as JsonRecord).resolvedProfile as JsonRecord;
+    binding.sha256 = digest(profileBytes);
+    binding.byteLength = profileBytes.byteLength;
+    plan.claimMappings = claims(plan).filter(
+      (mapping) => mapping.propertyId !== "property.integrity.state",
+    );
+
+    const result = validateAeRenderPlan({
+      ...input,
+      planBytes: serializePlan(plan),
+      ccaInputBytes: { ...input.ccaInputBytes, resolvedProfile: profileBytes },
+    });
+    expect(codes(result)).toContain("CCA_RESOLVED_PROFILE_SEMANTIC_INVALID");
   });
 
   it("rejects an upstream schema byte/digest mismatch", async () => {
@@ -340,6 +375,26 @@ describe("CCA-210 fail-closed negative boundaries", () => {
       `${code}\0${path}\0${message}`,
     );
     expect(keys).toEqual([...keys].sort((left, right) => (left < right ? -1 : left > right ? 1 : 0)));
+  });
+
+  it("summarizes informational diagnostic overflow without changing severity", () => {
+    const diagnostics = Array.from(
+      { length: maximumAeRenderDiagnostics + 1 },
+      (_, index) => ({
+        code: "SYNTHETIC_PROJECTION_LOSS",
+        path: `/synthetic/${index}`,
+        message: `Synthetic informational projection loss ${index}.`,
+        severity: "information" as const,
+      }),
+    );
+    expect(normalizeAeRenderDiagnostics(diagnostics, "information")).toEqual([
+      {
+        code: "DIAGNOSTIC_LIMIT_EXCEEDED",
+        path: "",
+        message: `More than ${maximumAeRenderDiagnostics} diagnostics were produced; details were suppressed.`,
+        severity: "information",
+      },
+    ]);
   });
 
   it("rejects duplicate claim mappings", async () => {
