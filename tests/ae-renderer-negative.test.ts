@@ -121,6 +121,42 @@ describe("CCA-210 fail-closed negative boundaries", () => {
     expect(codes(result)).toContain("CCA_INPUT_ROLE_UNKNOWN");
   });
 
+  it.each(["CCA", "upstream"] as const)(
+    "bounds an overfull %s role record before per-key diagnostics",
+    async (kind) => {
+      const input = await loadCca210ValidationInput();
+      const unknown = Object.fromEntries(
+        Array.from({ length: 32 }, (_, index) => [
+          `unreviewedRole${index}`,
+          Buffer.from("{}\n"),
+        ]),
+      );
+      const candidate =
+        kind === "CCA"
+          ? {
+              ...input,
+              ccaInputBytes: {
+                ...input.ccaInputBytes,
+                ...unknown,
+              } as AeRenderPlanValidationInput["ccaInputBytes"],
+            }
+          : {
+              ...input,
+              upstreamSchemaBytes: {
+                ...input.upstreamSchemaBytes,
+                ...unknown,
+              } as AeRenderPlanValidationInput["upstreamSchemaBytes"],
+            };
+      const diagnosticCodes = codes(validateAeRenderPlan(candidate));
+      const expectedCode =
+        kind === "CCA" ? "CCA_INPUT_ROLE_UNKNOWN" : "UPSTREAM_SCHEMA_ROLE_UNKNOWN";
+      expect(diagnosticCodes.filter((code) => code === expectedCode)).toHaveLength(
+        1,
+      );
+      expect(diagnosticCodes).not.toContain("DIAGNOSTIC_LIMIT_EXCEEDED");
+    },
+  );
+
   it.each([null, undefined, "invalid", 1, false, [], {}])(
     "rejects a malformed Context Pack container without throwing: %p",
     async (contextPackBytes) => {

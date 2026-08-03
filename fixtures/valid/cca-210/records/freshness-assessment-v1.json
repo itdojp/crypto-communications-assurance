@@ -45,7 +45,7 @@
     "contractId": "cryptocomm-evidence-provenance/v1",
     "digest": {
       "algorithm": "sha256",
-      "value": "d6947fb7646cc0036c1e565b98c31419b397a97484b37314c42ac8a1b061b074"
+      "value": "1eb8cd0a2c57674ef5c50a7bbd03314ae0a913af9362c63732d11534f7913d67"
     },
     "recordId": "provenance.synthetic.cca-210-render"
   },

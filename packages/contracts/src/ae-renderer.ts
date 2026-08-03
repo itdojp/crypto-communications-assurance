@@ -573,6 +573,15 @@ function exactByteRecordDiagnostics(
   const diagnostics: AeRenderDiagnostic[] = [];
   const allowed = new Set(roles);
   const ownKeys = Reflect.ownKeys(value);
+  if (ownKeys.length > roles.length) {
+    return [
+      diagnostic(
+        unknownRoleCode,
+        path,
+        `Supplied exact bytes exceed the closed ${roles.length}-role v1 input set.`,
+      ),
+    ];
+  }
   if (ownKeys.some((key) => typeof key === "symbol")) {
     diagnostics.push(
       diagnostic(
