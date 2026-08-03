@@ -49,6 +49,7 @@ const requiredFiles = [
   "schema/cryptocomm-freshness-assessment-v1.schema.json",
   "schema/cryptocomm-evidence-binding-set-v1.schema.json",
   "schema/cryptocomm-ae-render-plan-v1.schema.json",
+  "integrations/ae-framework/README.md",
   "integrations/ae-framework/pins/c5da6115638fdbfeebbc458b39fa6916db66afb0/UPSTREAM.json",
   "pack/modules/v1/capability-module-catalog.json",
   "pack/evidence/v1/execution-status-matrix.json",
@@ -100,6 +101,10 @@ for (const path of requiredDirectories) {
   } catch {
     failures.push(`missing required directory: ${path}`);
   }
+}
+if (failures.length > 0) {
+  console.error(failures.join("\n"));
+  process.exit(1);
 }
 
 const statusSemantics = await readFile("docs/STATUS_SEMANTICS.md", "utf8");
