@@ -153,7 +153,7 @@ describe("CCA-210 fail-closed negative boundaries", () => {
     expect(codes(result)).toContain("CONTEXT_PACK_CONTAINER_INVALID");
   });
 
-  it.each(["size", "entries"] as const)(
+  it.each(["size", "entries", "get", "keys"] as const)(
     "rejects an own Context Pack Map %s override without invoking it",
     async (property) => {
       const input = await loadCca210ValidationInput();
@@ -169,7 +169,7 @@ describe("CCA-210 fail-closed negative boundaries", () => {
             }
           : {
               value: () => {
-                throw new Error("own entries override should not be invoked");
+                throw new Error(`own ${property} override should not be invoked`);
               },
             },
       );
@@ -189,6 +189,140 @@ describe("CCA-210 fail-closed negative boundaries", () => {
       contextPackBytes,
     });
     expect(codes(result)).toContain("CONTEXT_PACK_CONTAINER_INVALID");
+  });
+
+  it("rejects Proxy-wrapped exact byte sequences for every public input role", async () => {
+    const input = await loadCca210ValidationInput();
+    const proxyBytes = (bytes: Uint8Array): Uint8Array => new Proxy(bytes, {});
+    const contextId = input.contextPackBytes.keys().next().value;
+    const contextBytes = input.contextPackBytes.values().next().value;
+    if (contextId === undefined || contextBytes === undefined) {
+      throw new Error("Context Pack fixture missing");
+    }
+    const cases: readonly [
+      string,
+      AeRenderPlanValidationInput,
+      string,
+    ][] = [
+      [
+        "planBytes",
+        { ...input, planBytes: proxyBytes(input.planBytes) },
+        "RENDER_PLAN_BYTES_INVALID",
+      ],
+      [
+        "CCA input",
+        {
+          ...input,
+          ccaInputBytes: {
+            ...input.ccaInputBytes,
+            propertyCatalog: proxyBytes(input.ccaInputBytes.propertyCatalog),
+          },
+        },
+        "CCA_INPUT_BYTES_INVALID",
+      ],
+      [
+        "Context Pack",
+        {
+          ...input,
+          contextPackBytes: new Map(input.contextPackBytes).set(
+            contextId,
+            proxyBytes(contextBytes),
+          ),
+        },
+        "CONTEXT_PACK_BYTES_INVALID",
+      ],
+      [
+        "upstream schema",
+        {
+          ...input,
+          upstreamSchemaBytes: {
+            ...input.upstreamSchemaBytes,
+            securityClaim: proxyBytes(input.upstreamSchemaBytes.securityClaim),
+          },
+        },
+        "UPSTREAM_SCHEMA_BYTES_INVALID",
+      ],
+      [
+        "renderer source",
+        {
+          ...input,
+          rendererSourceBytes: proxyBytes(input.rendererSourceBytes),
+        },
+        "RENDERER_SOURCE_MISSING",
+      ],
+    ];
+    for (const [label, candidate, expectedCode] of cases) {
+      expect(codes(validateAeRenderPlan(candidate)), label).toContain(expectedCode);
+    }
+  });
+
+  it.each(["own", "subclass"] as const)(
+    "rejects a Uint8Array with a throwing %s byteLength override",
+    async (kind) => {
+      const input = await loadCca210ValidationInput();
+      let planBytes: Uint8Array;
+      if (kind === "own") {
+        planBytes = new Uint8Array(input.planBytes);
+        Object.defineProperty(planBytes, "byteLength", {
+          get: () => {
+            throw new Error("own byteLength override should not be invoked");
+          },
+        });
+      } else {
+        class ThrowingBytes extends Uint8Array {
+          override get byteLength(): number {
+            throw new Error("subclass byteLength override should not be invoked");
+          }
+        }
+        planBytes = new ThrowingBytes(input.planBytes);
+      }
+      expect(codes(validateAeRenderPlan({ ...input, planBytes }))).toContain(
+        "RENDER_PLAN_BYTES_INVALID",
+      );
+    },
+  );
+
+  it("rejects Proxy-wrapped top-level and role-keyed records without invoking traps", async () => {
+    const input = await loadCca210ValidationInput();
+    const topLevel = Proxy.revocable(input, {});
+    topLevel.revoke();
+    expect(
+      codes(
+        validateAeRenderPlan(
+          topLevel.proxy as unknown as AeRenderPlanValidationInput,
+        ),
+      ),
+    ).toEqual(["VALIDATION_INPUT_INVALID"]);
+
+    for (const [label, candidate, expectedCode] of [
+      ["CCA", { ...input.ccaInputBytes }, "CCA_INPUT_CONTAINER_INVALID"],
+      [
+        "upstream",
+        { ...input.upstreamSchemaBytes },
+        "UPSTREAM_SCHEMA_CONTAINER_INVALID",
+      ],
+    ] as const) {
+      const throwingRoles = new Proxy(candidate, {
+        ownKeys: () => {
+          throw new Error(`${label} role record ownKeys trap should not be invoked`);
+        },
+      });
+      const validationInput =
+        label === "CCA"
+          ? {
+              ...input,
+              ccaInputBytes:
+                throwingRoles as AeRenderPlanValidationInput["ccaInputBytes"],
+            }
+          : {
+              ...input,
+              upstreamSchemaBytes:
+                throwingRoles as AeRenderPlanValidationInput["upstreamSchemaBytes"],
+            };
+      expect(codes(validateAeRenderPlan(validationInput)), label).toContain(
+        expectedCode,
+      );
+    }
   });
 
   it("rejects a non-string Context Pack key", async () => {

@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { types as utilTypes } from "node:util";
 
 import assuranceProfileSchema from "../../../integrations/ae-framework/pins/c5da6115638fdbfeebbc458b39fa6916db66afb0/schema/assurance-profile.schema.json" with { type: "json" };
 import contextPackSchema from "../../../integrations/ae-framework/pins/c5da6115638fdbfeebbc458b39fa6916db66afb0/schema/context-pack-v1.schema.json" with { type: "json" };
@@ -460,8 +461,33 @@ function bindingDiagnostics(
   return diagnostics;
 }
 
+const typedArrayPrototype = Object.getPrototypeOf(Uint8Array.prototype);
+const typedArrayByteLengthGetter = Object.getOwnPropertyDescriptor(
+  typedArrayPrototype,
+  "byteLength",
+)?.get;
+
 function isBytes(value: unknown): value is Uint8Array {
-  return value instanceof Uint8Array;
+  if (
+    utilTypes.isProxy(value) ||
+    !ArrayBuffer.isView(value) ||
+    !(value instanceof Uint8Array) ||
+    typedArrayByteLengthGetter === undefined
+  ) {
+    return false;
+  }
+  try {
+    let current: object | null = value;
+    while (current !== typedArrayPrototype) {
+      if (Object.hasOwn(current, "byteLength")) return false;
+      current = Object.getPrototypeOf(current);
+      if (current === null || utilTypes.isProxy(current)) return false;
+    }
+    typedArrayByteLengthGetter.call(value);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 const mapSizeGetter = Object.getOwnPropertyDescriptor(Map.prototype, "size")?.get;
@@ -475,7 +501,9 @@ function isStandardMap(
       !(value instanceof Map) ||
       Object.getPrototypeOf(value) !== Map.prototype ||
       Object.hasOwn(value, "size") ||
-      Object.hasOwn(value, "entries")
+      Object.hasOwn(value, "entries") ||
+      Object.hasOwn(value, "get") ||
+      Object.hasOwn(value, "keys")
     ) {
       return false;
     }
@@ -488,7 +516,12 @@ function isStandardMap(
 }
 
 function isPlainRecord(value: unknown): value is Readonly<Record<string, unknown>> {
-  if (value === null || typeof value !== "object" || Array.isArray(value)) {
+  if (
+    value === null ||
+    typeof value !== "object" ||
+    utilTypes.isProxy(value) ||
+    Array.isArray(value)
+  ) {
     return false;
   }
   const prototype = Object.getPrototypeOf(value);
@@ -1900,11 +1933,12 @@ export function renderAeNativeArtifacts(
   for (const kind of aeNativeArtifactKinds) {
     const selection = requestedOutput(state.plan, kind);
     if (selection?.disposition !== "render" || selection.outputPath === undefined) continue;
+    const outputIndex = state.plan.outputs.indexOf(selection);
     const bytes = serialize(renderers[kind]());
     const validation = state.nativeValidators[kind](bytes);
     const schemaErrors = schemaDiagnostics(
       validation,
-      `/outputs/${kind}`,
+      `/outputs/${outputIndex}`,
       "NATIVE_SCHEMA_MISMATCH",
     );
     if (schemaErrors.length > 0) renderErrors.push(...schemaErrors);
