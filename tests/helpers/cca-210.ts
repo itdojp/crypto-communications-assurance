@@ -27,8 +27,18 @@ const upstreamPaths: Readonly<Record<AeUpstreamSchemaRole, string>> = {
   contextPack: "schema/context-pack-v1.schema.json",
 };
 
-export const readRepositoryFile = (path: string): Promise<Buffer> =>
-  readFile(new URL(`../../${path}`, import.meta.url));
+export const readRepositoryFile = (path: string): Promise<Buffer> => {
+  const segments = path.split("/");
+  if (
+    path.length === 0 ||
+    path.startsWith("/") ||
+    path.includes("\\") ||
+    segments.some((segment) => segment.length === 0 || segment === "." || segment === "..")
+  ) {
+    throw new Error(`Repository-relative non-traversing path required: ${path}`);
+  }
+  return readFile(new URL(`../../${path}`, import.meta.url));
+};
 
 export async function loadCca210ValidationInput(): Promise<AeRenderPlanValidationInput> {
   const ccaEntries = await Promise.all(

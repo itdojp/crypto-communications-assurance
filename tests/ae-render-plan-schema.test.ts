@@ -7,6 +7,7 @@ import {
   compileContractBytes,
   decodeStrictJsonObject,
 } from "../packages/contracts/src/index.js";
+import { readRepositoryFile } from "./helpers/cca-210.js";
 
 const pin = "c5da6115638fdbfeebbc458b39fa6916db66afb0";
 const pinRoot = `../integrations/ae-framework/pins/${pin}/`;
@@ -179,4 +180,13 @@ describe("CCA-210 render-plan contract and exact upstream pin", () => {
       expect(source, prohibited).not.toContain(prohibited);
     }
   });
+
+  it.each(["../package.json", "/etc/passwd", "C:\\secret.json", "fixtures//file.json"])(
+    "rejects an unsafe repository test-helper path: %s",
+    (path) => {
+      expect(() => readRepositoryFile(path)).toThrow(
+        "Repository-relative non-traversing path required",
+      );
+    },
+  );
 });

@@ -137,6 +137,13 @@ describe("CCA-210 fail-closed negative boundaries", () => {
     expect(codes(result)).toContain("CONTEXT_PACK_BINDING_DIGEST_MISMATCH");
   });
 
+  it("rejects disabling pinned-schema validation for a Context Pack", async () => {
+    const result = await validateMutation((plan) => {
+      (plan.contextPacks as JsonRecord[])[0]!.validateWithPinnedSchema = false;
+    });
+    expect(codes(result)).toContain("RENDER_PLAN_SCHEMA_INVALID");
+  });
+
   it("rejects a claim scope reference found only in an unselected Context Pack", async () => {
     const [plan, input] = await Promise.all([
       loadCca210Plan(),

@@ -23,6 +23,9 @@ asserts repository-relative paths and `rejectSymlinks: true`; the embedding
 caller remains responsible for opening files without following a symlink before
 supplying their bytes.
 
+Every supplied Context Pack is unconditionally validated against the exact
+pinned Context Pack schema; v1 does not permit a plan to opt out.
+
 Semantic checks cover exact digests and lengths; CCA/upstream contract and pin
 identity; resolved-profile/catalog closure; mapping/output completeness;
 duplicate and dangling IDs; exact property/claim and threat identity; explicit

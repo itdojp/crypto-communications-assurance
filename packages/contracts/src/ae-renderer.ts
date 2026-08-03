@@ -85,7 +85,7 @@ type MappingDisposition = "render" | "unsupported" | "excluded-by-operator";
 interface ContextPackBinding extends ExactBinding {
   readonly id: string;
   readonly contractId: "context-pack/v1";
-  readonly validateWithPinnedSchema: boolean;
+  readonly validateWithPinnedSchema: true;
 }
 
 interface OutputSelection {
@@ -813,24 +813,22 @@ function contextDiagnostics(
       );
       continue;
     }
-    if (binding.validateWithPinnedSchema) {
-      if (schema === undefined) {
-        diagnostics.push(
-          diagnostic(
-            "CONTEXT_PACK_SCHEMA_UNAVAILABLE",
-            path,
-            "Pinned Context Pack schema bytes were not validly supplied.",
-          ),
-        );
-      } else {
-        diagnostics.push(
-          ...schemaDiagnostics(
-            compileContractBytes(schema)(bytes),
-            path,
-            "CONTEXT_PACK_SCHEMA_INVALID",
-          ),
-        );
-      }
+    if (schema === undefined) {
+      diagnostics.push(
+        diagnostic(
+          "CONTEXT_PACK_SCHEMA_UNAVAILABLE",
+          path,
+          "Pinned Context Pack schema bytes were not validly supplied.",
+        ),
+      );
+    } else {
+      diagnostics.push(
+        ...schemaDiagnostics(
+          compileContractBytes(schema)(bytes),
+          path,
+          "CONTEXT_PACK_SCHEMA_INVALID",
+        ),
+      );
     }
     const groups = [
       ["objects", allIdentifiers.objectIds, identifiers.objectIds],

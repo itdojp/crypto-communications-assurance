@@ -485,7 +485,7 @@
           "maximum": 1048576
         },
         "validateWithPinnedSchema": {
-          "type": "boolean"
+          "const": true
         }
       }
     },
