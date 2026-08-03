@@ -299,6 +299,15 @@ const ccaSchemaByRole: Readonly<Record<AeCcaInputRole, object>> = {
   capabilityModuleCatalog: capabilityModuleCatalogSchema,
   resolvedProfile: resolvedProfileSchema,
 };
+const ccaValidatorByRole: Readonly<Record<AeCcaInputRole, NativeValidator>> = {
+  propertyCatalog: compileContractBytes(ccaSchemaByRole.propertyCatalog),
+  attackerCatalog: compileContractBytes(ccaSchemaByRole.attackerCatalog),
+  threatCatalog: compileContractBytes(ccaSchemaByRole.threatCatalog),
+  capabilityModuleCatalog: compileContractBytes(
+    ccaSchemaByRole.capabilityModuleCatalog,
+  ),
+  resolvedProfile: compileContractBytes(ccaSchemaByRole.resolvedProfile),
+};
 const upstreamSnapshotByRole: Readonly<Record<AeUpstreamSchemaRole, object>> = {
   assuranceProfile: assuranceProfileSchema,
   securityClaim: securityClaimSchema,
@@ -523,7 +532,7 @@ function decodedCcaInputDiagnostics(
       continue;
     }
     diagnostics.push(...bindingDiagnostics(plan.ccaInputs[role], bytes, path, "CCA"));
-    const validation = compileContractBytes(ccaSchemaByRole[role])(bytes);
+    const validation = ccaValidatorByRole[role](bytes);
     diagnostics.push(...schemaDiagnostics(validation, path, "CCA_INPUT_SCHEMA_INVALID"));
     if (validation.valid) decoded[role] = validation.value;
   }

@@ -181,6 +181,15 @@ describe("CCA-210 render-plan contract and exact upstream pin", () => {
     }
   });
 
+  it("precompiles the five CCA input validators instead of recompiling per call", async () => {
+    const source = (
+      await loadBytes("../packages/contracts/src/ae-renderer.ts")
+    ).toString("utf8");
+    expect(source).toContain("const ccaValidatorByRole");
+    expect(source).toContain("ccaValidatorByRole[role](bytes)");
+    expect(source).not.toContain("compileContractBytes(ccaSchemaByRole[role])");
+  });
+
   it.each([
     "../package.json",
     "/etc/passwd",
