@@ -498,14 +498,19 @@ describe("CCA-210 fail-closed negative boundaries", () => {
     expect(codes(result)).toContain("RENDERER_SOURCE_MISSING");
   });
 
-  it("rejects direct rendering without a validated token", () => {
-    const rendered = renderAeNativeArtifacts({ planId: "forged" });
-    expect(rendered.valid).toBe(false);
-    expect(rendered.outputs).toEqual([]);
-    expect(rendered.diagnostics.map(({ code }) => code)).toEqual([
-      "VALIDATED_PLAN_REQUIRED",
-    ]);
-  });
+  it.each([{ planId: "forged" }, null, undefined, "forged", 1])(
+    "rejects direct rendering without a validated object token: %j",
+    (token) => {
+      const rendered = renderAeNativeArtifacts(
+        token as unknown as Parameters<typeof renderAeNativeArtifacts>[0],
+      );
+      expect(rendered.valid).toBe(false);
+      expect(rendered.outputs).toEqual([]);
+      expect(rendered.diagnostics.map(({ code }) => code)).toEqual([
+        "VALIDATED_PLAN_REQUIRED",
+      ]);
+    },
+  );
 
   it("demonstrates a native schema mismatch is rejected", async () => {
     const input = await loadCca210ValidationInput();

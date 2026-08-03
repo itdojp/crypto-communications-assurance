@@ -1609,7 +1609,12 @@ function serialize(value: object): Uint8Array {
 export function renderAeNativeArtifacts(
   validatedPlan: ValidatedAeRenderPlan,
 ): AeNativeRenderResult {
-  const state = validatedStates.get(validatedPlan);
+  const candidate: unknown = validatedPlan;
+  const state =
+    candidate !== null &&
+    (typeof candidate === "object" || typeof candidate === "function")
+      ? validatedStates.get(candidate as ValidatedAeRenderPlan)
+      : undefined;
   if (state === undefined) {
     return {
       valid: false,

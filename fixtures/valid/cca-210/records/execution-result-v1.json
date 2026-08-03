@@ -97,7 +97,7 @@
       "byteLength": 24149,
       "digest": {
         "algorithm": "sha256",
-        "value": "0467a8711c5b9dc1d2d4f0ed776b16c0e219276911ec367f4505aa62780d6f15"
+        "value": "6a370483a9a880d236a8210489e47c79ab8a114653a278c77ddb887faa0ae7a0"
       },
       "inputId": "input.cca210.render-plan",
       "mediaType": "application/json"
@@ -148,10 +148,10 @@
       "mediaType": "application/json"
     },
     {
-      "byteLength": 61763,
+      "byteLength": 61951,
       "digest": {
         "algorithm": "sha256",
-        "value": "61ec033a1bb8a22dadb6e4e099705ae78936368bc1c03fcddb73ce5a29605750"
+        "value": "ac5004e1497ba60ce65404a7f7e52857cf5b2958682a4146ffc6e59f504b8a63"
       },
       "inputId": "input.cca210.renderer-source",
       "mediaType": "text/plain"

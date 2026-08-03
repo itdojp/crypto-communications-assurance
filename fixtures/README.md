@@ -83,7 +83,7 @@ The execution record also retains seven stable informational diagnostics for
 the audit-tree loss, Context Pack reference-only projection, two unsupported
 human-review mappings, and three lossy threat projections.
 
-Sixty-three plan/renderer negative cases and five CCA-240 promotion/binding negative
+Sixty-seven plan/renderer negative cases and five CCA-240 promotion/binding negative
 cases are generated in memory from the exact positive files. They cover binding
 drift, missing/unsafe Context Packs, incomplete claims/evidence/taxonomies/scope,
 dangling and duplicate mappings, mutable/abbreviated Git identities, output
