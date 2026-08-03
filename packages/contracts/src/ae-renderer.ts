@@ -922,6 +922,7 @@ function outputDiagnostics(plan: AeRenderPlan): readonly AeRenderDiagnostic[] {
 function scopeDiagnostics(
   plan: AeRenderPlan,
   resolvedProfile: ResolvedProfile | undefined,
+  identifiers: ContextIdentifiers,
 ): {
   readonly diagnostics: readonly AeRenderDiagnostic[];
   readonly boundaries: ReadonlyMap<string, TrustBoundary>;
@@ -983,7 +984,26 @@ function scopeDiagnostics(
       );
     }
   }
-  for (const boundary of scope.trustBoundaries) boundaries.set(boundary.id, boundary);
+  const availableScopeRefs = new Set([
+    ...identifiers.objectIds,
+    ...identifiers.morphismIds,
+    ...identifiers.diagramIds,
+    ...identifiers.acceptanceTestIds,
+  ]);
+  for (const [boundaryIndex, boundary] of scope.trustBoundaries.entries()) {
+    boundaries.set(boundary.id, boundary);
+    for (const [refIndex, ref] of (boundary.scopeRefs ?? []).entries()) {
+      if (!availableScopeRefs.has(ref)) {
+        diagnostics.push(
+          diagnostic(
+            "CONTEXT_SCOPE_REF_DANGLING",
+            `/scopeMapping/scope/trustBoundaries/${boundaryIndex}/scopeRefs/${refIndex}`,
+            `No scope-selected Context Pack declares ${ref}.`,
+          ),
+        );
+      }
+    }
+  }
   return { diagnostics, boundaries };
 }
 
@@ -1433,7 +1453,11 @@ export function validateAeRenderPlan(
   diagnostics.push(...upstream.diagnostics);
   const contexts = contextDiagnostics(input, plan, upstream.schemas.contextPack);
   diagnostics.push(...contexts.diagnostics);
-  const scope = scopeDiagnostics(plan, cca.decoded.resolvedProfile);
+  const scope = scopeDiagnostics(
+    plan,
+    cca.decoded.resolvedProfile,
+    contexts.identifiers,
+  );
   diagnostics.push(...scope.diagnostics);
   const claims = claimDiagnostics(plan, cca.decoded.propertyCatalog, cca.decoded.resolvedProfile, scope.boundaries, contexts.identifiers, nativeEnums(upstream.schemas));
   diagnostics.push(...claims.diagnostics);

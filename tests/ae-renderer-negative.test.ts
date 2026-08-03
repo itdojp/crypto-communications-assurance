@@ -189,6 +189,24 @@ describe("CCA-210 fail-closed negative boundaries", () => {
     expect(codes(result)).toContain("CONTEXT_SCOPE_REF_DANGLING");
   });
 
+  it("rejects a dangling trust-boundary reference outside selected Context Packs", async () => {
+    const result = await validateMutation((plan) => {
+      const scope = (plan.scopeMapping as JsonRecord).scope as JsonRecord;
+      const boundary = (scope.trustBoundaries as JsonRecord[])[0]!;
+      boundary.scopeRefs = ["component.synthetic.not-selected"];
+    });
+    expect(result.valid).toBe(false);
+    if (result.valid) return;
+    expect(result.diagnostics).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          code: "CONTEXT_SCOPE_REF_DANGLING",
+          path: "/scopeMapping/scope/trustBoundaries/0/scopeRefs/0",
+        }),
+      ]),
+    );
+  });
+
   it.each(["statement", "type", "kind", "criticality", "targetLevel"])(
     "rejects a rendered claim missing explicit %s",
     async (field) => {
