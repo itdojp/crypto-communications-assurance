@@ -1,0 +1,242 @@
+{
+  "artifacts": [
+    {
+      "artifactId": "artifact.cca210.assurance-profile",
+      "byteLength": 3927,
+      "digest": {
+        "algorithm": "sha256",
+        "value": "504adc42dee25235385175b264d7b51e845e7a2dedfef5ba6ac9108002e8cc32"
+      },
+      "kind": "public-content",
+      "mediaType": "application/json",
+      "role": "substantive-result"
+    },
+    {
+      "artifactId": "artifact.cca210.security-audit-scope",
+      "byteLength": 815,
+      "digest": {
+        "algorithm": "sha256",
+        "value": "e4a5d9c409701b2cda6aedf34e8222adce8c7ee8f491a48a7b0d9eeea913336f"
+      },
+      "kind": "public-content",
+      "mediaType": "application/json",
+      "role": "substantive-result"
+    },
+    {
+      "artifactId": "artifact.cca210.security-claim",
+      "byteLength": 6437,
+      "digest": {
+        "algorithm": "sha256",
+        "value": "bf0b099c1719bc390c501d96b1008b7d89ca968f64d4f4905ab7b7d5b232a4b0"
+      },
+      "kind": "public-content",
+      "mediaType": "application/json",
+      "role": "substantive-result"
+    },
+    {
+      "artifactId": "artifact.cca210.security-threat-model",
+      "byteLength": 2075,
+      "digest": {
+        "algorithm": "sha256",
+        "value": "dd4e9f965ad4f45089cb850139fabc88618b7417d7c97b931ae8c380c407d404"
+      },
+      "kind": "public-content",
+      "mediaType": "application/json",
+      "role": "substantive-result"
+    }
+  ],
+  "diagnostics": [],
+  "environment": {
+    "architecture": "x86_64",
+    "environmentId": "environment.synthetic.cca-210-linux",
+    "kind": "recorded",
+    "operatingSystem": "linux",
+    "runtimeVersion": "22.22.2"
+  },
+  "evidenceOrigin": "synthetic",
+  "executionResult": {
+    "byteLength": 9140,
+    "contractId": "cryptocomm-execution-result/v1",
+    "digest": {
+      "algorithm": "sha256",
+      "value": "2bd12a842f02e7e790d18c22866185a768edfd73ed5d5b23d8ce10dddce29739"
+    },
+    "recordId": "result.synthetic.cca-210-render"
+  },
+  "fixtureClassification": "synthetic-test-only",
+  "inputBindings": [
+    {
+      "byteLength": 18620,
+      "digest": {
+        "algorithm": "sha256",
+        "value": "fc04473aaa15ad5ebe9de5e102ee9f65ca877c42fe5e7830d08d59145eea28c3"
+      },
+      "inputId": "input.cca210.cca.module-catalog",
+      "mediaType": "application/json"
+    },
+    {
+      "byteLength": 22729,
+      "digest": {
+        "algorithm": "sha256",
+        "value": "66d8aacaabcb5edad809f8fe6c4ae4ea324c411178fd12f6e670843a694d4cc5"
+      },
+      "inputId": "input.cca210.cca.attacker-catalog",
+      "mediaType": "application/json"
+    },
+    {
+      "byteLength": 24149,
+      "digest": {
+        "algorithm": "sha256",
+        "value": "d13d509a24a65d260501160f4558199f219ddc694ceab5cfb1003cd071a0d5e0"
+      },
+      "inputId": "input.cca210.render-plan",
+      "mediaType": "application/json"
+    },
+    {
+      "byteLength": 2522,
+      "digest": {
+        "algorithm": "sha256",
+        "value": "c4aa83bf614b3b82603bbff4d5df2ced1d8e220d30a33dbc1a0619c4122a9f03"
+      },
+      "inputId": "input.cca210.context.context-pack",
+      "mediaType": "application/json"
+    },
+    {
+      "byteLength": 2613,
+      "digest": {
+        "algorithm": "sha256",
+        "value": "cf11bd9085bb075735d8c2541b82673388a91c44e6b5ab94a072e8d9f362085e"
+      },
+      "inputId": "input.cca210.upstream.security-threat-model-schema",
+      "mediaType": "application/schema+json"
+    },
+    {
+      "byteLength": 2847,
+      "digest": {
+        "algorithm": "sha256",
+        "value": "0b2ea34a53565c6ccc955125805eb2631373fab940b05297c639b791a6e7eb02"
+      },
+      "inputId": "input.cca210.upstream.security-audit-scope-schema",
+      "mediaType": "application/schema+json"
+    },
+    {
+      "byteLength": 34321,
+      "digest": {
+        "algorithm": "sha256",
+        "value": "11c76e7c602714e7b860220babeaaf214a825eb6b1bc55677fb11265e2d3da90"
+      },
+      "inputId": "input.cca210.cca.property-catalog",
+      "mediaType": "application/json"
+    },
+    {
+      "byteLength": 41748,
+      "digest": {
+        "algorithm": "sha256",
+        "value": "f81921d192768ca84c6f9ded24fe7aed98cdc3f0f300f30d2d656ca47aee85d6"
+      },
+      "inputId": "input.cca210.cca.threat-catalog",
+      "mediaType": "application/json"
+    },
+    {
+      "byteLength": 73553,
+      "digest": {
+        "algorithm": "sha256",
+        "value": "2a17172fdc74adb01acf00517459518d9d8cca361f4501e13c51125c0644c4eb"
+      },
+      "inputId": "input.cca210.renderer-source",
+      "mediaType": "text/plain"
+    },
+    {
+      "byteLength": 6915,
+      "digest": {
+        "algorithm": "sha256",
+        "value": "9a9923d1aa5cf2ef38f3b5aeb390c5493a3e4d8fae9f894626fe9fd86ec79bd3"
+      },
+      "inputId": "input.cca210.cca.resolved-profile",
+      "mediaType": "application/json"
+    },
+    {
+      "byteLength": 7062,
+      "digest": {
+        "algorithm": "sha256",
+        "value": "3e7ccc9c2d7ba6b1154fce45d3120f0178a30883b7d773a8d5ab9e10b3cf5f26"
+      },
+      "inputId": "input.cca210.upstream.security-claim-schema",
+      "mediaType": "application/schema+json"
+    },
+    {
+      "byteLength": 7600,
+      "digest": {
+        "algorithm": "sha256",
+        "value": "abc016c948b8affd0b000c83269fedc9aa57688cead2650dd0348ddb01d343fe"
+      },
+      "inputId": "input.cca210.upstream.assurance-profile-schema",
+      "mediaType": "application/schema+json"
+    },
+    {
+      "byteLength": 7644,
+      "digest": {
+        "algorithm": "sha256",
+        "value": "c0070a81e39c533be7540e14e8748f38e5ef47309c7269efe28aa793f8c1572f"
+      },
+      "inputId": "input.cca210.upstream.context-pack-schema",
+      "mediaType": "application/schema+json"
+    }
+  ],
+  "producer": {
+    "implementation": {
+      "implementationId": "renderer.cca210.ae-native",
+      "sourceRepositoryId": "example.test:synthetic/crypto-communications-assurance",
+      "sourceRevision": {
+        "algorithm": "git-sha1",
+        "value": "3333333333333333333333333333333333333333"
+      },
+      "version": "0.0.0"
+    },
+    "kind": "software"
+  },
+  "provenanceId": "provenance.synthetic.cca-210-render",
+  "safety": {
+    "executable": false,
+    "networkRequired": false,
+    "secretsAllowed": false
+  },
+  "schemaVersion": "cryptocomm-evidence-provenance/v1",
+  "scope": {
+    "description": "Synthetic repository-local CCA-210 renderer fixture scope.",
+    "exclusions": [
+      "claim satisfaction",
+      "live systems",
+      "private evidence",
+      "product compatibility"
+    ],
+    "scopeId": "scope.synthetic.cca-210-target"
+  },
+  "subject": {
+    "commit": {
+      "algorithm": "git-sha1",
+      "value": "1111111111111111111111111111111111111111"
+    },
+    "kind": "git-revision",
+    "repositoryId": "example.test:synthetic/crypto-target",
+    "tree": {
+      "algorithm": "git-sha1",
+      "value": "2222222222222222222222222222222222222222"
+    }
+  },
+  "tool": {
+    "implementation": {
+      "implementationId": "renderer.cca210.ae-native",
+      "sourceRepositoryId": "example.test:synthetic/crypto-communications-assurance",
+      "sourceRevision": {
+        "algorithm": "git-sha1",
+        "value": "3333333333333333333333333333333333333333"
+      },
+      "version": "0.0.0"
+    },
+    "kind": "identified",
+    "toolId": "tool.synthetic.cca-ae-renderer",
+    "version": "0.0.0"
+  },
+  "useRestriction": "test-only"
+}

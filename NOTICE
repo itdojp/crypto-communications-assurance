@@ -3,3 +3,8 @@ Copyright 2026 itdojp contributors
 
 This product includes software developed by the Cryptographic Communications
 Assurance project contributors.
+
+This product includes schema snapshots developed by the ae-framework
+contributors and pinned under integrations/ae-framework/pins/.
+ae-framework
+Copyright (c) ae-framework contributors.

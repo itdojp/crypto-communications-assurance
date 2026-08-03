@@ -18,6 +18,7 @@
 | `cryptocomm-evidence-provenance/v1` | Exact execution binding, subject/input/producer/tool/environment/scope identity, classification, and artifact references | CCA-240 v1 contract. |
 | `cryptocomm-freshness-assessment/v1` | Pure caller-fact freshness comparison | CCA-240 v1 contract. |
 | `cryptocomm-evidence-binding-set/v1` | Minimal exact-byte composition root | CCA-240 v1 contract. |
+| `cryptocomm-ae-render-plan/v1` | Exact-bound explicit semantic decisions for four pinned ae-framework-native projections | CCA-210 v1 contract. |
 
 Each value identifies one closed JSON Schema Draft 2020-12 contract. The manifest, lock, and compatibility record have separate identities because their authorities and content bindings differ.
 
@@ -58,6 +59,40 @@ confirmed vulnerability, or any evidence to human approval/certification/release
 Adding private sidecars/storage, policy decisions, approval, satisfaction,
 certification, risk acceptance, release authority, or upstream mappings requires
 a new separately authorized contract/Issue rather than an optional v1 field.
+
+## ae render-plan evolution
+
+CCA-210 v1 has one CCA-owned contract. The upstream repository, commit, tree,
+five schema paths/blob SHAs/exact-byte digests, four permitted output kinds,
+property/claim and threat identity rules, dispositions, explicit native enums,
+scope/tree-loss record, Context Pack reference-only boundary, safety constants,
+and deterministic serializer behavior are part of its reviewed meaning.
+
+The current threat-model projection emits only `STRIDE` in `frameworks` and
+retains explicitly selected CWE IDs on individual threats. Future
+`CWE_TOP_25` output requires an exact dated CWE Top 25 edition, exact membership
+data, validation of every emitted CWE against that edition, and a separate
+accountable-human decision; it is not an in-place v1 inference.
+
+The tuple `cca-ae-renderer/v1@0.0.0`, the fixed source path, and the schema-fixed
+source SHA-256 names the exact current renderer snapshot for this reviewed v1
+boundary. After acceptance, a source change must not silently replace only that
+digest under the same historical meaning. It requires a reviewed
+implementation-identity, package-version, or render-plan contract-version
+decision.
+
+Changing the upstream pin, adding a native kind, following a mutable upstream
+ref, synthesizing Context Packs, adding a render-result/output-index contract,
+inferring a mapping, or introducing satisfaction/policy/approval/release fields
+requires a separately authorized version decision. A later upstream schema with
+the same apparent fields is not accepted automatically. Shape conformance to the
+current exact bytes is not a compatibility migration.
+
+Renderer output ordering is part of v1 behavior: UTF-8, two spaces, LF, one
+final newline, fixed field order, and code-point-sorted set-like arrays/maps.
+Optional `generatedAt`, summaries, and assurance-profile deployment/gate-policy
+content are omitted. Exact output records remain the existing CCA-240 contracts;
+their evolution is independent.
 
 ## Explicit migration
 

@@ -28,7 +28,9 @@ This phase does not implement cryptographic primitives or protocols.
 
 Candidate work:
 
-- future ae-framework bridge inputs and public synthetic fixtures, without a compatibility claim until separately validated;
+- CCA-210 exact-pin ae-framework native projections through one CCA-owned render
+  plan, a pure offline validator/renderer, existing Context Pack references, and
+  public synthetic fixtures; this establishes no product-wide compatibility;
 - future GenAI Repo Auditor bridge inputs and target templates, without a compatibility claim until separately validated;
 - public mapping suites that do not call either external system during unit
   tests.

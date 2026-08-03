@@ -63,3 +63,42 @@ The `fixtureClassification: synthetic-test-only` marker labels the committed
 fixture and requires `evidenceOrigin: synthetic` plus `useRestriction: test-only`.
 Tests exercise unmarked `real` and `policy-evaluable` lexical forms in memory only;
 they do not commit a promotable record or authorize policy use.
+
+## CCA-210 exact-pin render fixtures
+
+`valid/cca-210/` contains 12 public-safe synthetic/test-only JSON files: one
+operator profile request used to derive the fixture profile, one exact resolved
+profile, one existing Context Pack, one render plan, four generated native
+artifacts, and four CCA-240 render records. The plan explicitly renders four
+claims and three threats, references one existing Context Pack, and records the
+audit-scope tree omission as lossy. It exact-byte binds the authoritative public
+CCA catalogs/module catalog, resolved profile, target commit/tree, exact five
+upstream schema snapshots, Context Pack, and renderer source.
+
+The native fixtures omit `generatedAt`, summaries, deployment/gate policy, and
+the audit target tree. The exact tree remains in the plan and CCA-240 subject.
+The threat-model fixture emits `STRIDE` only in `frameworks` and retains the
+explicit `CWE-200`, `CWE-522`, and `CWE-345` per-threat identifiers unchanged.
+It does not claim membership in an unpinned CWE Top 25 edition.
+The four CCA-240 records use literal `pass`, `synthetic`, `test-only`, and
+`not-assessed`; pass records transformation/schema validation only.
+The execution record also retains eight stable informational diagnostics for
+the audit-tree loss, Context Pack reference-only projection, one general-CWE
+framework projection loss, two unsupported human-review mappings, and three
+lossy threat projections.
+
+Bounded plan/renderer negative cases and five CCA-240 promotion/binding negative
+cases are generated in memory from the exact positive files. They cover binding
+drift, malformed exported runtime shapes, missing/unsafe Context Packs,
+incomplete claims/evidence/taxonomies/scope,
+dangling, incomplete, and duplicate threat/claim relationships, renderer version
+and independently fixed source-identity drift, synthetic-classification loss,
+claim-surface/output completeness, mutable/abbreviated Git identities,
+output bounds/order, prohibited artifact and authority fields, native mismatch,
+and synthetic/freshness/satisfaction promotion. In-memory mutation avoids
+committing dozens of redundant full-plan copies while preserving exact
+fail-closed tests.
+
+These fixtures state no product claim, evidence satisfaction, compatibility,
+vulnerability absence, approval, certification, production readiness, release,
+or publication authority.

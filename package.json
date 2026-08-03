@@ -14,7 +14,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "eslint .",
     "test": "vitest run",
-    "check:schemas": "vitest run tests/schema.test.ts tests/strict-json.test.ts tests/pack-contracts-schema.test.ts tests/catalog-contracts-schema.test.ts tests/catalog-contracts-semantic.test.ts tests/profile-contracts-schema.test.ts tests/profile-resolution.test.ts tests/evidence-contracts-schema.test.ts tests/evidence-contracts-semantic.test.ts",
+    "check:schemas": "vitest run tests/schema.test.ts tests/strict-json.test.ts tests/pack-contracts-schema.test.ts tests/catalog-contracts-schema.test.ts tests/catalog-contracts-semantic.test.ts tests/profile-contracts-schema.test.ts tests/profile-resolution.test.ts tests/evidence-contracts-schema.test.ts tests/evidence-contracts-semantic.test.ts tests/ae-render-plan-schema.test.ts tests/ae-renderer.test.ts tests/ae-renderer-negative.test.ts tests/ae-render-records.test.ts",
     "check:docs": "node scripts/check-docs.mjs",
     "lint:workflows": "node scripts/lint-workflows.mjs",
     "verify": "pnpm run lint && pnpm run typecheck && pnpm run build && pnpm run test && pnpm run check:docs && pnpm run lint:workflows"

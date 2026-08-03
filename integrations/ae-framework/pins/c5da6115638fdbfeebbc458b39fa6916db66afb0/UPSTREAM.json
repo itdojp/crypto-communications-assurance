@@ -1,0 +1,57 @@
+{
+  "repository": "itdojp/ae-framework",
+  "commit": "c5da6115638fdbfeebbc458b39fa6916db66afb0",
+  "tree": "0d69865b37a4476a20f0f1f1f42031967d3ec3a7",
+  "upstreamLicense": {
+    "spdxIdentifier": "Apache-2.0",
+    "path": "LICENSE",
+    "localLicensePath": "LICENSE"
+  },
+  "notice": {
+    "upstreamPath": "NOTICE",
+    "localPath": "NOTICE",
+    "handling": "The upstream attribution is reproduced in the repository NOTICE."
+  },
+  "selectedSchemas": [
+    {
+      "path": "schema/assurance-profile.schema.json",
+      "pinnedPath": "schema/assurance-profile.schema.json",
+      "blobSha": "7bff5e356339c3bb33594e48cab91d4560aae1ce",
+      "contentSha256": "abc016c948b8affd0b000c83269fedc9aa57688cead2650dd0348ddb01d343fe",
+      "byteLength": 7600,
+      "purpose": "Offline validation of generated assurance-profile/v1 artifacts."
+    },
+    {
+      "path": "schema/security-claim-v1.schema.json",
+      "pinnedPath": "schema/security-claim-v1.schema.json",
+      "blobSha": "b34005cc2d48cef252387dd0b570056295ed78ba",
+      "contentSha256": "3e7ccc9c2d7ba6b1154fce45d3120f0178a30883b7d773a8d5ab9e10b3cf5f26",
+      "byteLength": 7062,
+      "purpose": "Offline validation of generated security-claim/v1 artifacts."
+    },
+    {
+      "path": "schema/security-threat-model-v1.schema.json",
+      "pinnedPath": "schema/security-threat-model-v1.schema.json",
+      "blobSha": "61f359c92f488a58f3543ce97d5a0dfd1fb496d3",
+      "contentSha256": "cf11bd9085bb075735d8c2541b82673388a91c44e6b5ab94a072e8d9f362085e",
+      "byteLength": 2613,
+      "purpose": "Offline validation of generated security-threat-model/v1 artifacts."
+    },
+    {
+      "path": "schema/security-audit-scope-v1.schema.json",
+      "pinnedPath": "schema/security-audit-scope-v1.schema.json",
+      "blobSha": "229be6448b9671baac40bf0b21c94488220667d9",
+      "contentSha256": "0b2ea34a53565c6ccc955125805eb2631373fab940b05297c639b791a6e7eb02",
+      "byteLength": 2847,
+      "purpose": "Offline validation of generated security-audit-scope/v1 artifacts."
+    },
+    {
+      "path": "schema/context-pack-v1.schema.json",
+      "pinnedPath": "schema/context-pack-v1.schema.json",
+      "blobSha": "509a7f75d1e14b146d97df46f17c4831a6bd1e59",
+      "contentSha256": "c0070a81e39c533be7540e14e8748f38e5ef47309c7269efe28aa793f8c1572f",
+      "byteLength": 7644,
+      "purpose": "Offline validation only of supplied operator-selected Context Pack references."
+    }
+  ]
+}

@@ -61,3 +61,12 @@ The machine-readable matrix is
 No result status is claim satisfaction, evidence sufficiency, accountable-human
 approval, certification, risk acceptance, or release authority. A retry creates a
 new record and never rewrites the original literal state.
+
+## CCA-210 renderer application
+
+CCA-210 uses `pass` for a representative renderer execution only when the
+declared deterministic byte transformation and exact pinned-schema validation
+completed. It does not mean a native claim is satisfied, required evidence
+exists or is sufficient/fresh, the target is secure, or ae-framework accepted or
+executed the artifact. Unsupported/excluded render-plan mappings remain their
+literal dispositions and never become pass.

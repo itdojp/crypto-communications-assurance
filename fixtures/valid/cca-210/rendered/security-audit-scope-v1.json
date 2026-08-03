@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "security-audit-scope/v1",
+  "target": {
+    "repository": "itdojp/synthetic-crypto-target",
+    "commit": "1111111111111111111111111111111111111111"
+  },
+  "inScope": [
+    "src/synthetic-receiver/**",
+    "src/synthetic-sender/**"
+  ],
+  "outOfScope": [
+    "fixtures/private/**"
+  ],
+  "trustBoundaries": [
+    {
+      "id": "boundary.synthetic.network",
+      "name": "Synthetic network boundary",
+      "entryPoints": [
+        "synthetic-receiver",
+        "synthetic-sender"
+      ],
+      "attackerControlled": true,
+      "description": "Synthetic test-only entry boundary; no live system is represented.",
+      "dataClasses": [
+        "synthetic-message"
+      ],
+      "scopeRefs": [
+        "component.synthetic.receiver",
+        "component.synthetic.sender"
+      ]
+    }
+  ]
+}

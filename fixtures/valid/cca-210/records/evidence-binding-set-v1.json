@@ -1,0 +1,62 @@
+{
+  "bindingSetId": "binding-set.synthetic.cca-210-render",
+  "bindings": {
+    "evidenceProvenance": {
+      "byteLength": 7317,
+      "contractId": "cryptocomm-evidence-provenance/v1",
+      "digest": {
+        "algorithm": "sha256",
+        "value": "86db75e70eaf4241e061b8aaf23d9e5dd67de46084407264dfd1d0ca441c28f1"
+      },
+      "recordId": "provenance.synthetic.cca-210-render"
+    },
+    "executionResult": {
+      "byteLength": 9140,
+      "contractId": "cryptocomm-execution-result/v1",
+      "digest": {
+        "algorithm": "sha256",
+        "value": "2bd12a842f02e7e790d18c22866185a768edfd73ed5d5b23d8ce10dddce29739"
+      },
+      "recordId": "result.synthetic.cca-210-render"
+    },
+    "freshnessAssessment": {
+      "byteLength": 2360,
+      "contractId": "cryptocomm-freshness-assessment/v1",
+      "digest": {
+        "algorithm": "sha256",
+        "value": "62df601446ecf00f2e523930e10cd029f4ae80001049e3ccd195a68cc0a4f82d"
+      },
+      "recordId": "assessment.synthetic.cca-210-not-assessed"
+    }
+  },
+  "diagnostics": [],
+  "fixtureClassification": "synthetic-test-only",
+  "safety": {
+    "executable": false,
+    "networkRequired": false,
+    "secretsAllowed": false
+  },
+  "schemaVersion": "cryptocomm-evidence-binding-set/v1",
+  "scope": {
+    "description": "Synthetic repository-local CCA-210 renderer fixture scope.",
+    "exclusions": [
+      "claim satisfaction",
+      "live systems",
+      "private evidence",
+      "product compatibility"
+    ],
+    "scopeId": "scope.synthetic.cca-210-target"
+  },
+  "subject": {
+    "commit": {
+      "algorithm": "git-sha1",
+      "value": "1111111111111111111111111111111111111111"
+    },
+    "kind": "git-revision",
+    "repositoryId": "example.test:synthetic/crypto-target",
+    "tree": {
+      "algorithm": "git-sha1",
+      "value": "2222222222222222222222222222222222222222"
+    }
+  }
+}

@@ -26,3 +26,10 @@ The matrices contain no execution instance, evidence bytes, private reference,
 subject/producer identity, aggregate status, satisfaction, approval,
 certification, risk acceptance, or release authority. A CCA-240 binding set is an
 exact-byte composition root and not evidence storage.
+
+CCA-210 consumes the exact public property, attacker, threat, and module-catalog
+bytes plus an explicitly generated resolved-profile fixture. Those inputs remain
+the CCA relationship and selection authorities. The render plan does not add a
+second pack catalog and never rewrites catalog titles/descriptions into claims.
+Native lane/kind and STRIDE/CWE selections are explicit plan decisions, not new
+automatic pack crosswalk tables.

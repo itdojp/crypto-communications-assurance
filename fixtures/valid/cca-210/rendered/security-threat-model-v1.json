@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "security-threat-model/v1",
+  "frameworks": [
+    "STRIDE"
+  ],
+  "threats": [
+    {
+      "id": "threat.confidentiality.passive-message-disclosure",
+      "stride": "Information Disclosure",
+      "cwe": "CWE-200",
+      "description": "Within the synthetic scope, an observer obtains message content from an exposed communication representation.",
+      "relatedClaimIds": [
+        "property.confidentiality.message"
+      ],
+      "trustBoundaryIds": [
+        "boundary.synthetic.network"
+      ],
+      "notes": [
+        "CCA preconditions, assumptions, exclusions, and impact remain authoritative in the exact bound threat catalog.",
+        "Explicit source capability retained by reference: capability.network.observe."
+      ]
+    },
+    {
+      "id": "threat.confidentiality.secret-material-extraction",
+      "stride": "Information Disclosure",
+      "cwe": "CWE-522",
+      "description": "Within the synthetic scope, an attacker obtains secret material from modeled endpoint state or observation.",
+      "relatedClaimIds": [
+        "property.confidentiality.key-material"
+      ],
+      "trustBoundaryIds": [
+        "boundary.synthetic.network"
+      ],
+      "notes": [
+        "CCA preconditions, assumptions, exclusions, and impact remain authoritative in the exact bound threat catalog.",
+        "Explicit source capability retained by reference: capability.endpoint.read-memory."
+      ]
+    },
+    {
+      "id": "threat.integrity.in-transit-modification",
+      "stride": "Tampering",
+      "cwe": "CWE-345",
+      "description": "Within the synthetic scope, an active path attacker alters protected input before receiver processing.",
+      "relatedClaimIds": [
+        "property.integrity.message"
+      ],
+      "trustBoundaryIds": [
+        "boundary.synthetic.network"
+      ],
+      "notes": [
+        "CCA preconditions, assumptions, exclusions, and impact remain authoritative in the exact bound threat catalog.",
+        "Explicit source capability retained by reference: capability.network.modify."
+      ]
+    }
+  ]
+}

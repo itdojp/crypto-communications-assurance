@@ -1,0 +1,737 @@
+{
+  "schemaVersion": "cryptocomm-ae-render-plan/v1",
+  "planId": "render-plan.synthetic.cca-210",
+  "ccaRevision": {
+    "repository": "itdojp/crypto-communications-assurance",
+    "commit": "c7d941d6aa1c6665122816736a86502490799c3a",
+    "tree": "259679ac7127269532bbf9ad26d4692e2f1abbe9"
+  },
+  "ccaInputs": {
+    "propertyCatalog": {
+      "contractId": "cryptocomm-property-catalog/v1",
+      "path": "pack/catalogs/v1/property-catalog.json",
+      "sha256": "11c76e7c602714e7b860220babeaaf214a825eb6b1bc55677fb11265e2d3da90",
+      "byteLength": 34321
+    },
+    "attackerCatalog": {
+      "contractId": "cryptocomm-attacker-catalog/v1",
+      "path": "pack/catalogs/v1/attacker-catalog.json",
+      "sha256": "66d8aacaabcb5edad809f8fe6c4ae4ea324c411178fd12f6e670843a694d4cc5",
+      "byteLength": 22729
+    },
+    "threatCatalog": {
+      "contractId": "cryptocomm-threat-catalog/v1",
+      "path": "pack/catalogs/v1/threat-catalog.json",
+      "sha256": "f81921d192768ca84c6f9ded24fe7aed98cdc3f0f300f30d2d656ca47aee85d6",
+      "byteLength": 41748
+    },
+    "capabilityModuleCatalog": {
+      "contractId": "cryptocomm-capability-module-catalog/v1",
+      "path": "pack/modules/v1/capability-module-catalog.json",
+      "sha256": "fc04473aaa15ad5ebe9de5e102ee9f65ca877c42fe5e7830d08d59145eea28c3",
+      "byteLength": 18620
+    },
+    "resolvedProfile": {
+      "contractId": "cryptocomm-resolved-profile/v1",
+      "path": "fixtures/valid/cca-210/resolved-profile-v1.json",
+      "sha256": "9a9923d1aa5cf2ef38f3b5aeb390c5493a3e4d8fae9f894626fe9fd86ec79bd3",
+      "byteLength": 6915
+    }
+  },
+  "target": {
+    "repository": "itdojp/synthetic-crypto-target",
+    "commit": "1111111111111111111111111111111111111111",
+    "tree": "2222222222222222222222222222222222222222"
+  },
+  "contextPacks": [
+    {
+      "id": "context.synthetic.cca-210",
+      "path": "fixtures/valid/cca-210/context-pack-v1.json",
+      "contractId": "context-pack/v1",
+      "sha256": "c4aa83bf614b3b82603bbff4d5df2ced1d8e220d30a33dbc1a0619c4122a9f03",
+      "byteLength": 2522,
+      "validateWithPinnedSchema": true
+    }
+  ],
+  "upstream": {
+    "repository": "itdojp/ae-framework",
+    "commit": "c5da6115638fdbfeebbc458b39fa6916db66afb0",
+    "tree": "0d69865b37a4476a20f0f1f1f42031967d3ec3a7",
+    "schemas": {
+      "assuranceProfile": {
+        "path": "schema/assurance-profile.schema.json",
+        "blobSha": "7bff5e356339c3bb33594e48cab91d4560aae1ce",
+        "sha256": "abc016c948b8affd0b000c83269fedc9aa57688cead2650dd0348ddb01d343fe",
+        "byteLength": 7600
+      },
+      "securityClaim": {
+        "path": "schema/security-claim-v1.schema.json",
+        "blobSha": "b34005cc2d48cef252387dd0b570056295ed78ba",
+        "sha256": "3e7ccc9c2d7ba6b1154fce45d3120f0178a30883b7d773a8d5ab9e10b3cf5f26",
+        "byteLength": 7062
+      },
+      "securityThreatModel": {
+        "path": "schema/security-threat-model-v1.schema.json",
+        "blobSha": "61f359c92f488a58f3543ce97d5a0dfd1fb496d3",
+        "sha256": "cf11bd9085bb075735d8c2541b82673388a91c44e6b5ab94a072e8d9f362085e",
+        "byteLength": 2613
+      },
+      "securityAuditScope": {
+        "path": "schema/security-audit-scope-v1.schema.json",
+        "blobSha": "229be6448b9671baac40bf0b21c94488220667d9",
+        "sha256": "0b2ea34a53565c6ccc955125805eb2631373fab940b05297c639b791a6e7eb02",
+        "byteLength": 2847
+      },
+      "contextPack": {
+        "path": "schema/context-pack-v1.schema.json",
+        "blobSha": "509a7f75d1e14b146d97df46f17c4831a6bd1e59",
+        "sha256": "c0070a81e39c533be7540e14e8748f38e5ef47309c7269efe28aa793f8c1572f",
+        "byteLength": 7644
+      }
+    }
+  },
+  "renderer": {
+    "implementationId": "cca-ae-renderer/v1",
+    "packageName": "@itdojp/cryptocomm-contracts",
+    "packageVersion": "0.0.0",
+    "sourcePath": "packages/contracts/src/ae-renderer.ts",
+    "sourceSha256": "2a17172fdc74adb01acf00517459518d9d8cca361f4501e13c51125c0644c4eb"
+  },
+  "outputs": [
+    {
+      "artifactKind": "assurance-profile/v1",
+      "disposition": "render",
+      "outputPath": "fixtures/valid/cca-210/rendered/assurance-profile-v1.json"
+    },
+    {
+      "artifactKind": "security-claim/v1",
+      "disposition": "render",
+      "outputPath": "fixtures/valid/cca-210/rendered/security-claim-v1.json"
+    },
+    {
+      "artifactKind": "security-threat-model/v1",
+      "disposition": "render",
+      "outputPath": "fixtures/valid/cca-210/rendered/security-threat-model-v1.json"
+    },
+    {
+      "artifactKind": "security-audit-scope/v1",
+      "disposition": "render",
+      "outputPath": "fixtures/valid/cca-210/rendered/security-audit-scope-v1.json"
+    }
+  ],
+  "claimMappings": [
+    {
+      "propertyId": "property.confidentiality.key-material",
+      "disposition": "render",
+      "claim": {
+        "claimId": "property.confidentiality.key-material",
+        "statement": "Within the synthetic target scope, secret keying material remains inside the explicitly modeled handling boundary.",
+        "type": "invariant",
+        "kind": "security",
+        "criticality": "critical",
+        "targetLevel": "A3",
+        "requiredLanes": [
+          "adversarial",
+          "spec"
+        ],
+        "requiredEvidenceKinds": [
+          "conformance",
+          "differential",
+          "fuzz",
+          "schema"
+        ],
+        "evidenceMappings": [
+          {
+            "decisionId": "mapping.evidence.key-material.specification",
+            "sourceEvidenceKind": "specification",
+            "disposition": "render",
+            "rendered": {
+              "projection": "direct",
+              "requiredLanes": [
+                "spec"
+              ],
+              "requiredEvidenceKinds": [
+                "conformance",
+                "schema"
+              ]
+            }
+          },
+          {
+            "decisionId": "mapping.evidence.key-material.adversarial",
+            "sourceEvidenceKind": "adversarial-test",
+            "disposition": "render",
+            "rendered": {
+              "projection": "direct",
+              "requiredLanes": [
+                "adversarial"
+              ],
+              "requiredEvidenceKinds": [
+                "differential",
+                "fuzz"
+              ]
+            }
+          },
+          {
+            "decisionId": "mapping.evidence.key-material.human-review",
+            "sourceEvidenceKind": "human-review",
+            "disposition": "unsupported",
+            "reason": "The pinned native evidence-kind vocabulary has no complete human-review representation."
+          }
+        ],
+        "sourceRefs": [
+          {
+            "kind": "spec",
+            "uri": "pack/catalogs/v1/property-catalog.json",
+            "section": "#/properties/property.confidentiality.key-material",
+            "description": "Exact bound synthetic/public CCA property-catalog entry; this reference does not establish satisfaction."
+          }
+        ],
+        "threatTags": {
+          "stride": [
+            "Information Disclosure"
+          ],
+          "cwe": [
+            "CWE-522"
+          ]
+        },
+        "trustBoundary": {
+          "boundaryIds": [
+            "boundary.synthetic.network"
+          ],
+          "entryPoints": [
+            "synthetic-receiver",
+            "synthetic-sender"
+          ],
+          "attackerControlled": true,
+          "dataClasses": [
+            "synthetic-message"
+          ],
+          "notes": [
+            "Synthetic test-only trust-boundary projection."
+          ]
+        },
+        "scopeRefs": {
+          "objectIds": [
+            "component.synthetic.receiver",
+            "component.synthetic.sender"
+          ],
+          "morphismIds": [
+            "morphism.synthetic.transfer"
+          ],
+          "diagramIds": [
+            "diagram.synthetic.flow"
+          ],
+          "acceptanceTestIds": [
+            "acceptance.synthetic.deterministic-render"
+          ]
+        },
+        "provenance": {
+          "origin": "generated",
+          "generator": "cca-ae-renderer/v1",
+          "source": "pack/catalogs/v1/property-catalog.json#/properties/property.confidentiality.key-material",
+          "version": "0.0.0"
+        },
+        "notes": [
+          "Generated native claim is a synthetic requirements projection, not a satisfied claim."
+        ],
+        "minIndependentSources": 2
+      }
+    },
+    {
+      "propertyId": "property.confidentiality.message",
+      "disposition": "render",
+      "claim": {
+        "claimId": "property.confidentiality.message",
+        "statement": "Within the synthetic target scope, message content is unavailable outside the explicitly modeled recipient boundary.",
+        "type": "invariant",
+        "kind": "security",
+        "criticality": "high",
+        "targetLevel": "A2",
+        "requiredLanes": [
+          "adversarial",
+          "spec"
+        ],
+        "requiredEvidenceKinds": [
+          "conformance",
+          "differential",
+          "fuzz",
+          "schema"
+        ],
+        "evidenceMappings": [
+          {
+            "decisionId": "mapping.evidence.message-confidentiality.specification",
+            "sourceEvidenceKind": "specification",
+            "disposition": "render",
+            "rendered": {
+              "projection": "direct",
+              "requiredLanes": [
+                "spec"
+              ],
+              "requiredEvidenceKinds": [
+                "conformance",
+                "schema"
+              ]
+            }
+          },
+          {
+            "decisionId": "mapping.evidence.message-confidentiality.adversarial",
+            "sourceEvidenceKind": "adversarial-test",
+            "disposition": "render",
+            "rendered": {
+              "projection": "direct",
+              "requiredLanes": [
+                "adversarial"
+              ],
+              "requiredEvidenceKinds": [
+                "differential",
+                "fuzz"
+              ]
+            }
+          },
+          {
+            "decisionId": "mapping.evidence.message-confidentiality.human-review",
+            "sourceEvidenceKind": "human-review",
+            "disposition": "unsupported",
+            "reason": "The pinned native evidence-kind vocabulary has no complete human-review representation."
+          }
+        ],
+        "sourceRefs": [
+          {
+            "kind": "spec",
+            "uri": "pack/catalogs/v1/property-catalog.json",
+            "section": "#/properties/property.confidentiality.message",
+            "description": "Exact bound synthetic/public CCA property-catalog entry; this reference does not establish satisfaction."
+          }
+        ],
+        "threatTags": {
+          "stride": [
+            "Information Disclosure"
+          ],
+          "cwe": [
+            "CWE-200"
+          ]
+        },
+        "trustBoundary": {
+          "boundaryIds": [
+            "boundary.synthetic.network"
+          ],
+          "entryPoints": [
+            "synthetic-receiver",
+            "synthetic-sender"
+          ],
+          "attackerControlled": true,
+          "dataClasses": [
+            "synthetic-message"
+          ],
+          "notes": [
+            "Synthetic test-only trust-boundary projection."
+          ]
+        },
+        "scopeRefs": {
+          "objectIds": [
+            "component.synthetic.receiver",
+            "component.synthetic.sender"
+          ],
+          "morphismIds": [
+            "morphism.synthetic.transfer"
+          ],
+          "diagramIds": [
+            "diagram.synthetic.flow"
+          ],
+          "acceptanceTestIds": [
+            "acceptance.synthetic.deterministic-render"
+          ]
+        },
+        "provenance": {
+          "origin": "generated",
+          "generator": "cca-ae-renderer/v1",
+          "source": "pack/catalogs/v1/property-catalog.json#/properties/property.confidentiality.message",
+          "version": "0.0.0"
+        },
+        "notes": [
+          "Generated native claim is a synthetic requirements projection, not a satisfied claim."
+        ]
+      }
+    },
+    {
+      "propertyId": "property.integrity.message",
+      "disposition": "render",
+      "claim": {
+        "claimId": "property.integrity.message",
+        "statement": "Within the synthetic target scope, receiver processing detects unauthorized message modification, insertion, deletion, or truncation.",
+        "type": "invariant",
+        "kind": "data-integrity",
+        "criticality": "high",
+        "targetLevel": "A2",
+        "requiredLanes": [
+          "adversarial",
+          "behavior",
+          "spec"
+        ],
+        "requiredEvidenceKinds": [
+          "conformance",
+          "fuzz",
+          "integration",
+          "mutation",
+          "schema",
+          "unit"
+        ],
+        "evidenceMappings": [
+          {
+            "decisionId": "mapping.evidence.message-integrity.specification",
+            "sourceEvidenceKind": "specification",
+            "disposition": "render",
+            "rendered": {
+              "projection": "direct",
+              "requiredLanes": [
+                "spec"
+              ],
+              "requiredEvidenceKinds": [
+                "conformance",
+                "schema"
+              ]
+            }
+          },
+          {
+            "decisionId": "mapping.evidence.message-integrity.behavioral",
+            "sourceEvidenceKind": "behavioral-test",
+            "disposition": "render",
+            "rendered": {
+              "projection": "direct",
+              "requiredLanes": [
+                "behavior"
+              ],
+              "requiredEvidenceKinds": [
+                "integration",
+                "unit"
+              ]
+            }
+          },
+          {
+            "decisionId": "mapping.evidence.message-integrity.adversarial",
+            "sourceEvidenceKind": "adversarial-test",
+            "disposition": "render",
+            "rendered": {
+              "projection": "direct",
+              "requiredLanes": [
+                "adversarial"
+              ],
+              "requiredEvidenceKinds": [
+                "fuzz",
+                "mutation"
+              ]
+            }
+          }
+        ],
+        "sourceRefs": [
+          {
+            "kind": "spec",
+            "uri": "pack/catalogs/v1/property-catalog.json",
+            "section": "#/properties/property.integrity.message",
+            "description": "Exact bound synthetic/public CCA property-catalog entry; this reference does not establish satisfaction."
+          }
+        ],
+        "threatTags": {
+          "stride": [
+            "Tampering"
+          ],
+          "cwe": [
+            "CWE-345"
+          ]
+        },
+        "trustBoundary": {
+          "boundaryIds": [
+            "boundary.synthetic.network"
+          ],
+          "entryPoints": [
+            "synthetic-receiver",
+            "synthetic-sender"
+          ],
+          "attackerControlled": true,
+          "dataClasses": [
+            "synthetic-message"
+          ],
+          "notes": [
+            "Synthetic test-only trust-boundary projection."
+          ]
+        },
+        "scopeRefs": {
+          "objectIds": [
+            "component.synthetic.receiver",
+            "component.synthetic.sender"
+          ],
+          "morphismIds": [
+            "morphism.synthetic.transfer"
+          ],
+          "diagramIds": [
+            "diagram.synthetic.flow"
+          ],
+          "acceptanceTestIds": [
+            "acceptance.synthetic.deterministic-render"
+          ]
+        },
+        "provenance": {
+          "origin": "generated",
+          "generator": "cca-ae-renderer/v1",
+          "source": "pack/catalogs/v1/property-catalog.json#/properties/property.integrity.message",
+          "version": "0.0.0"
+        },
+        "notes": [
+          "Generated native claim is a synthetic requirements projection, not a satisfied claim."
+        ]
+      }
+    },
+    {
+      "propertyId": "property.integrity.state",
+      "disposition": "render",
+      "claim": {
+        "claimId": "property.integrity.state",
+        "statement": "Within the synthetic target scope, security-relevant state changes only through the explicitly modeled valid transitions.",
+        "type": "invariant",
+        "kind": "data-integrity",
+        "criticality": "medium",
+        "targetLevel": "A1",
+        "requiredLanes": [
+          "adversarial",
+          "behavior",
+          "spec"
+        ],
+        "requiredEvidenceKinds": [
+          "conformance",
+          "fuzz",
+          "integration",
+          "mutation",
+          "schema",
+          "unit"
+        ],
+        "evidenceMappings": [
+          {
+            "decisionId": "mapping.evidence.state-integrity.specification",
+            "sourceEvidenceKind": "specification",
+            "disposition": "render",
+            "rendered": {
+              "projection": "direct",
+              "requiredLanes": [
+                "spec"
+              ],
+              "requiredEvidenceKinds": [
+                "conformance",
+                "schema"
+              ]
+            }
+          },
+          {
+            "decisionId": "mapping.evidence.state-integrity.behavioral",
+            "sourceEvidenceKind": "behavioral-test",
+            "disposition": "render",
+            "rendered": {
+              "projection": "direct",
+              "requiredLanes": [
+                "behavior"
+              ],
+              "requiredEvidenceKinds": [
+                "integration",
+                "unit"
+              ]
+            }
+          },
+          {
+            "decisionId": "mapping.evidence.state-integrity.adversarial",
+            "sourceEvidenceKind": "adversarial-test",
+            "disposition": "render",
+            "rendered": {
+              "projection": "direct",
+              "requiredLanes": [
+                "adversarial"
+              ],
+              "requiredEvidenceKinds": [
+                "fuzz",
+                "mutation"
+              ]
+            }
+          }
+        ],
+        "sourceRefs": [
+          {
+            "kind": "spec",
+            "uri": "pack/catalogs/v1/property-catalog.json",
+            "section": "#/properties/property.integrity.state",
+            "description": "Exact bound synthetic/public CCA property-catalog entry; this reference does not establish satisfaction."
+          }
+        ],
+        "threatTags": {
+          "stride": [
+            "Tampering"
+          ],
+          "cwe": [
+            "CWE-20"
+          ]
+        },
+        "trustBoundary": {
+          "boundaryIds": [
+            "boundary.synthetic.network"
+          ],
+          "entryPoints": [
+            "synthetic-receiver",
+            "synthetic-sender"
+          ],
+          "attackerControlled": true,
+          "dataClasses": [
+            "synthetic-message"
+          ],
+          "notes": [
+            "Synthetic test-only trust-boundary projection."
+          ]
+        },
+        "scopeRefs": {
+          "objectIds": [
+            "component.synthetic.receiver",
+            "component.synthetic.sender"
+          ],
+          "morphismIds": [
+            "morphism.synthetic.transfer"
+          ],
+          "diagramIds": [
+            "diagram.synthetic.flow"
+          ],
+          "acceptanceTestIds": [
+            "acceptance.synthetic.deterministic-render"
+          ]
+        },
+        "provenance": {
+          "origin": "generated",
+          "generator": "cca-ae-renderer/v1",
+          "source": "pack/catalogs/v1/property-catalog.json#/properties/property.integrity.state",
+          "version": "0.0.0"
+        },
+        "notes": [
+          "Generated native claim is a synthetic requirements projection, not a satisfied claim."
+        ]
+      }
+    }
+  ],
+  "threatMappings": [
+    {
+      "threatId": "threat.confidentiality.passive-message-disclosure",
+      "disposition": "render",
+      "threat": {
+        "threatId": "threat.confidentiality.passive-message-disclosure",
+        "description": "Within the synthetic scope, an observer obtains message content from an exposed communication representation.",
+        "stride": "Information Disclosure",
+        "cwe": "CWE-200",
+        "relatedClaimIds": [
+          "property.confidentiality.message"
+        ],
+        "trustBoundaryIds": [
+          "boundary.synthetic.network"
+        ],
+        "notes": [
+          "Explicit source capability retained by reference: capability.network.observe.",
+          "CCA preconditions, assumptions, exclusions, and impact remain authoritative in the exact bound threat catalog."
+        ]
+      }
+    },
+    {
+      "threatId": "threat.confidentiality.secret-material-extraction",
+      "disposition": "render",
+      "threat": {
+        "threatId": "threat.confidentiality.secret-material-extraction",
+        "description": "Within the synthetic scope, an attacker obtains secret material from modeled endpoint state or observation.",
+        "stride": "Information Disclosure",
+        "cwe": "CWE-522",
+        "relatedClaimIds": [
+          "property.confidentiality.key-material"
+        ],
+        "trustBoundaryIds": [
+          "boundary.synthetic.network"
+        ],
+        "notes": [
+          "Explicit source capability retained by reference: capability.endpoint.read-memory.",
+          "CCA preconditions, assumptions, exclusions, and impact remain authoritative in the exact bound threat catalog."
+        ]
+      }
+    },
+    {
+      "threatId": "threat.integrity.in-transit-modification",
+      "disposition": "render",
+      "threat": {
+        "threatId": "threat.integrity.in-transit-modification",
+        "description": "Within the synthetic scope, an active path attacker alters protected input before receiver processing.",
+        "stride": "Tampering",
+        "cwe": "CWE-345",
+        "relatedClaimIds": [
+          "property.integrity.message"
+        ],
+        "trustBoundaryIds": [
+          "boundary.synthetic.network"
+        ],
+        "notes": [
+          "Explicit source capability retained by reference: capability.network.modify.",
+          "CCA preconditions, assumptions, exclusions, and impact remain authoritative in the exact bound threat catalog."
+        ]
+      }
+    }
+  ],
+  "scopeMapping": {
+    "disposition": "render",
+    "scope": {
+      "profileId": "profile.synthetic.cca-210",
+      "contextPackIds": [
+        "context.synthetic.cca-210"
+      ],
+      "componentGlobs": [
+        "src/synthetic-receiver/**",
+        "src/synthetic-sender/**"
+      ],
+      "target": {
+        "repository": "itdojp/synthetic-crypto-target",
+        "commit": "1111111111111111111111111111111111111111",
+        "tree": "2222222222222222222222222222222222222222"
+      },
+      "inScope": [
+        "src/synthetic-receiver/**",
+        "src/synthetic-sender/**"
+      ],
+      "outOfScope": [
+        "fixtures/private/**"
+      ],
+      "trustBoundaries": [
+        {
+          "id": "boundary.synthetic.network",
+          "name": "Synthetic network boundary",
+          "entryPoints": [
+            "synthetic-receiver",
+            "synthetic-sender"
+          ],
+          "attackerControlled": true,
+          "description": "Synthetic test-only entry boundary; no live system is represented.",
+          "dataClasses": [
+            "synthetic-message"
+          ],
+          "scopeRefs": [
+            "component.synthetic.receiver",
+            "component.synthetic.sender"
+          ]
+        }
+      ],
+      "treeProjection": {
+        "disposition": "lossy",
+        "sourceField": "target.tree",
+        "nativeArtifact": "security-audit-scope/v1",
+        "omittedField": "target.tree",
+        "reason": "The pinned native audit-scope schema has a full commit field but no Git tree field; the exact tree remains authoritative in this plan and CCA-240 provenance."
+      }
+    }
+  },
+  "safety": {
+    "executable": false,
+    "networkRequired": false,
+    "secretsAllowed": false,
+    "privateEvidenceAllowed": false,
+    "targetContentMayOverrideMappings": false,
+    "upstreamExecutionRequired": false,
+    "repositoryRelativePathsOnly": true,
+    "rejectSymlinks": true
+  },
+  "fixtureClassification": "synthetic-test-only"
+}

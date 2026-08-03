@@ -1,0 +1,231 @@
+{
+  "schemaVersion": "cryptocomm-resolved-profile/v1",
+  "profileId": "profile.synthetic.cca-210",
+  "state": "complete",
+  "inputBindings": {
+    "moduleCatalog": {
+      "contractId": "cryptocomm-capability-module-catalog/v1",
+      "catalogId": "cryptocomm-capability-modules",
+      "catalogVersion": "0.1.0",
+      "digest": {
+        "algorithm": "sha256",
+        "value": "fc04473aaa15ad5ebe9de5e102ee9f65ca877c42fe5e7830d08d59145eea28c3"
+      }
+    },
+    "propertyCatalog": {
+      "contractId": "cryptocomm-property-catalog/v1",
+      "catalogId": "cryptocomm-properties",
+      "catalogVersion": "0.1.0",
+      "digest": {
+        "algorithm": "sha256",
+        "value": "11c76e7c602714e7b860220babeaaf214a825eb6b1bc55677fb11265e2d3da90"
+      }
+    },
+    "attackerCatalog": {
+      "contractId": "cryptocomm-attacker-catalog/v1",
+      "catalogId": "cryptocomm-attackers",
+      "catalogVersion": "0.1.0",
+      "digest": {
+        "algorithm": "sha256",
+        "value": "66d8aacaabcb5edad809f8fe6c4ae4ea324c411178fd12f6e670843a694d4cc5"
+      }
+    },
+    "threatCatalog": {
+      "contractId": "cryptocomm-threat-catalog/v1",
+      "catalogId": "cryptocomm-threats",
+      "catalogVersion": "0.1.0",
+      "digest": {
+        "algorithm": "sha256",
+        "value": "f81921d192768ca84c6f9ded24fe7aed98cdc3f0f300f30d2d656ca47aee85d6"
+      }
+    }
+  },
+  "requestedModules": [
+    "module.communication.confidentiality-integrity"
+  ],
+  "modules": {
+    "module.communication.confidentiality-integrity": {
+      "id": "module.communication.confidentiality-integrity",
+      "state": "resolved",
+      "requested": true,
+      "requiredBy": []
+    }
+  },
+  "selections": {
+    "properties": {
+      "property.confidentiality.key-material": {
+        "id": "property.confidentiality.key-material",
+        "sources": [
+          {
+            "sourceModuleId": "module.communication.confidentiality-integrity",
+            "inclusionReasons": [
+              "module-selection",
+              "threat-affected-property"
+            ]
+          }
+        ]
+      },
+      "property.confidentiality.message": {
+        "id": "property.confidentiality.message",
+        "sources": [
+          {
+            "sourceModuleId": "module.communication.confidentiality-integrity",
+            "inclusionReasons": [
+              "module-selection",
+              "threat-affected-property"
+            ]
+          }
+        ]
+      },
+      "property.integrity.message": {
+        "id": "property.integrity.message",
+        "sources": [
+          {
+            "sourceModuleId": "module.communication.confidentiality-integrity",
+            "inclusionReasons": [
+              "module-selection",
+              "threat-affected-property"
+            ]
+          }
+        ]
+      },
+      "property.integrity.state": {
+        "id": "property.integrity.state",
+        "sources": [
+          {
+            "sourceModuleId": "module.communication.confidentiality-integrity",
+            "inclusionReasons": [
+              "module-selection"
+            ]
+          }
+        ]
+      }
+    },
+    "capabilities": {
+      "capability.endpoint.read-memory": {
+        "id": "capability.endpoint.read-memory",
+        "sources": [
+          {
+            "sourceModuleId": "module.communication.confidentiality-integrity",
+            "inclusionReasons": [
+              "threat-capability"
+            ]
+          }
+        ]
+      },
+      "capability.network.modify": {
+        "id": "capability.network.modify",
+        "sources": [
+          {
+            "sourceModuleId": "module.communication.confidentiality-integrity",
+            "inclusionReasons": [
+              "module-selection",
+              "threat-capability"
+            ]
+          }
+        ]
+      },
+      "capability.network.observe": {
+        "id": "capability.network.observe",
+        "sources": [
+          {
+            "sourceModuleId": "module.communication.confidentiality-integrity",
+            "inclusionReasons": [
+              "attacker-capability",
+              "module-selection",
+              "threat-capability"
+            ]
+          }
+        ]
+      },
+      "capability.observation.side-channel": {
+        "id": "capability.observation.side-channel",
+        "sources": [
+          {
+            "sourceModuleId": "module.communication.confidentiality-integrity",
+            "inclusionReasons": [
+              "threat-capability"
+            ]
+          }
+        ]
+      },
+      "capability.observation.traffic-pattern": {
+        "id": "capability.observation.traffic-pattern",
+        "sources": [
+          {
+            "sourceModuleId": "module.communication.confidentiality-integrity",
+            "inclusionReasons": [
+              "attacker-capability"
+            ]
+          }
+        ]
+      }
+    },
+    "attackers": {
+      "attacker.passive-network-observer": {
+        "id": "attacker.passive-network-observer",
+        "sources": [
+          {
+            "sourceModuleId": "module.communication.confidentiality-integrity",
+            "inclusionReasons": [
+              "module-selection"
+            ]
+          }
+        ]
+      }
+    },
+    "threats": {
+      "threat.confidentiality.passive-message-disclosure": {
+        "id": "threat.confidentiality.passive-message-disclosure",
+        "sources": [
+          {
+            "sourceModuleId": "module.communication.confidentiality-integrity",
+            "inclusionReasons": [
+              "module-selection"
+            ]
+          }
+        ]
+      },
+      "threat.confidentiality.secret-material-extraction": {
+        "id": "threat.confidentiality.secret-material-extraction",
+        "sources": [
+          {
+            "sourceModuleId": "module.communication.confidentiality-integrity",
+            "inclusionReasons": [
+              "module-selection"
+            ]
+          }
+        ]
+      },
+      "threat.integrity.in-transit-modification": {
+        "id": "threat.integrity.in-transit-modification",
+        "sources": [
+          {
+            "sourceModuleId": "module.communication.confidentiality-integrity",
+            "inclusionReasons": [
+              "module-selection"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "assumptions": [
+    {
+      "sourceModuleId": "module.communication.confidentiality-integrity",
+      "statement": "The assessment scope identifies which communication content and key material are intended to remain confidential and which state transitions require integrity."
+    }
+  ],
+  "exclusions": [
+    {
+      "sourceModuleId": "module.communication.confidentiality-integrity",
+      "statement": "Selection does not prescribe a cipher, protocol, key size, implementation, or deployment architecture."
+    }
+  ],
+  "fixtureClassification": "synthetic-test-only",
+  "safety": {
+    "executable": false,
+    "networkRequired": false,
+    "secretsAllowed": false
+  }
+}
