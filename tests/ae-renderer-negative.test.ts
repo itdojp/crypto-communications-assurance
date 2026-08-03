@@ -157,6 +157,51 @@ describe("CCA-210 fail-closed negative boundaries", () => {
     },
   );
 
+  it.each(["CCA", "upstream"] as const)(
+    "rejects an overlong unknown %s role at the aggregate record path",
+    async (kind) => {
+      const input = await loadCca210ValidationInput();
+      const overlongRole = "x".repeat(65);
+      const candidate =
+        kind === "CCA"
+          ? (() => {
+              const roles = {
+                ...input.ccaInputBytes,
+              } as Record<string, Uint8Array>;
+              delete roles.resolvedProfile;
+              roles[overlongRole] = Buffer.from("{}\n");
+              return {
+                ...input,
+                ccaInputBytes:
+                  roles as AeRenderPlanValidationInput["ccaInputBytes"],
+              };
+            })()
+          : (() => {
+              const roles = {
+                ...input.upstreamSchemaBytes,
+              } as Record<string, Uint8Array>;
+              delete roles.contextPack;
+              roles[overlongRole] = Buffer.from("{}\n");
+              return {
+                ...input,
+                upstreamSchemaBytes:
+                  roles as AeRenderPlanValidationInput["upstreamSchemaBytes"],
+              };
+            })();
+      const result = validateAeRenderPlan(candidate);
+      expect(result.valid).toBe(false);
+      if (result.valid) return;
+      const expectedCode =
+        kind === "CCA" ? "CCA_INPUT_ROLE_UNKNOWN" : "UPSTREAM_SCHEMA_ROLE_UNKNOWN";
+      const matches = result.diagnostics.filter(({ code }) => code === expectedCode);
+      expect(matches).toHaveLength(1);
+      expect(matches[0]?.path).toBe(
+        kind === "CCA" ? "/ccaInputs" : "/upstream/schemas",
+      );
+      expect(matches[0]?.path).not.toContain(overlongRole);
+    },
+  );
+
   it.each([null, undefined, "invalid", 1, false, [], {}])(
     "rejects a malformed Context Pack container without throwing: %p",
     async (contextPackBytes) => {

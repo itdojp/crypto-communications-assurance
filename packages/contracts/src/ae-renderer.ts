@@ -62,6 +62,7 @@ export const aeCcaInputRoles = [
 export type AeCcaInputRole = (typeof aeCcaInputRoles)[number];
 
 export const maximumAeRenderDiagnostics = 256;
+const maximumAeInputRoleLength = 64;
 
 export interface AeRenderDiagnostic {
   readonly code: string;
@@ -591,18 +592,26 @@ function exactByteRecordDiagnostics(
       ),
     );
   }
-  for (const role of ownKeys
-    .filter((key): key is string => typeof key === "string")
-    .sort(compare)) {
-    if (!allowed.has(role)) {
-      diagnostics.push(
-        diagnostic(
-          unknownRoleCode,
-          `${path}/${pointerSegment(role)}`,
-          "Supplied exact bytes use a role outside the closed v1 input set.",
-        ),
-      );
-    }
+  const stringKeys = ownKeys.filter(
+    (key): key is string => typeof key === "string",
+  );
+  if (stringKeys.some((role) => role.length > maximumAeInputRoleLength)) {
+    return [
+      diagnostic(
+        unknownRoleCode,
+        path,
+        "Supplied exact bytes include an overlong role outside the closed v1 input set.",
+      ),
+    ];
+  }
+  if (stringKeys.some((role) => !allowed.has(role))) {
+    diagnostics.push(
+      diagnostic(
+        unknownRoleCode,
+        path,
+        "Supplied exact bytes use a role outside the closed v1 input set.",
+      ),
+    );
   }
   for (const role of roles) {
     const property = ownDataProperty(value, role);
