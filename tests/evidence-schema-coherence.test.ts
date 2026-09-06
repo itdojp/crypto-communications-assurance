@@ -93,7 +93,11 @@ describe("CCA-240 shared schema definition coherence", () => {
     ]);
   });
 
-  it.each([null, [], "not-a-definition-map"])("rejects malformed $defs: %j", (defs) => {
+  it.each([
+    { label: "null", defs: null },
+    { label: "array", defs: [] },
+    { label: "string", defs: "not-a-definition-map" },
+  ])("rejects malformed $defs: $label", ({ defs }) => {
     const snapshots: EvidenceSchemaSnapshot[] = syntheticSnapshots();
     snapshots[0] = { name: schemaFiles[0], schema: { $defs: defs } };
     expect(evidenceDefinitionDrift(snapshots)).toContainEqual({
