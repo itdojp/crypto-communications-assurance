@@ -8,3 +8,9 @@ path = ["**"]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2026 itdojp contributors"
 SPDX-License-Identifier = "Apache-2.0"
+
+[[annotations]]
+path = ["integrations/ae-framework/pins/c5da6115638fdbfeebbc458b39fa6916db66afb0/schema/*.json"]
+precedence = "override"
+SPDX-FileCopyrightText = "ae-framework contributors"
+SPDX-License-Identifier = "Apache-2.0"

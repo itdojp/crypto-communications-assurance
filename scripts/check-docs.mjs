@@ -31,6 +31,7 @@ const requiredFiles = [
   "docs/decisions/0003-security-catalog-separation-and-relationships.md",
   "docs/decisions/0004-capability-modules-and-deterministic-profile-resolution.md",
   "docs/decisions/0005-execution-provenance-freshness-and-binding.md",
+  "docs/decisions/0006-cca-owned-render-plan-and-pinned-ae-native-projection.md",
   "docs/EVIDENCE_CONTRACTS.md",
   "schema/cryptocomm-pack-v1.schema.json",
   "schema/README.md",
@@ -47,10 +48,16 @@ const requiredFiles = [
   "schema/cryptocomm-evidence-provenance-v1.schema.json",
   "schema/cryptocomm-freshness-assessment-v1.schema.json",
   "schema/cryptocomm-evidence-binding-set-v1.schema.json",
+  "schema/cryptocomm-ae-render-plan-v1.schema.json",
+  "integrations/ae-framework/README.md",
+  "integrations/ae-framework/pins/c5da6115638fdbfeebbc458b39fa6916db66afb0/UPSTREAM.json",
   "pack/modules/v1/capability-module-catalog.json",
   "pack/evidence/v1/execution-status-matrix.json",
   "pack/evidence/v1/evidence-classification-matrix.json",
   "packages/contracts/src/evidence.ts",
+  "packages/contracts/src/ae-renderer.ts",
+  "fixtures/valid/cca-210/ae-render-plan-v1.json",
+  "fixtures/valid/cca-210/records/evidence-binding-set-v1.json",
 ];
 
 const requiredDirectories = [
@@ -94,6 +101,10 @@ for (const path of requiredDirectories) {
   } catch {
     failures.push(`missing required directory: ${path}`);
   }
+}
+if (failures.length > 0) {
+  console.error(failures.join("\n"));
+  process.exit(1);
 }
 
 const statusSemantics = await readFile("docs/STATUS_SEMANTICS.md", "utf8");
@@ -143,6 +154,15 @@ for (const distinction of [
   "`local proof != machine-checked proof`",
   "`runtime mitigation != absence of a bug`",
   "`binding set != evidence storage`",
+  "`property != product claim`",
+  "`generated native claim != satisfied claim`",
+  "`shape-valid != semantically compatible`",
+  "`pass render != evidence satisfied`",
+  "`Context Pack reference != Context Pack synthesis`",
+  "`full commit in native audit scope != full CCA target identity`",
+  "`explicit STRIDE/CWE mapping != automated threat classification`",
+  "`renderer != ae-framework execution`",
+  "`pinned schema conformance != product-wide compatibility`",
 ]) {
   if (!architecture.includes(distinction)) {
     failures.push(`ARCHITECTURE.md does not document ${distinction}`);
@@ -166,6 +186,8 @@ for (const migrationBoundary of [
   "The only accepted pair is legacy `planned` to new `unknown`",
   "`LEGACY_STATUS_MIGRATION_FORBIDDEN`",
   "evidence-enriching migration",
+  "exact dated CWE Top 25 edition",
+  "implementation-identity, package-version, or render-plan contract-version",
 ]) {
   if (!versioning.includes(migrationBoundary)) {
     failures.push(`CONTRACT_VERSIONING.md does not document ${migrationBoundary}`);
@@ -188,6 +210,7 @@ for (const contractId of [
   "`cryptocomm-evidence-provenance/v1`",
   "`cryptocomm-freshness-assessment/v1`",
   "`cryptocomm-evidence-binding-set/v1`",
+  "`cryptocomm-ae-render-plan/v1`",
 ]) {
   if (!schemaReadme.includes(contractId)) {
     failures.push(`schema/README.md does not document ${contractId}`);
@@ -224,6 +247,35 @@ if (
   failures.push(
     "EVIDENCE_CONTRACTS.md does not distinguish a private-opaque artifact reference from its public-safe provenance record",
   );
+}
+
+const aeIntegration = await readFile("integrations/ae-framework/README.md", "utf8");
+for (const boundary of [
+  "c5da6115638fdbfeebbc458b39fa6916db66afb0",
+  "0d69865b37a4476a20f0f1f1f42031967d3ec3a7",
+  "do not execute ae-framework",
+  "not product-wide compatibility",
+]) {
+  if (!aeIntegration.includes(boundary)) {
+    failures.push(`ae-framework integration documentation does not include ${boundary}`);
+  }
+}
+
+const renderDecision = await readFile(
+  "docs/decisions/0006-cca-owned-render-plan-and-pinned-ae-native-projection.md",
+  "utf8",
+);
+for (const boundary of [
+  "cryptocomm-ae-render-plan/v1",
+  "There is no CCA-210 render-result or output-index contract",
+  "operational-procedure",
+  "human-review",
+  "treeProjection",
+  "CCA-330",
+]) {
+  if (!renderDecision.includes(boundary)) {
+    failures.push(`ADR 0006 does not document ${boundary}`);
+  }
 }
 
 const catalogCoverage = await readFile("docs/CATALOG_COVERAGE.md", "utf8");

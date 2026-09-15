@@ -1,0 +1,215 @@
+{
+  "schemaVersion": "security-claim/v1",
+  "claims": [
+    {
+      "id": "property.confidentiality.key-material",
+      "type": "invariant",
+      "statement": "Within the synthetic target scope, secret keying material remains inside the explicitly modeled handling boundary.",
+      "sourceRefs": [
+        {
+          "kind": "spec",
+          "uri": "pack/catalogs/v1/property-catalog.json",
+          "section": "#/properties/property.confidentiality.key-material",
+          "description": "Exact bound synthetic/public CCA property-catalog entry; this reference does not establish satisfaction."
+        }
+      ],
+      "criticality": "critical",
+      "targetLevel": "A3",
+      "threatTags": {
+        "stride": [
+          "Information Disclosure"
+        ],
+        "cwe": [
+          "CWE-522"
+        ]
+      },
+      "trustBoundary": {
+        "boundaryIds": [
+          "boundary.synthetic.network"
+        ],
+        "entryPoints": [
+          "synthetic-receiver",
+          "synthetic-sender"
+        ],
+        "attackerControlled": true,
+        "dataClasses": [
+          "synthetic-message"
+        ],
+        "notes": [
+          "Synthetic test-only trust-boundary projection."
+        ]
+      },
+      "requiredLanes": [
+        "adversarial",
+        "spec"
+      ],
+      "provenance": {
+        "origin": "generated",
+        "generator": "cca-ae-renderer/v1",
+        "source": "pack/catalogs/v1/property-catalog.json#/properties/property.confidentiality.key-material",
+        "version": "0.0.0"
+      },
+      "notes": [
+        "Generated native claim is a synthetic requirements projection, not a satisfied claim."
+      ]
+    },
+    {
+      "id": "property.confidentiality.message",
+      "type": "invariant",
+      "statement": "Within the synthetic target scope, message content is unavailable outside the explicitly modeled recipient boundary.",
+      "sourceRefs": [
+        {
+          "kind": "spec",
+          "uri": "pack/catalogs/v1/property-catalog.json",
+          "section": "#/properties/property.confidentiality.message",
+          "description": "Exact bound synthetic/public CCA property-catalog entry; this reference does not establish satisfaction."
+        }
+      ],
+      "criticality": "high",
+      "targetLevel": "A2",
+      "threatTags": {
+        "stride": [
+          "Information Disclosure"
+        ],
+        "cwe": [
+          "CWE-200"
+        ]
+      },
+      "trustBoundary": {
+        "boundaryIds": [
+          "boundary.synthetic.network"
+        ],
+        "entryPoints": [
+          "synthetic-receiver",
+          "synthetic-sender"
+        ],
+        "attackerControlled": true,
+        "dataClasses": [
+          "synthetic-message"
+        ],
+        "notes": [
+          "Synthetic test-only trust-boundary projection."
+        ]
+      },
+      "requiredLanes": [
+        "adversarial",
+        "spec"
+      ],
+      "provenance": {
+        "origin": "generated",
+        "generator": "cca-ae-renderer/v1",
+        "source": "pack/catalogs/v1/property-catalog.json#/properties/property.confidentiality.message",
+        "version": "0.0.0"
+      },
+      "notes": [
+        "Generated native claim is a synthetic requirements projection, not a satisfied claim."
+      ]
+    },
+    {
+      "id": "property.integrity.message",
+      "type": "invariant",
+      "statement": "Within the synthetic target scope, receiver processing detects unauthorized message modification, insertion, deletion, or truncation.",
+      "sourceRefs": [
+        {
+          "kind": "spec",
+          "uri": "pack/catalogs/v1/property-catalog.json",
+          "section": "#/properties/property.integrity.message",
+          "description": "Exact bound synthetic/public CCA property-catalog entry; this reference does not establish satisfaction."
+        }
+      ],
+      "criticality": "high",
+      "targetLevel": "A2",
+      "threatTags": {
+        "stride": [
+          "Tampering"
+        ],
+        "cwe": [
+          "CWE-345"
+        ]
+      },
+      "trustBoundary": {
+        "boundaryIds": [
+          "boundary.synthetic.network"
+        ],
+        "entryPoints": [
+          "synthetic-receiver",
+          "synthetic-sender"
+        ],
+        "attackerControlled": true,
+        "dataClasses": [
+          "synthetic-message"
+        ],
+        "notes": [
+          "Synthetic test-only trust-boundary projection."
+        ]
+      },
+      "requiredLanes": [
+        "adversarial",
+        "behavior",
+        "spec"
+      ],
+      "provenance": {
+        "origin": "generated",
+        "generator": "cca-ae-renderer/v1",
+        "source": "pack/catalogs/v1/property-catalog.json#/properties/property.integrity.message",
+        "version": "0.0.0"
+      },
+      "notes": [
+        "Generated native claim is a synthetic requirements projection, not a satisfied claim."
+      ]
+    },
+    {
+      "id": "property.integrity.state",
+      "type": "invariant",
+      "statement": "Within the synthetic target scope, security-relevant state changes only through the explicitly modeled valid transitions.",
+      "sourceRefs": [
+        {
+          "kind": "spec",
+          "uri": "pack/catalogs/v1/property-catalog.json",
+          "section": "#/properties/property.integrity.state",
+          "description": "Exact bound synthetic/public CCA property-catalog entry; this reference does not establish satisfaction."
+        }
+      ],
+      "criticality": "medium",
+      "targetLevel": "A1",
+      "threatTags": {
+        "stride": [
+          "Tampering"
+        ],
+        "cwe": [
+          "CWE-20"
+        ]
+      },
+      "trustBoundary": {
+        "boundaryIds": [
+          "boundary.synthetic.network"
+        ],
+        "entryPoints": [
+          "synthetic-receiver",
+          "synthetic-sender"
+        ],
+        "attackerControlled": true,
+        "dataClasses": [
+          "synthetic-message"
+        ],
+        "notes": [
+          "Synthetic test-only trust-boundary projection."
+        ]
+      },
+      "requiredLanes": [
+        "adversarial",
+        "behavior",
+        "spec"
+      ],
+      "provenance": {
+        "origin": "generated",
+        "generator": "cca-ae-renderer/v1",
+        "source": "pack/catalogs/v1/property-catalog.json#/properties/property.integrity.state",
+        "version": "0.0.0"
+      },
+      "notes": [
+        "Generated native claim is a synthetic requirements projection, not a satisfied claim."
+      ]
+    }
+  ]
+}

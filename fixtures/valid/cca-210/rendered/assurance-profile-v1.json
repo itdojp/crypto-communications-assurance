@@ -1,0 +1,150 @@
+{
+  "schemaVersion": "assurance-profile/v1",
+  "profileId": "profile.synthetic.cca-210",
+  "scope": {
+    "contextPackSources": [
+      "fixtures/valid/cca-210/context-pack-v1.json"
+    ],
+    "componentGlobs": [
+      "src/synthetic-receiver/**",
+      "src/synthetic-sender/**"
+    ]
+  },
+  "claims": [
+    {
+      "id": "property.confidentiality.key-material",
+      "statement": "Within the synthetic target scope, secret keying material remains inside the explicitly modeled handling boundary.",
+      "kind": "security",
+      "criticality": "critical",
+      "targetLevel": "A3",
+      "minIndependentSources": 2,
+      "scopeRefs": {
+        "objectIds": [
+          "component.synthetic.receiver",
+          "component.synthetic.sender"
+        ],
+        "morphismIds": [
+          "morphism.synthetic.transfer"
+        ],
+        "diagramIds": [
+          "diagram.synthetic.flow"
+        ],
+        "acceptanceTestIds": [
+          "acceptance.synthetic.deterministic-render"
+        ]
+      },
+      "requiredLanes": [
+        "adversarial",
+        "spec"
+      ],
+      "requiredEvidenceKinds": [
+        "conformance",
+        "differential",
+        "fuzz",
+        "schema"
+      ]
+    },
+    {
+      "id": "property.confidentiality.message",
+      "statement": "Within the synthetic target scope, message content is unavailable outside the explicitly modeled recipient boundary.",
+      "kind": "security",
+      "criticality": "high",
+      "targetLevel": "A2",
+      "scopeRefs": {
+        "objectIds": [
+          "component.synthetic.receiver",
+          "component.synthetic.sender"
+        ],
+        "morphismIds": [
+          "morphism.synthetic.transfer"
+        ],
+        "diagramIds": [
+          "diagram.synthetic.flow"
+        ],
+        "acceptanceTestIds": [
+          "acceptance.synthetic.deterministic-render"
+        ]
+      },
+      "requiredLanes": [
+        "adversarial",
+        "spec"
+      ],
+      "requiredEvidenceKinds": [
+        "conformance",
+        "differential",
+        "fuzz",
+        "schema"
+      ]
+    },
+    {
+      "id": "property.integrity.message",
+      "statement": "Within the synthetic target scope, receiver processing detects unauthorized message modification, insertion, deletion, or truncation.",
+      "kind": "data-integrity",
+      "criticality": "high",
+      "targetLevel": "A2",
+      "scopeRefs": {
+        "objectIds": [
+          "component.synthetic.receiver",
+          "component.synthetic.sender"
+        ],
+        "morphismIds": [
+          "morphism.synthetic.transfer"
+        ],
+        "diagramIds": [
+          "diagram.synthetic.flow"
+        ],
+        "acceptanceTestIds": [
+          "acceptance.synthetic.deterministic-render"
+        ]
+      },
+      "requiredLanes": [
+        "adversarial",
+        "behavior",
+        "spec"
+      ],
+      "requiredEvidenceKinds": [
+        "conformance",
+        "fuzz",
+        "integration",
+        "mutation",
+        "schema",
+        "unit"
+      ]
+    },
+    {
+      "id": "property.integrity.state",
+      "statement": "Within the synthetic target scope, security-relevant state changes only through the explicitly modeled valid transitions.",
+      "kind": "data-integrity",
+      "criticality": "medium",
+      "targetLevel": "A1",
+      "scopeRefs": {
+        "objectIds": [
+          "component.synthetic.receiver",
+          "component.synthetic.sender"
+        ],
+        "morphismIds": [
+          "morphism.synthetic.transfer"
+        ],
+        "diagramIds": [
+          "diagram.synthetic.flow"
+        ],
+        "acceptanceTestIds": [
+          "acceptance.synthetic.deterministic-render"
+        ]
+      },
+      "requiredLanes": [
+        "adversarial",
+        "behavior",
+        "spec"
+      ],
+      "requiredEvidenceKinds": [
+        "conformance",
+        "fuzz",
+        "integration",
+        "mutation",
+        "schema",
+        "unit"
+      ]
+    }
+  ]
+}
