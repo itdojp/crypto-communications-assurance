@@ -1044,7 +1044,8 @@ function contextDiagnostics(
 } {
   const diagnostics: AeRenderDiagnostic[] = [];
   const identifiers = emptyContextIdentifiers();
-  const allIdentifiers = emptyContextIdentifiers();
+  // Native audit-scope refs are untyped, so element IDs share one namespace.
+  const allIdentifiers = new Set<string>();
   let containsSyntheticFixture = false;
   const selectedContextIds = new Set(
     plan.scopeMapping.disposition === "render" && plan.scopeMapping.scope !== undefined
@@ -1116,16 +1117,12 @@ function contextDiagnostics(
       );
     }
     const groups = [
-      ["objects", allIdentifiers.objectIds, identifiers.objectIds],
-      ["morphisms", allIdentifiers.morphismIds, identifiers.morphismIds],
-      ["diagrams", allIdentifiers.diagramIds, identifiers.diagramIds],
-      [
-        "acceptance_tests",
-        allIdentifiers.acceptanceTestIds,
-        identifiers.acceptanceTestIds,
-      ],
+      ["objects", identifiers.objectIds],
+      ["morphisms", identifiers.morphismIds],
+      ["diagrams", identifiers.diagramIds],
+      ["acceptance_tests", identifiers.acceptanceTestIds],
     ] as const;
-    for (const [key, allTarget, selectedTarget] of groups) {
+    for (const [key, selectedTarget] of groups) {
       const entries = decoded.value[key];
       if (!Array.isArray(entries)) continue;
       for (const [entryIndex, entry] of entries.entries()) {
@@ -1134,7 +1131,7 @@ function contextDiagnostics(
             ? (entry as Record<string, unknown>).id
             : undefined;
         if (typeof id !== "string") continue;
-        if (allTarget.has(id)) {
+        if (allIdentifiers.has(id)) {
           diagnostics.push(
             diagnostic(
               "CONTEXT_PACK_ELEMENT_ID_DUPLICATE",
@@ -1143,7 +1140,7 @@ function contextDiagnostics(
             ),
           );
         }
-        allTarget.add(id);
+        allIdentifiers.add(id);
         if (selectedContextIds.has(binding.id)) selectedTarget.add(id);
       }
     }

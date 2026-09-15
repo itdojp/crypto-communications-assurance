@@ -891,6 +891,67 @@ describe("CCA-210 fail-closed negative boundaries", () => {
     expect(codes(result)).toContain("CONTEXT_SCOPE_REF_DANGLING");
   });
 
+  describe.each(["same", "separate"] as const)("Context Pack IDs in %s files", (location) => {
+    it.each([
+      ["objects", "objects"],
+      ["objects", "morphisms"],
+      ["objects", "diagrams"],
+      ["objects", "acceptance_tests"],
+      ["morphisms", "diagrams"],
+      ["morphisms", "acceptance_tests"],
+      ["diagrams", "acceptance_tests"],
+    ] as const)("rejects a shared ID between %s and %s", async (sourceKind, targetKind) => {
+      const [plan, input] = await Promise.all([
+        loadCca210Plan(),
+        loadCca210ValidationInput(),
+      ]);
+      const bindings = plan.contextPacks as JsonRecord[];
+      const originalBinding = bindings[0]!;
+      const originalId = originalBinding.id as string;
+      const originalBytes = input.contextPackBytes.get(originalId);
+      if (originalBytes === undefined) throw new Error("Context Pack fixture missing");
+      const decoded = decodeStrictJsonObject<JsonRecord>(originalBytes);
+      if (!decoded.valid) throw new Error("Context Pack fixture did not decode");
+      const context = structuredClone(decoded.value);
+      const collisionId = (context[sourceKind] as JsonRecord[])[0]!.id as string;
+      const scope = (plan.scopeMapping as JsonRecord).scope as JsonRecord;
+      let binding = originalBinding;
+      if (location === "separate") {
+        for (const kind of ["objects", "morphisms", "diagrams", "acceptance_tests"]) {
+          for (const entry of context[kind] as JsonRecord[]) entry.id = `${entry.id}.second`;
+        }
+        binding = {
+          ...originalBinding,
+          id: "context.synthetic.cca-210-second",
+          path: "fixtures/valid/cca-210/second-context-pack-v1.json",
+        };
+        bindings.push(binding);
+        (scope.contextPackIds as string[]).push(binding.id as string);
+      }
+      const targetEntries = context[targetKind] as JsonRecord[];
+      targetEntries.push({ ...targetEntries[0], id: collisionId });
+      (scope.trustBoundaries as JsonRecord[])[0]!.scopeRefs = [collisionId];
+      const contextBytes = serializePlan(context);
+      binding.sha256 = digest(contextBytes);
+      binding.byteLength = contextBytes.byteLength;
+      const schema = decodeStrictJsonObject(input.upstreamSchemaBytes.contextPack);
+      if (!schema.valid) throw new Error("Context Pack schema fixture did not decode");
+      expect(compileContractBytes(schema.value)(contextBytes).valid).toBe(true);
+
+      const candidate = {
+        ...input,
+        planBytes: serializePlan(plan),
+        contextPackBytes: new Map(input.contextPackBytes).set(binding.id as string, contextBytes),
+      };
+      const result = validateAeRenderPlan(candidate);
+      expect(codes(result)).toEqual(["CONTEXT_PACK_ELEMENT_ID_DUPLICATE"]);
+      expect(validateAeRenderPlan({
+        ...candidate,
+        contextPackBytes: new Map([...candidate.contextPackBytes].reverse()),
+      })).toEqual(result);
+    });
+  });
+
   it("rejects a dangling trust-boundary reference outside selected Context Packs", async () => {
     const result = await validateMutation((plan) => {
       const scope = (plan.scopeMapping as JsonRecord).scope as JsonRecord;

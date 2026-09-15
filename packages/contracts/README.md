@@ -38,6 +38,10 @@ supplying their bytes.
 
 Every supplied Context Pack is unconditionally validated against the exact
 pinned Context Pack schema; v1 does not permit a plan to opt out.
+CCA-210 also requires element IDs to be unique across objects, morphisms,
+diagrams, and acceptance tests across all supplied packs. Native audit-scope
+`scopeRefs` have no kind or pack qualifier, so cross-kind collisions are rejected
+with `CONTEXT_PACK_ELEMENT_ID_DUPLICATE` even if the upstream schema accepts them.
 
 Semantic checks cover exact digests and lengths; CCA/upstream contract and pin
 identity; resolved-profile/catalog closure; mapping/output completeness;
