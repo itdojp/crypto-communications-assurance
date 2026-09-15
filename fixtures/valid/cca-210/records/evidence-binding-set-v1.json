@@ -6,7 +6,7 @@
       "contractId": "cryptocomm-evidence-provenance/v1",
       "digest": {
         "algorithm": "sha256",
-        "value": "26bec93385a23d1c493b6559df8d189c677ac8eb0a8295b648250f4fa6f4ad2c"
+        "value": "c7bac663eeae3f23da89a5a988b37520d6c7624a68319fedd7ba1f5f6dca160c"
       },
       "recordId": "provenance.synthetic.cca-210-render"
     },
@@ -15,7 +15,7 @@
       "contractId": "cryptocomm-execution-result/v1",
       "digest": {
         "algorithm": "sha256",
-        "value": "7e95f8835c43916abcecc5cc940b23a84ff9dbe1774e43ce1efecbbaa5c8f626"
+        "value": "a7e59d8f314ebc9f7a9c0e7b22613db04d37437da046ad7417c01f8fddd6b2ce"
       },
       "recordId": "result.synthetic.cca-210-render"
     },
@@ -24,7 +24,7 @@
       "contractId": "cryptocomm-freshness-assessment/v1",
       "digest": {
         "algorithm": "sha256",
-        "value": "fe53503d7815ea8827b29fc4849ed815ce9ab72d0209f5cea79bb6c894a741cd"
+        "value": "c349f2a128526f1e5c92e915b12b8c8515526c049eb5e043f4975928942d91ab"
       },
       "recordId": "assessment.synthetic.cca-210-not-assessed"
     }

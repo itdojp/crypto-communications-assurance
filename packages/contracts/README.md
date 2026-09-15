@@ -42,6 +42,10 @@ CCA-210 also requires element IDs to be unique across objects, morphisms,
 diagrams, and acceptance tests across all supplied packs. Native audit-scope
 `scopeRefs` have no kind or pack qualifier, so cross-kind collisions are rejected
 with `CONTEXT_PACK_ELEMENT_ID_DUPLICATE` even if the upstream schema accepts them.
+Duplicate scanning stops once the diagnostic budget is exceeded, and oversized
+schema-error lists are summarized before diagnostic projection/spreading. These
+guards retain fail-closed errors without adding an element-count mapping rule;
+the existing per-file byte limit still applies to upstream schema validation.
 
 Semantic checks cover exact digests and lengths; CCA/upstream contract and pin
 identity; resolved-profile/catalog closure; mapping/output completeness;

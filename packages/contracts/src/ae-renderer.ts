@@ -396,6 +396,13 @@ function schemaDiagnostics(
   code = "CONTRACT_SCHEMA_INVALID",
 ): readonly AeRenderDiagnostic[] {
   if (result.valid) return [];
+  if (result.errors.length > maximumAeRenderDiagnostics) {
+    return [diagnostic(
+      "DIAGNOSTIC_LIMIT_EXCEEDED",
+      "",
+      `More than ${maximumAeRenderDiagnostics} diagnostics were produced; details were suppressed.`,
+    )];
+  }
   if (result.stage === "decode") {
     return result.errors.map((entry) =>
       diagnostic(entry.code, `${path}${entry.path}`, entry.message),
@@ -1139,6 +1146,9 @@ function contextDiagnostics(
               `Duplicate Context Pack element ID: ${id}.`,
             ),
           );
+          if (diagnostics.length > maximumAeRenderDiagnostics) {
+            return { diagnostics, identifiers, containsSyntheticFixture };
+          }
         }
         allIdentifiers.add(id);
         if (selectedContextIds.has(binding.id)) selectedTarget.add(id);

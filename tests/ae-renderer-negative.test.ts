@@ -8,6 +8,7 @@ import {
   compileContractBytes,
   decodeStrictJsonObject,
   maximumAeRenderDiagnostics,
+  maximumContractJsonBytes,
   normalizeAeRenderDiagnostics,
   renderAeNativeArtifacts,
   resolveProfile,
@@ -969,6 +970,46 @@ describe("CCA-210 fail-closed negative boundaries", () => {
       ]),
     );
   });
+
+  it.each(["duplicates", "schema-errors"] as const)(
+    "bounds large Context Pack %s without overflowing argument or diagnostic limits",
+    async (kind) => {
+      const [plan, input] = await Promise.all([
+        loadCca210Plan(),
+        loadCca210ValidationInput(),
+      ]);
+      const originalBinding = (plan.contextPacks as JsonRecord[])[0]!;
+      const originalBytes = input.contextPackBytes.get(originalBinding.id as string);
+      if (originalBytes === undefined) throw new Error("Context Pack fixture missing");
+      const decoded = decodeStrictJsonObject<JsonRecord>(originalBytes);
+      if (!decoded.valid) throw new Error("Context Pack fixture did not decode");
+      decoded.value.objects = kind === "duplicates"
+        ? [
+            ...decoded.value.objects as JsonRecord[],
+            ...Array.from({ length: 20_000 }, () => ({ id: "x", kind: "x" })),
+          ]
+        : Array.from({ length: 70_000 }, () => ({}));
+      const bytes = new TextEncoder().encode(JSON.stringify(decoded.value));
+      expect(bytes.byteLength).toBeLessThan(maximumContractJsonBytes);
+      const bindings = Array.from({ length: kind === "duplicates" ? 8 : 1 }, (_, index) => ({
+        ...originalBinding,
+        id: index === 0 ? originalBinding.id as string : `context.synthetic.overflow-${index}`,
+        path: `fixtures/valid/cca-210/overflow-context-${index}.json`,
+        sha256: digest(bytes),
+        byteLength: bytes.byteLength,
+      }));
+      plan.contextPacks = bindings;
+      const result = validateAeRenderPlan({
+        ...input,
+        planBytes: serializePlan(plan),
+        contextPackBytes: new Map(bindings.map(({ id }) => [id, bytes])),
+      });
+      expect(result.valid).toBe(false);
+      expect(codes(result)).toContain("DIAGNOSTIC_LIMIT_EXCEEDED");
+      expect(result.diagnostics.length).toBeLessThanOrEqual(maximumAeRenderDiagnostics);
+    },
+    15_000,
+  );
 
   it.each(["statement", "type", "kind", "criticality", "targetLevel"])(
     "rejects a rendered claim missing explicit %s",
