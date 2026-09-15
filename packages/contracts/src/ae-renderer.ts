@@ -479,22 +479,25 @@ const typedArrayBufferGetter = Object.getOwnPropertyDescriptor(
 )?.get;
 
 function isBytes(value: unknown): value is Uint8Array {
+  // Native brand checks do not traverse caller-controlled prototype chains.
   if (
     utilTypes.isProxy(value) ||
-    !ArrayBuffer.isView(value) ||
+    !utilTypes.isUint8Array(value) ||
     typedArrayByteLengthGetter === undefined ||
     typedArrayBufferGetter === undefined
   ) {
     return false;
   }
   try {
-    if (!(value instanceof Uint8Array)) return false;
     let current: object | null = value;
+    let hasUint8ArrayPrototype = false;
     while (current !== typedArrayPrototype) {
+      if (current === Uint8Array.prototype) hasUint8ArrayPrototype = true;
       if (Object.hasOwn(current, "byteLength")) return false;
       current = Object.getPrototypeOf(current);
       if (current === null || utilTypes.isProxy(current)) return false;
     }
+    if (!hasUint8ArrayPrototype) return false;
     typedArrayByteLengthGetter.call(value);
     if (utilTypes.isSharedArrayBuffer(typedArrayBufferGetter.call(value))) {
       return false;
@@ -513,7 +516,8 @@ function isStandardMap(
   try {
     if (
       mapSizeGetter === undefined ||
-      !(value instanceof Map) ||
+      utilTypes.isProxy(value) ||
+      !utilTypes.isMap(value) ||
       Object.getPrototypeOf(value) !== Map.prototype ||
       Object.hasOwn(value, "size") ||
       Object.hasOwn(value, "entries") ||

@@ -47,8 +47,12 @@ describe("CCA-210 pure render-plan validation and rendering", () => {
     expect(rendered.outputs).toHaveLength(4);
   });
 
-  it("matches every committed golden native artifact byte-for-byte", async () => {
-    const validation = validateAeRenderPlan(await loadCca210ValidationInput());
+  it.each(["Buffer", "Uint8Array"] as const)("matches every golden artifact byte-for-byte from %s plan bytes", async (kind) => {
+    const input = await loadCca210ValidationInput();
+    const validation = validateAeRenderPlan({
+      ...input,
+      planBytes: kind === "Buffer" ? input.planBytes : new Uint8Array(input.planBytes),
+    });
     if (!validation.valid) throw new Error(JSON.stringify(validation.diagnostics));
     const rendered = renderAeNativeArtifacts(validation.validatedPlan);
     expect(rendered.valid).toBe(true);

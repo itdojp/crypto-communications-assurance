@@ -81,6 +81,11 @@ digest under the same historical meaning. It requires a reviewed
 implementation-identity, package-version, or render-plan contract-version
 decision.
 
+The pre-acceptance Proxy-boundary correction in PR #24 refreshes this snapshot's
+exact source digest and its synthetic plan/CCA-240 bindings together. It changes
+neither mapping authority nor native output bytes and still requires review of
+the new exact head; it does not waive the post-acceptance version rule above.
+
 Changing the upstream pin, adding a native kind, following a mutable upstream
 ref, synthesizing Context Packs, adding a render-result/output-index contract,
 inferring a mapping, or introducing satisfaction/policy/approval/release fields

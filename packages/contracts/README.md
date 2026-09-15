@@ -13,6 +13,14 @@ Malformed top-level input, byte fields, role records, Context Pack maps/keys,
 and validated-plan tokens fail closed with bounded machine-readable diagnostics
 before parsing, hashing, iteration by semantic validators, or rendering.
 
+CCA-210 checks native Map/Uint8Array brands before examining prototypes. It
+rejects input Proxies and Proxy-bearing byte prototype chains without invoking
+their traps; a prototype label alone cannot turn another typed-array kind into
+exact bytes. Ordinary Buffer and Uint8Array values remain supported. This
+boundary assumes trusted Node.js intrinsics and dependencies; it is not a
+sandbox for arbitrary hostile code already executing in the same JavaScript
+realm, nor a guarantee about the older shared validation APIs.
+
 The decoder does not canonicalize or rewrite JSON. SHA-256 binding continues to cover the original byte sequence supplied by the caller, not a re-serialized object. The 1,048,576-byte limit applies independently to each manifest, lock, and compatibility record and is checked before UTF-8 decoding. The 128-container limit is checked with a non-recursive structural preflight before parsing, and duplicate traversal is also non-recursive.
 
 A v1 lock may reference at most one compatibility record for each exact subject/target pair. Multiple supporting results belong in that single record's evidence map. Evidence map keys are bounded bundle-relative identifiers, not repository authorities, URLs, private or absolute paths, or provenance records.

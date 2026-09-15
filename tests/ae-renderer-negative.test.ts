@@ -272,6 +272,33 @@ describe("CCA-210 fail-closed negative boundaries", () => {
     expect(codes(result)).toContain("CONTEXT_PACK_CONTAINER_INVALID");
   });
 
+  it.each(["direct", "prototype"] as const)(
+    "rejects a Context Pack Map with a %s Proxy without invoking traps",
+    async (placement) => {
+      const input = await loadCca210ValidationInput();
+      const calls: string[] = [];
+      const handler: ProxyHandler<Map<string, Uint8Array>> = {
+        getPrototypeOf(target) {
+          calls.push("getPrototypeOf");
+          return Reflect.getPrototypeOf(target);
+        },
+        getOwnPropertyDescriptor(target, key) {
+          calls.push("getOwnPropertyDescriptor");
+          return Reflect.getOwnPropertyDescriptor(target, key);
+        },
+      };
+      const original = new Map(input.contextPackBytes);
+      const contextPackBytes = placement === "direct"
+        ? new Proxy(original, handler)
+        : Object.setPrototypeOf(original, new Proxy(Map.prototype, handler));
+
+      expect(codes(validateAeRenderPlan({ ...input, contextPackBytes }))).toContain(
+        "CONTEXT_PACK_CONTAINER_INVALID",
+      );
+      expect(calls).toEqual([]);
+    },
+  );
+
   it("rejects Proxy-wrapped exact byte sequences for every public input role", async () => {
     const input = await loadCca210ValidationInput();
     const proxyBytes = (bytes: Uint8Array): Uint8Array => new Proxy(bytes, {});
@@ -337,16 +364,87 @@ describe("CCA-210 fail-closed negative boundaries", () => {
     }
   });
 
-  it("rejects exact bytes with a throwing prototype chain without throwing", async () => {
+  it("rejects exact bytes with a throwing prototype chain without invoking it", async () => {
     const input = await loadCca210ValidationInput();
     const planBytes = new Uint8Array(input.planBytes);
+    let calls = 0;
     const hostilePrototype = new Proxy(Uint8Array.prototype, {
       getPrototypeOf: () => {
-        throw new Error("prototype trap should be contained");
+        calls += 1;
+        throw new Error("prototype trap should not be invoked");
       },
     });
     Object.setPrototypeOf(planBytes, hostilePrototype);
 
+    expect(codes(validateAeRenderPlan({ ...input, planBytes }))).toContain(
+      "RENDER_PLAN_BYTES_INVALID",
+    );
+    expect(calls).toBe(0);
+  });
+
+  it.each(["direct", "nested"] as const)(
+    "rejects %s prototype Proxies in every byte role without invoking traps",
+    async (placement) => {
+      const input = await loadCca210ValidationInput();
+      let calls = 0;
+      if (input.rendererSourceBytes === undefined) throw new Error("Renderer fixture missing");
+      const bytes = (value: Uint8Array): Uint8Array => {
+        const prototype = new Proxy(Uint8Array.prototype, {
+          getPrototypeOf(target) {
+            calls += 1;
+            return Reflect.getPrototypeOf(target);
+          },
+        });
+        return Object.setPrototypeOf(
+          new Uint8Array(value),
+          placement === "direct" ? prototype : Object.create(prototype),
+        );
+      };
+      const candidates: readonly [AeRenderPlanValidationInput, string][] = [
+        [{ ...input, planBytes: bytes(input.planBytes) }, "RENDER_PLAN_BYTES_INVALID"],
+        [
+          { ...input, ccaInputBytes: {
+            ...input.ccaInputBytes,
+            propertyCatalog: bytes(input.ccaInputBytes.propertyCatalog),
+          } },
+          "CCA_INPUT_BYTES_INVALID",
+        ],
+        [
+          { ...input, upstreamSchemaBytes: {
+            ...input.upstreamSchemaBytes,
+            securityClaim: bytes(input.upstreamSchemaBytes.securityClaim),
+          } },
+          "UPSTREAM_SCHEMA_BYTES_INVALID",
+        ],
+        [
+          { ...input, contextPackBytes: new Map(
+            [...input.contextPackBytes].map(([id, value]) => [id, bytes(value)]),
+          ) },
+          "CONTEXT_PACK_BYTES_INVALID",
+        ],
+        [{ ...input, rendererSourceBytes: bytes(input.rendererSourceBytes) }, "RENDERER_SOURCE_MISSING"],
+      ];
+      for (const [candidate, code] of candidates) {
+        expect(codes(validateAeRenderPlan(candidate))).toContain(code);
+        expect(calls, code).toBe(0);
+      }
+    },
+  );
+
+  it("rejects a different typed-array brand disguised with Uint8Array.prototype", async () => {
+    const input = await loadCca210ValidationInput();
+    const planBytes = Object.setPrototypeOf(new Uint16Array(4), Uint8Array.prototype);
+    expect(codes(validateAeRenderPlan({ ...input, planBytes }))).toContain(
+      "RENDER_PLAN_BYTES_INVALID",
+    );
+  });
+
+  it("retains rejection of bytes whose chain bypasses Uint8Array.prototype", async () => {
+    const input = await loadCca210ValidationInput();
+    const planBytes = Object.setPrototypeOf(
+      new Uint8Array(input.planBytes),
+      Object.getPrototypeOf(Uint8Array.prototype),
+    );
     expect(codes(validateAeRenderPlan({ ...input, planBytes }))).toContain(
       "RENDER_PLAN_BYTES_INVALID",
     );
