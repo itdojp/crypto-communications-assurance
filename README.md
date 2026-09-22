@@ -1,24 +1,90 @@
 # Cryptographic Communications Assurance
 
-Reusable, machine-readable assurance contracts, profiles, audit targets, and evidence bridges for cryptographic communication products.
+Data-only assurance contracts, security catalogs, profiles, and evidence records
+for cryptographic communication products.
 
-Future, separately authorized bridge work may integrate with:
+Use this repository to describe **what needs assurance**, compose an explicit
+assurance scope, and bind recorded check results to exact inputs and provenance.
+It is intended for engineers, security reviewers, and assurance-tool integrators
+who need reviewable JSON artifacts rather than another audit control plane.
 
-- [ae-framework](https://github.com/itdojp/ae-framework) for specifications, assurance evidence, policy gates, and release judgments.
-- [GenAI Repo Auditor](https://github.com/itdojp/genai-repo-auditor) for defensive repository security auditing.
+**Pre-alpha:** no stable contract, production-readiness, certification, or
+product-wide compatibility commitment. This is not a cryptographic library,
+product scanner, or approval system; the repository-local packages are not
+published and no end-user CLI is implemented.
+
+[Quick start](#quick-start) · [Documentation](#documentation) ·
+[Contract status](#status) · [Assurance boundary](#assurance-boundary) ·
+[Contributing](#contributing-and-security)
 
 ## Project role
 
-This repository provides domain-specific assurance inputs and integration contracts for cryptographic communication products. It is not a third assurance control plane.
+The current building blocks keep declarations, composition, and evidence facts
+separate:
 
-Planned capabilities include:
+| Building block | What it records or does | Start here |
+| --- | --- | --- |
+| Pack identity | Manifest, exact-byte lock, and a separate evidence-bound compatibility record | [Schema index](schema/README.md) |
+| Security vocabulary | Properties, attacker capabilities/models, and related threats | [Public catalogs](pack/catalogs/v1/) and [coverage](docs/CATALOG_COVERAGE.md) |
+| Scope composition | Explicit module requests and deterministic profile resolution; no default or recommended profile | [Module catalog](pack/modules/v1/capability-module-catalog.json) |
+| Evidence records | Separate execution result, provenance, freshness assessment, and exact-byte binding set | [Evidence semantics](docs/EVIDENCE_CONTRACTS.md) |
+| Local validation | Bounded strict JSON decoding, schema and semantic checks, and synthetic regression tests | [Contracts package](packages/contracts/README.md) and [fixtures](fixtures/README.md) |
 
-- cryptographic-communications security property, threat, and attacker catalogs;
-- evidence requirements and reusable capability modules;
-- tool-neutral assurance profiles and security artifacts that later bridges may map;
-- repository-audit packs and target templates whose upstream mappings remain future work;
-- content-bound evidence bridges between development assurance and repository auditing;
-- deterministic synthetic fixtures and compatibility tests.
+JSON artifacts are authoritative; Markdown explains their use and boundaries.
+A catalog entry or resolved profile is not a product claim, and
+a passing check is not human approval.
+
+Future, separately authorized bridge work may integrate with:
+
+- [ae-framework](https://github.com/itdojp/ae-framework) for specifications,
+  assurance evidence, policy gates, and human-controlled release judgments.
+- [GenAI Repo Auditor](https://github.com/itdojp/genai-repo-auditor) for defensive
+  repository security auditing.
+
+Open pull requests, roadmap entries, and placeholder directories must not be
+read as shipped integrations or compatibility guarantees. See the
+[roadmap](docs/ROADMAP.md) and [product boundary](docs/PRODUCT_BOUNDARY.md).
+
+## Quick start
+
+To inspect schemas and public data, start with the links above; no tool execution
+is required. To run the repository's local checks, use Node.js `22.22.2`
+([`.node-version`](.node-version)) and Corepack. The repository selects pnpm
+`10.34.5` through [`package.json`](package.json).
+
+```bash
+git clone https://github.com/itdojp/crypto-communications-assurance.git
+cd crypto-communications-assurance
+corepack enable
+pnpm install --frozen-lockfile
+pnpm run verify
+```
+
+Cloning and dependency/tool installation may require network access. After the
+locked dependencies are installed, verification is repository-local: it does not
+call an external model, scanner, upstream framework, or live target. A successful
+run validates repository contracts and synthetic fixtures, **not a deployed
+product or satisfied assurance claim**.
+
+For a small, explicitly synthetic reading path, compare a
+[profile request](fixtures/valid/profile-request-complete-v1.json) with its
+[resolved profile](fixtures/valid/resolved-profile-complete-v1.json), then read
+the [profile resolution tests](tests/profile-resolution.test.ts). The
+[contracts package documentation](packages/contracts/README.md) explains the
+separate decoding, schema-validation, and semantic-validation steps; this
+quick start does not publish a package or introduce a CLI.
+
+## Documentation
+
+| Reader question | Document |
+| --- | --- |
+| What does the project do, and deliberately not do? | [Product boundary](docs/PRODUCT_BOUNDARY.md) |
+| Which JSON contracts and validation APIs exist? | [Schema index](schema/README.md), [contracts package](packages/contracts/README.md) |
+| Where are reusable public data and synthetic examples? | [Pack data](pack/README.md), [synthetic fixtures](fixtures/README.md) |
+| What do execution, evidence, and freshness states mean? | [Status semantics](docs/STATUS_SEMANTICS.md), [evidence contracts](docs/EVIDENCE_CONTRACTS.md) |
+| How are responsibilities and changes separated? | [Architecture](docs/ARCHITECTURE.md), [contract versioning](docs/CONTRACT_VERSIONING.md) |
+| What may be committed or shared publicly? | [Public/private boundary](docs/PUBLIC_PRIVATE_BOUNDARY.md), [security policy](SECURITY.md) |
+| How can I contribute, and what is planned? | [Contributing](CONTRIBUTING.md), [roadmap](docs/ROADMAP.md) |
 
 ## Status
 
@@ -107,14 +173,7 @@ The normative boundaries are documented in:
 - JSON Schema Draft 2020-12 and AJV `8.20.0`;
 - Vitest `4.1.10`.
 
-Install the exact dependency graph:
-
-```bash
-corepack enable
-pnpm install --frozen-lockfile
-```
-
-Repository-local commands:
+After the [quick start](#quick-start), these checks can also be run individually:
 
 ```bash
 pnpm run build
