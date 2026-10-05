@@ -13,9 +13,21 @@ const contractsRequire = createRequire(
   new URL("../packages/contracts/package.json", import.meta.url),
 );
 const ajvRequire = createRequire(contractsRequire.resolve("ajv/package.json"));
+type UriComponents = {
+  scheme?: string;
+  host?: string;
+  port?: string | number;
+  path?: string;
+  error?: string;
+};
 const uri = ajvRequire("fast-uri") as {
-  normalize(value: string): string;
-  resolve(base: string, relative: string): string;
+  parse(value: string, options?: { unicodeSupport: boolean }): UriComponents;
+  serialize(value: UriComponents): string;
+  normalize(value: string, options?: { unicodeSupport: boolean }): string;
+  normalize(value: UriComponents): UriComponents;
+  equal(left: string | UriComponents, right: string | UriComponents,
+    options?: { unicodeSupport: boolean }): boolean;
+  resolve(base: string, relative: string, options?: { unicodeSupport: boolean }): string;
 };
 const base = "https://base.invalid/";
 
@@ -32,16 +44,65 @@ describe("synthetic-only fast-uri dependency security regressions", () => {
       snapshots: Record<string, { dependencies?: Record<string, string> }>;
     };
 
-    expect(manifest.pnpm?.overrides?.["fast-uri"]).toBe("3.1.6");
-    expect(lock.overrides["fast-uri"]).toBe("3.1.6");
+    expect(manifest.pnpm?.overrides?.["fast-uri"]).toBe("3.1.7");
+    expect(lock.overrides["fast-uri"]).toBe("3.1.7");
     for (const section of [lock.packages, lock.snapshots]) {
       expect(Object.keys(section).filter((key) => key.startsWith("fast-uri@")))
-        .toEqual(["fast-uri@3.1.6"]);
+        .toEqual(["fast-uri@3.1.7"]);
     }
-    expect(lock.snapshots["ajv@8.20.0"]?.dependencies?.["fast-uri"]).toBe("3.1.6");
+    expect(lock.snapshots["ajv@8.20.0"]?.dependencies?.["fast-uri"]).toBe("3.1.7");
     expect((ajvRequire("fast-uri/package.json") as { version: string }).version)
-      .toBe("3.1.6");
+      .toBe("3.1.7");
   });
+
+  it.each([
+    "@other.invalid", "8081@other.invalid", "123/path", "123?query",
+    "123#fragment", "123:456", "-1", "1.5", 1.5, NaN, Infinity, "\u0661",
+  ])("rejects malformed component port %s without accepting equality", (port) => {
+    const components = { scheme: "https", host: "trusted.invalid", port, path: "/local" };
+    expect(() => uri.serialize({ ...components })).toThrow("URI port is malformed.");
+    // Object normalization returns components, not a URL string. Assert the
+    // library rejection itself, without passing its result to another parser.
+    expect(() => uri.normalize({ ...components })).toThrow("URI port is malformed.");
+    expect(uri.equal({ ...components }, { ...components })).toBe(false);
+  });
+
+  it.each([8192, "8192", "00081", ""])(
+    "preserves valid digit/empty port serialization: %s",
+    (port) => {
+      // A non-special scheme avoids HTTP default-port normalization. This tests
+      // component syntax only, not whether a port is usable by a network client.
+      const components = { scheme: "synthetic", host: "trusted.invalid", port };
+      expect(uri.serialize({ ...components })).toBe(`synthetic://trusted.invalid:${port}`);
+      expect(uri.normalize({ ...components }).host).toBe("trusted.invalid");
+      expect(uri.equal({ ...components }, { ...components })).toBe(true);
+    },
+  );
+
+  it.each([
+    "https://[2001/", "https://[/", "https://[synthetic.invalid/",
+    "https://user@[@other.invalid/local", "https://user@]other.invalid/local",
+    "https://user@prefix[@other.invalid/local",
+  ])("fails closed on malformed authority brackets: %s", (value) => {
+    for (const options of [undefined, { unicodeSupport: true }]) {
+      expect(uri.parse(value, options).error).toBe("URI host is malformed.");
+      // String normalization preserves the invalid input; preservation is not
+      // acceptance. Error, equality and resolution are asserted separately.
+      expect(uri.normalize(value, options)).toBe(value);
+      expect(uri.equal(value, value, options)).toBe(false);
+      expect(() => uri.resolve(base, value, options)).toThrow("URI host is malformed.");
+    }
+  });
+
+  it.each(["https://[2001:db8::1]/local", "https://[2001:db8::2]:8192/local"])(
+    "preserves valid documentation-only IPv6 literals: %s",
+    (value) => {
+      expect(uri.parse(value).error).toBeUndefined();
+      expect(uri.normalize(value)).toBe(value);
+      expect(uri.equal(value, value)).toBe(true);
+      expect(uri.resolve(base, value)).toBe(value);
+    },
+  );
 
   it.each([
     { kind: "backslash authority", value: "https:\\\\synthetic.invalid/path" },
