@@ -44,15 +44,43 @@ describe("synthetic-only fast-uri dependency security regressions", () => {
       snapshots: Record<string, { dependencies?: Record<string, string> }>;
     };
 
-    expect(manifest.pnpm?.overrides?.["fast-uri"]).toBe("3.1.7");
-    expect(lock.overrides["fast-uri"]).toBe("3.1.7");
+    expect(manifest.pnpm?.overrides?.["fast-uri"]).toBe("3.1.8");
+    expect(lock.overrides["fast-uri"]).toBe("3.1.8");
     for (const section of [lock.packages, lock.snapshots]) {
       expect(Object.keys(section).filter((key) => key.startsWith("fast-uri@")))
-        .toEqual(["fast-uri@3.1.7"]);
+        .toEqual(["fast-uri@3.1.8"]);
     }
-    expect(lock.snapshots["ajv@8.20.0"]?.dependencies?.["fast-uri"]).toBe("3.1.7");
+    expect(lock.snapshots["ajv@8.20.0"]?.dependencies?.["fast-uri"]).toBe("3.1.8");
     expect((ajvRequire("fast-uri/package.json") as { version: string }).version)
-      .toBe("3.1.7");
+      .toBe("3.1.8");
+  });
+
+  it.each([
+    { encoded: "//%53YNTHETIC.invalid/local", canonical: "//synthetic.invalid/local" },
+    { encoded: "//syntheti%43.invalid/local", canonical: "//synthetic.invalid/local" },
+  ])("folds decoded host case consistently: $encoded", ({ encoded, canonical }) => {
+    expect(uri.parse(encoded).host).toBe("synthetic.invalid");
+    expect(uri.normalize(encoded)).toBe(canonical);
+    expect(uri.normalize(uri.normalize(encoded))).toBe(canonical);
+    expect(uri.equal(encoded, canonical)).toBe(true);
+    expect(uri.resolve("synthetic://base.invalid/", encoded))
+      .toBe(uri.resolve("synthetic://base.invalid/", canonical));
+  });
+
+  it("preserves reserved and nested host escapes while folding host case", () => {
+    expect(uri.normalize("//%53ynthetic.invalid%2fextra"))
+      .toBe("//synthetic.invalid%2Fextra");
+    expect(uri.normalize("//%2553ynthetic.invalid"))
+      .toBe("//%2553ynthetic.invalid");
+  });
+
+  it.each([
+    ["//Reader@%53ynthetic.invalid/x", "//reader@synthetic.invalid/x"],
+    ["//%53ynthetic.invalid/Upper", "//synthetic.invalid/upper"],
+    ["//%53ynthetic.invalid/?Key=Value", "//synthetic.invalid/?key=value"],
+  ])("does not case-fold non-host components: %s", (left, right) => {
+    expect(uri.parse(left).host).toBe(uri.parse(right).host);
+    expect(uri.equal(left, right)).toBe(false);
   });
 
   it.each([
